@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core\Structure\OPF;
 
 use PHPePub\Core\EPub;
@@ -10,7 +11,8 @@ use PHPePub\Core\EPub;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class MetaValue {
+class MetaValue
+{
     private $tagName = null;
     private $tagValue = null;
     private $attr = [];
@@ -22,7 +24,8 @@ class MetaValue {
      * @param string $name the name includes the namespace. ie. "dc:contributor"
      * @param string $value
      */
-    function __construct($name, $value) {
+    public function __construct($name, $value)
+    {
         $this->setValue($name, $value);
     }
 
@@ -33,7 +36,8 @@ class MetaValue {
      * @param string $name
      * @param string $value
      */
-    function setValue($name, $value) {
+    public function setValue($name, $value)
+    {
         $this->tagName = is_string($name) ? trim($name) : null;
         if (isset($this->tagName)) {
             $this->tagValue = isset($value) ? (string)$value : null;
@@ -48,7 +52,8 @@ class MetaValue {
      *
      * @return void
      */
-    function __destruct() {
+    public function __destruct()
+    {
         unset($this->tagName, $this->tagValue, $this->attr, $this->opfAttr);
     }
 
@@ -59,7 +64,8 @@ class MetaValue {
      * @param string $attrName
      * @param string $attrValue
      */
-    function addAttr($attrName, $attrValue) {
+    public function addAttr($attrName, $attrValue)
+    {
         $attrName = is_string($attrName) ? trim($attrName) : null;
         if (isset($attrName)) {
             $attrValue = is_string($attrValue) ? trim($attrValue) : null;
@@ -77,7 +83,8 @@ class MetaValue {
      * @param string $opfAttrName
      * @param string $opfAttrValue
      */
-    function addOpfAttr($opfAttrName, $opfAttrValue) {
+    public function addOpfAttr($opfAttrName, $opfAttrValue)
+    {
         $opfAttrName = is_string($opfAttrName) ? trim($opfAttrName) : null;
         if (isset($opfAttrName)) {
             $opfAttrValue = is_string($opfAttrValue) ? trim($opfAttrValue) : null;
@@ -93,7 +100,8 @@ class MetaValue {
      *
      * @return string
      */
-    function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2) {
+    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2)
+    {
         $dc = "\t\t<" . $this->tagName;
 
         if (count($this->attr) > 0) {

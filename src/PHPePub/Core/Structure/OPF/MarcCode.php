@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core\Structure\OPF;
 
 /**
@@ -9,7 +10,8 @@ namespace PHPePub\Core\Structure\OPF;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class MarcCode {
+class MarcCode
+{
     /**
      * Adapter
      *

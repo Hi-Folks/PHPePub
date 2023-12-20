@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core\Structure\OPF;
 
 /**
@@ -8,7 +9,8 @@ namespace PHPePub\Core\Structure\OPF;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class Spine {
+class Spine
+{
     private $itemrefs = [];
     private $toc = null;
 
@@ -17,7 +19,8 @@ class Spine {
      *
      * @param string $toc
      */
-    function __construct($toc = "ncx") {
+    public function __construct($toc = "ncx")
+    {
         $this->setToc($toc);
     }
 
@@ -27,7 +30,8 @@ class Spine {
      *
      * @param string $toc
      */
-    function setToc($toc) {
+    public function setToc($toc)
+    {
         $this->toc = is_string($toc) ? trim($toc) : null;
     }
 
@@ -36,7 +40,8 @@ class Spine {
      *
      * @return void
      */
-    function __destruct() {
+    public function __destruct()
+    {
         unset($this->itemrefs, $this->toc);
     }
 
@@ -46,7 +51,8 @@ class Spine {
      *
      * @param Itemref $itemref
      */
-    function addItemref($itemref) {
+    public function addItemref($itemref)
+    {
         if ($itemref != null
             && is_object($itemref)
             && $itemref instanceof Itemref
@@ -62,7 +68,8 @@ class Spine {
      *
      * @return string
      */
-    function finalize() {
+    public function finalize()
+    {
         $spine = "\n\t<spine toc=\"" . $this->toc . "\">\n";
         foreach ($this->itemrefs as $itemref) {
             /** @var $itemref ItemRef */

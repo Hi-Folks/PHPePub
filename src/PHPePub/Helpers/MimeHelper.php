@@ -10,17 +10,17 @@
 
 namespace PHPePub\Helpers;
 
-
 use PHPePub\Core\StaticData;
 
-class MimeHelper {
-
+class MimeHelper
+{
     /**
      * @param string $source URL Source
      *
      * @return string MimeType
      */
-    public static function getMimeTypeFromUrl($source) {
+    public static function getMimeTypeFromUrl($source)
+    {
         $ext = false;
 
         $srev = strrev($source);
@@ -47,7 +47,8 @@ class MimeHelper {
      *
      * @return string MimeType
      */
-    public static  function getMimeTypeFromExtension($ext) {
+    public static function getMimeTypeFromExtension($ext)
+    {
         if (array_key_exists($ext, StaticData::$mimetypes)) {
             return StaticData::$mimetypes[$ext];
         }
@@ -63,7 +64,8 @@ class MimeHelper {
      * @return string mimetype, or FALSE.
      * @deprecated Use getMimeTypeFromExtension(string $extension) instead.
      */
-    public static function getMime($source) {
+    public static function getMime($source)
+    {
         return MimeHelper::getMimeTypeFromExtension(pathinfo($source, PATHINFO_EXTENSION));
     }
 }

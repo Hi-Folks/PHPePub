@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core;
 
 /**
@@ -8,7 +9,8 @@ namespace PHPePub\Core;
  * @copyright 2012- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class Logger {
+class Logger
+{
     private $log = "";
     private $tStart;
     private $tLast;
@@ -21,7 +23,8 @@ class Logger {
      * @param string $name
      * @param bool $isLogging
      */
-    function __construct($name = null, private $isLogging = false) {
+    public function __construct($name = null, private $isLogging = false)
+    {
         if ($name === null) {
             $this->name = "";
         } else {
@@ -30,7 +33,8 @@ class Logger {
         $this->start();
     }
 
-    function start() {
+    public function start()
+    {
         /* Prepare Logging. Just in case it's used. later */
         if ($this->isLogging) {
             $this->tStart = gettimeofday();
@@ -40,7 +44,8 @@ class Logger {
         }
     }
 
-    function logLine($line) {
+    public function logLine($line)
+    {
         if ($this->isLogging) {
             $tTemp = gettimeofday();
             $tS = $this->tStart['sec'] + (((int)($this->tStart['usec'] / 100)) / 10000);
@@ -63,11 +68,13 @@ class Logger {
      * @return void
      * @TODO make sure elements in the destructor match the current class elements
      */
-    function __destruct() {
+    public function __destruct()
+    {
         unset($this->log);
     }
 
-    function dumpInstalledModules() {
+    public function dumpInstalledModules()
+    {
         if ($this->isLogging) {
             $isCurlInstalled = extension_loaded('curl') && function_exists('curl_version');
             $isGdInstalled = extension_loaded('gd') && function_exists('gd_info');
@@ -83,7 +90,8 @@ class Logger {
         }
     }
 
-    function getLog() {
+    public function getLog()
+    {
         return $this->log;
     }
 
@@ -92,7 +100,8 @@ class Logger {
      *
      * @return string
      */
-    public function boolYN($isCurlInstalled) {
+    public function boolYN($isCurlInstalled)
+    {
         return ($isCurlInstalled ? "Yes" : "No");
     }
 }

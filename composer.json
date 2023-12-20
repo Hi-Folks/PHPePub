@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Package to create and stream e-books in the ePub 2.0 and 3.0 formats.",
     "keywords": ["epub", "e-book"],
-    "homepage": "https://github.com/wallabag/PHPePub",
+    "homepage": "https://github.com/Hi-Folks/PHPePub",
     "license": "LGPL-2.1",
     "minimum-stability": "stable",
     "authors": [
@@ -51,6 +51,10 @@
         ]
     },
     "require-dev": {
-        "rector/rector": "^0.18.13"
+        "rector/rector": "^0.18.13",
+        "laravel/pint": "^1.13"
+    },
+    "scripts": {
+        "format": "pint"
     }
 }

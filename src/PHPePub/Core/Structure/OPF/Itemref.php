@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core\Structure\OPF;
 
 /**
@@ -8,7 +9,8 @@ namespace PHPePub\Core\Structure\OPF;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class Itemref {
+class Itemref
+{
     private $idref = null;
     private $linear = true;
 
@@ -18,7 +20,8 @@ class Itemref {
      * @param      $idref
      * @param bool $linear
      */
-    function __construct($idref, $linear = true) {
+    public function __construct($idref, $linear = true)
+    {
         $this->setIdref($idref);
         $this->setLinear($linear);
     }
@@ -29,7 +32,8 @@ class Itemref {
      *
      * @param bool $linear
      */
-    function setLinear($linear = true) {
+    public function setLinear($linear = true)
+    {
         $this->linear = $linear === true;
     }
 
@@ -38,7 +42,8 @@ class Itemref {
      *
      * @return void
      */
-    function __destruct() {
+    public function __destruct()
+    {
         unset($this->idref, $this->linear);
     }
 
@@ -48,7 +53,8 @@ class Itemref {
      *
      * @return string $idref
      */
-    function getIdref() {
+    public function getIdref()
+    {
         return $this->idref;
     }
 
@@ -58,7 +64,8 @@ class Itemref {
      *
      * @param string $idref
      */
-    function setIdref($idref) {
+    public function setIdref($idref)
+    {
         $this->idref = is_string($idref) ? trim($idref) : null;
     }
 
@@ -68,7 +75,8 @@ class Itemref {
      *
      * @return string
      */
-    function finalize() {
+    public function finalize()
+    {
         $itemref = "\t\t<itemref idref=\"" . $this->idref . "\"";
 
         return $itemref . ($this->linear == false ? ' linear="no"' : '') . " />\n";

@@ -8,7 +8,8 @@
 
 namespace PHPePub\Core\Structure\NCX;
 
-abstract class AbstractNavEntry {
+abstract class AbstractNavEntry
+{
     /**
      * @return AbstractNavEntry
      */

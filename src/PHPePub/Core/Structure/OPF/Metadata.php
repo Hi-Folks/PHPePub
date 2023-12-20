@@ -1,7 +1,7 @@
 <?php
+
 namespace PHPePub\Core\Structure\OPF;
 
-use com\grandt\BinStringStatic;
 use PHPePub\Core\EPub;
 use PHPePub\Core\StaticData;
 
@@ -12,7 +12,8 @@ use PHPePub\Core\StaticData;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class Metadata {
+class Metadata
+{
     private $dc = [];
     private $meta = [];
     private $metaProperties = [];
@@ -21,15 +22,15 @@ class Metadata {
     /**
      * Class constructor.
      */
-    function __construct() {
-    }
+    public function __construct() {}
 
     /**
      * Class destructor
      *
      * @return void
      */
-    function __destruct() {
+    public function __destruct()
+    {
         unset($this->dc, $this->meta);
     }
 
@@ -39,7 +40,8 @@ class Metadata {
      *
      * @param MetaValue $dc
      */
-    function addDublinCore($dc) {
+    public function addDublinCore($dc)
+    {
         if ($dc != null && is_object($dc) && $dc instanceof MetaValue) {
             $this->dc[] = $dc;
         }
@@ -52,7 +54,8 @@ class Metadata {
      * @param string $name
      * @param string $content
      */
-    function addMeta($name, $content) {
+    public function addMeta($name, $content)
+    {
         $name = is_string($name) ? trim($name) : null;
         if (isset($name)) {
             $content = is_string($content) ? trim($content) : null;
@@ -69,7 +72,8 @@ class Metadata {
      * @param string $name
      * @param string $content
      */
-    function addMetaProperty($name, $content) {
+    public function addMetaProperty($name, $content)
+    {
         $name = is_string($name) ? trim($name) : null;
         if (isset($name)) {
             $content = is_string($content) ? trim($content) : null;
@@ -83,7 +87,8 @@ class Metadata {
      * @param string $nsName
      * @param string $nsURI
      */
-    function addNamespace($nsName, $nsURI) {
+    public function addNamespace($nsName, $nsURI)
+    {
         if (!array_key_exists($nsName, $this->namespaces)) {
             $this->namespaces[$nsName] = $nsURI;
         }
@@ -96,7 +101,8 @@ class Metadata {
      *
      * @return string
      */
-    function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2, $date = null) {
+    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2, $date = null)
+    {
         if ($bookVersion === EPub::BOOK_VERSION_EPUB2) {
             $this->addNamespace("opf", StaticData::$namespaces["opf"]);
         } else {

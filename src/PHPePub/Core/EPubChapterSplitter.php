@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core;
 
 use Masterminds\HTML5;
@@ -15,7 +16,8 @@ use DOMDocument;
  * @link      http://www.phpclasses.org/package/6115
  * @link      https://github.com/Grandt/PHPePub
  */
-class EPubChapterSplitter {
+class EPubChapterSplitter
+{
     private $splitDefaultSize = 250000;
     private $bookVersion = EPub::BOOK_VERSION_EPUB2;
     private $htmlFormat = EPub::FORMAT_XHTML;
@@ -25,7 +27,8 @@ class EPubChapterSplitter {
      *
      * @param string $htmlFormat
      */
-    function __construct($htmlFormat = EPub::FORMAT_XHTML) {
+    public function __construct($htmlFormat = EPub::FORMAT_XHTML)
+    {
         $this->setHtmlFormat($htmlFormat);
     }
 
@@ -35,7 +38,8 @@ class EPubChapterSplitter {
      *
      * @param string $bookVersion
      */
-    function setVersion($bookVersion) {
+    public function setVersion($bookVersion)
+    {
         $this->bookVersion = is_string($bookVersion) ? trim($bookVersion) : EPub::BOOK_VERSION_EPUB2;
     }
 
@@ -44,7 +48,8 @@ class EPubChapterSplitter {
      *
      * @param string $htmlFormat
      */
-    public function setHtmlFormat($htmlFormat) {
+    public function setHtmlFormat($htmlFormat)
+    {
         $this->htmlFormat = in_array($htmlFormat, [EPub::FORMAT_XHTML, EPub::FORMAT_HTML5])
             ? $htmlFormat
             : EPub::FORMAT_XHTML;
@@ -58,7 +63,8 @@ class EPubChapterSplitter {
      *
      * @return void
      */
-    function setSplitSize($size) {
+    public function setSplitSize($size)
+    {
         $this->splitDefaultSize = (int)$size;
         if ($size < 10240) {
             $this->splitDefaultSize = 10240; // Making the file smaller than 10k is not a good idea.
@@ -70,7 +76,8 @@ class EPubChapterSplitter {
      *
      * @return int $size
      */
-    function getSplitSize() {
+    public function getSplitSize()
+    {
         return $this->splitDefaultSize;
     }
 
@@ -86,7 +93,8 @@ class EPubChapterSplitter {
      *
      * @return array with 1 or more parts
      */
-    function splitChapter($chapter, $splitOnSearchString = false, $searchString = '/^Chapter\\ /i') {
+    public function splitChapter($chapter, $splitOnSearchString = false, $searchString = '/^Chapter\\ /i')
+    {
         $chapterData = [];
         $isSearchRegexp = $splitOnSearchString && (preg_match('#^(\D|\S|\W).+\1[imsxeADSUXJu]*$#m', $searchString) == 1);
         if ($splitOnSearchString && !$isSearchRegexp) {
@@ -98,7 +106,7 @@ class EPubChapterSplitter {
         }
 
         switch ($this->htmlFormat) {
-            case EPub::FORMAT_HTML5;
+            case EPub::FORMAT_HTML5:
                 $html5 = new HTML5();
                 $xmlDoc = $html5->loadHTML($chapter);
                 break;

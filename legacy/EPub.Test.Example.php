@@ -1,4 +1,5 @@
 <?php
+
 include 'vendor/autoload.php';
 
 use PHPePub\Core\EPub;
@@ -32,7 +33,7 @@ $bookEnd = "</body>\n</html>\n";
 // setting timezone for time functions used for logging to work properly
 date_default_timezone_set('Europe/Berlin');
 
-$log = new Logger("Example", TRUE);
+$log = new Logger("Example", true);
 
 $fileDir = './PHPePub';
 
@@ -87,7 +88,7 @@ $log->logLine("Set Cover Image");
 
 $cover = $content_start . "<h1>Test Book</h1>\n<h2>By: John Doe Johnson</h2>\n" . $bookEnd;
 $book->addChapter("Notices", "Cover.html", $cover);
-$book->buildTOC(NULL, "toc", "Table of Contents", TRUE, TRUE);
+$book->buildTOC(null, "toc", "Table of Contents", true, true);
 //    function buildTOC($cssFileName = NULL, $tocCSSClass = "toc", $title = "Table of Contents", $addReferences = TRUE, $addToIndex = FALSE, $tocFileName = "TOC.xhtml") {
 
 

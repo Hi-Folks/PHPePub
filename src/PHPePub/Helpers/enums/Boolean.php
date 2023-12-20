@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Helpers\enums;
 
 use PHPePub\Helpers\Enum;
@@ -10,7 +11,8 @@ use PHPePub\Helpers\Enum;
  * @copyright 2015- A. Grandt
  * @license   GNU LGPL 2.1
  */
-abstract class Boolean extends Enum {
+abstract class Boolean extends Enum
+{
     final public const TRUE = "true";
     final public const FALSE = "false";
 
@@ -19,7 +21,8 @@ abstract class Boolean extends Enum {
      *
      * @return string constant
      */
-    public static function getBoolean($value) {
+    public static function getBoolean($value)
+    {
         if (is_bool($value)) {
             return $value === true ? self::TRUE : self::FALSE;
         }

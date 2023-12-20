@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core;
 
 /**
@@ -8,8 +9,8 @@ namespace PHPePub\Core;
  * @copyright 2009- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class StaticData {
-
+class StaticData
+{
     public static $htmlEntities = [
         "&quot;"     => "\x22",
         // &#34; ((double) quotation mark)

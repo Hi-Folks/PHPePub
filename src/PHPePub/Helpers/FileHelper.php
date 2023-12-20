@@ -10,12 +10,12 @@
 
 namespace PHPePub\Helpers;
 
-
 use PHPePub\Core\EPub;
 use PHPePub\Core\StaticData;
 use RelativePath;
 
-class FileHelper {
+class FileHelper
+{
     protected static $isCurlInstalled;
     protected static $isFileGetContentsInstalled;
     protected static $isFileGetContentsExtInstalled;
@@ -23,7 +23,8 @@ class FileHelper {
     /**
      * @return mixed
      */
-    public static function getIsCurlInstalled() {
+    public static function getIsCurlInstalled()
+    {
         if (!isset(self::$isCurlInstalled)) {
             self::$isCurlInstalled = extension_loaded('curl') && function_exists('curl_version');
         }
@@ -33,7 +34,8 @@ class FileHelper {
     /**
      * @return mixed
      */
-    public static function getIsFileGetContentsInstalled() {
+    public static function getIsFileGetContentsInstalled()
+    {
         if (!isset(self::$isFileGetContentsInstalled)) {
             self::$isFileGetContentsInstalled = function_exists('file_get_contents');
         }
@@ -43,7 +45,8 @@ class FileHelper {
     /**
      * @return mixed
      */
-    public static function getIsFileGetContentsExtInstalled() {
+    public static function getIsFileGetContentsExtInstalled()
+    {
         if (!isset(self::$isFileGetContentsExtInstalled)) {
             self::$isFileGetContentsExtInstalled = self::getIsFileGetContentsInstalled() && ini_get('allow_url_fopen');
         }
@@ -57,7 +60,8 @@ class FileHelper {
      *
      * @return mixed|string
      */
-    public static function sanitizeFileName($fileName) {
+    public static function sanitizeFileName($fileName)
+    {
         $fileName1 = str_replace(StaticData::$forbiddenCharacters, '', $fileName);
         $fileName2 = preg_replace('/[\s-]+/', '-', $fileName1);
 
@@ -72,7 +76,8 @@ class FileHelper {
      *
      * @return bool|mixed|null|string
      */
-    public static function getFileContents($source, $toTempFile = false) {
+    public static function getFileContents($source, $toTempFile = false)
+    {
         $isExternal = preg_match('#^(http|ftp)s?://#i', $source) == 1;
 
         if ($isExternal && FileHelper::getIsCurlInstalled()) {
@@ -142,7 +147,8 @@ class FileHelper {
      *
      * @return string normalized filename
      */
-    public static function normalizeFileName($fileName) {
+    public static function normalizeFileName($fileName)
+    {
         return preg_replace('#^[/\.]+#i', "", RelativePath::getRelativePath($fileName));
     }
 }

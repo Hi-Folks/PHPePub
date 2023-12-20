@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Helpers;
 
 use ReflectionClass;
@@ -10,11 +11,13 @@ use UnexpectedValueException;
  * More:
  *   http://stackoverflow.com/questions/254514/php-and-enumerations
  */
-abstract class Enum {
+abstract class Enum
+{
     private static $constantsCache = [];
     private $value;
 
-    public function __construct($value) {
+    public function __construct($value)
+    {
         if (!self::has($value)) {
             throw new UnexpectedValueException("Value '$value' is not part of the enum " . static::class);
         }
@@ -22,19 +25,23 @@ abstract class Enum {
         $this->value = $value;
     }
 
-    public function is($value) {
+    public function is($value)
+    {
         return $this->value === $value;
     }
 
-    public function value() {
+    public function value()
+    {
         return $this->value;
     }
 
-    public static function has($value) {
+    public static function has($value)
+    {
         return in_array($value, self::toArray(), true);
     }
 
-    public static function toArray() {
+    public static function toArray()
+    {
         $calledClass = static::class;
 
         if(!array_key_exists($calledClass, self::$constantsCache)) {

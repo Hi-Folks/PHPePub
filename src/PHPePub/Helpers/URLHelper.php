@@ -10,16 +10,16 @@
 
 namespace PHPePub\Helpers;
 
-
-class URLHelper {
-
+class URLHelper
+{
     /**
      * Get the url of the current page.
      * Example use: Default Source URL
      *
      * $return string Page URL.
      */
-    public static function getCurrentPageURL() {
+    public static function getCurrentPageURL()
+    {
         $pageURL = self::getCurrentServerURL() . filter_input(INPUT_SERVER, "REQUEST_URI");
 
         return $pageURL;
@@ -31,7 +31,8 @@ class URLHelper {
      *
      * $return string Server URL.
      */
-    public static function getCurrentServerURL() {
+    public static function getCurrentServerURL()
+    {
         $serverURL = 'http';
         $https = filter_input(INPUT_SERVER, "HTTPS");
         $port = filter_input(INPUT_SERVER, "SERVER_PORT");

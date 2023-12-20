@@ -1,4 +1,5 @@
 <?php
+
 include 'vendor/autoload.php';
 
 use PHPePub\Core\EPub;
@@ -30,7 +31,7 @@ $bookEnd = "</body>\n</html>\n";
 // setting timezone for time functions used for logging to work properly
 date_default_timezone_set('Europe/Berlin');
 
-$log = new Logger("Example", TRUE);
+$log = new Logger("Example", true);
 
 $fileDir = './PHPePub';
 
@@ -76,7 +77,7 @@ $book->setCoverImage("Cover.jpg", file_get_contents("demo/cover-image.jpg"), "im
 
 $data = '<div class="img-container" id="em_1" style="left: 138px; top: 148px; height: 232px; width: 308px; position: absolute; z-index: 1;"><img src="http://www.grandt.com/test/sample2.gif" style="width:100%;height:100%;"/></div>';
 
-$book->addChapter("Page 1", "page_1.xhtml", $content_start . $data . $bookEnd, FALSE, EPub::EXTERNAL_REF_ADD);
+$book->addChapter("Page 1", "page_1.xhtml", $content_start . $data . $bookEnd, false, EPub::EXTERNAL_REF_ADD);
 
 $log->logLine("Add TOC");
 $book->buildTOC();

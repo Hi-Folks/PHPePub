@@ -10,17 +10,18 @@
 
 namespace PHPePub\Helpers;
 
-
 use PHPePub\Core\EPub;
 
-class CalibreHelper {
+class CalibreHelper
+{
     /**
      * @param EPub   $book
      * @param string $seriesName
      * @param string $seriesIndex
      * @param string $sortTitle
      */
-    public static function setCalibreMetadata($book, $seriesName, $seriesIndex, $sortTitle = null) {
+    public static function setCalibreMetadata($book, $seriesName, $seriesIndex, $sortTitle = null)
+    {
         $book->addCustomMetadata("calibre:series", $seriesName);
         $book->addCustomMetadata("calibre:series_index", "" . $seriesIndex);
         if (!empty($sortTitle)) {

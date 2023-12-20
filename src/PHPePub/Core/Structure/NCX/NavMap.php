@@ -9,7 +9,8 @@ namespace PHPePub\Core\Structure\NCX;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class NavMap extends AbstractNavEntry {
+class NavMap extends AbstractNavEntry
+{
     final public const _VERSION = 3.30;
 
     private $navPoints = [];
@@ -21,7 +22,8 @@ class NavMap extends AbstractNavEntry {
      *
      * @param string $writingDirection
      */
-    function __construct($writingDirection = null) {
+    public function __construct($writingDirection = null)
+    {
         $this->setWritingDirection($writingDirection);
     }
 
@@ -30,11 +32,13 @@ class NavMap extends AbstractNavEntry {
      *
      * @return void
      */
-    function __destruct() {
+    public function __destruct()
+    {
         unset($this->navPoints, $this->navLevels, $this->writingDirection);
     }
 
-    function getWritingDirection() {
+    public function getWritingDirection()
+    {
         return $this->writingDirection;
     }
 
@@ -43,7 +47,8 @@ class NavMap extends AbstractNavEntry {
      *
      * @param string $writingDirection
      */
-    function setWritingDirection($writingDirection) {
+    public function setWritingDirection($writingDirection)
+    {
         $this->writingDirection = isset($writingDirection) && is_string($writingDirection) ? trim($writingDirection) : null;
     }
 
@@ -54,7 +59,8 @@ class NavMap extends AbstractNavEntry {
      *
      * @return NavMap
      */
-    function addNavPoint($navPoint) {
+    public function addNavPoint($navPoint)
+    {
         if ($navPoint != null && is_object($navPoint) && $navPoint instanceof NavPoint) {
             $navPoint->setParent($this);
             if ($navPoint->getWritingDirection() == null) {
@@ -74,18 +80,21 @@ class NavMap extends AbstractNavEntry {
      *
      * @return number
      */
-    function getNavLevels() {
+    public function getNavLevels()
+    {
         return $this->navLevels + 1;
     }
 
-    function getLevel() {
+    public function getLevel()
+    {
         return 1;
     }
 
     /**
      * @return AbstractNavEntry this
      */
-    function getParent() {
+    public function getParent()
+    {
         return $this;
     }
 
@@ -93,7 +102,8 @@ class NavMap extends AbstractNavEntry {
      * Finalize the navMap, the final max depth for the "dtb:depth" meta attribute can be retrieved with getNavLevels after finalization
      *
      */
-    function finalize() {
+    public function finalize()
+    {
         $playOrder = 0;
         $this->navLevels = 0;
 
@@ -116,7 +126,8 @@ class NavMap extends AbstractNavEntry {
      * Finalize the navMap, the final max depth for the "dtb:depth" meta attribute can be retrieved with getNavLevels after finalization
      *
      */
-    function finalizeEPub3() {
+    public function finalizeEPub3()
+    {
         $playOrder = 0;
         $level = 0;
         $this->navLevels = 0;

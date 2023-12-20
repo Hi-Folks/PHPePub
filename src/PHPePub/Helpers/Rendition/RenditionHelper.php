@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Helpers\Rendition;
 
 use PHPePub\Core\EPub;
@@ -12,8 +13,8 @@ use PHPePub\Core\EPub;
  * @copyright 2015- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class RenditionHelper {
-
+class RenditionHelper
+{
     final public const RENDITION_PREFIX_NAME = "rendition";
     final public const RENDITION_PREFIX_URI = "http://www.idpf.org/vocab/rendition/#";
 
@@ -39,7 +40,8 @@ class RenditionHelper {
      *
      * @param EPub $book
      */
-    public static function addPrefix($book) {
+    public static function addPrefix($book)
+    {
         if (!$book->isEPubVersion2()) {
             $book->addCustomPrefix(self::RENDITION_PREFIX_NAME, self::RENDITION_PREFIX_URI);
         }
@@ -49,7 +51,8 @@ class RenditionHelper {
      * @param EPub   $book
      * @param string $value "reflowable", "pre-paginated"
      */
-    public static function setLayout($book, $value) {
+    public static function setLayout($book, $value)
+    {
         if (!$book->isEPubVersion2() && $value === self::LAYOUT_REFLOWABLE || $value === self::LAYOUT_PRE_PAGINATED) {
             $book->addCustomMetaProperty(self::RENDITION_LAYOUT, $value);
         }
@@ -59,7 +62,8 @@ class RenditionHelper {
      * @param EPub   $book
      * @param string $value "landscape", "portrait" or "auto"
      */
-    public static function setOrientation($book, $value) {
+    public static function setOrientation($book, $value)
+    {
         if (!$book->isEPubVersion2() && $value === self::ORIENTATION_LANDSCAPE || $value === self::ORIENTATION_PORTRAIT || $value === self::ORIENTATION_AUTO) {
             $book->addCustomMetaProperty(self::RENDITION_ORIENTATION, $value);
         }
@@ -69,7 +73,8 @@ class RenditionHelper {
      * @param EPub   $book
      * @param string $value "landscape", "portrait" or "auto"
      */
-    public static function setSpread($book, $value) {
+    public static function setSpread($book, $value)
+    {
         if (!$book->isEPubVersion2() && $value === self::SPREAD_NONE || $value === self::SPREAD_LANDSCAPE || $value === self::SPREAD_PORTRAIT || $value === self::SPREAD_BOTH || $value === self::SPREAD_AUTO) {
             $book->addCustomMetaProperty(self::RENDITION_SPREAD, $value);
         }

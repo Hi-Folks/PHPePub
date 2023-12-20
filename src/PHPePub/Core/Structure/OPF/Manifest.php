@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core\Structure\OPF;
 
 use PHPePub\Core\EPub;
@@ -10,21 +11,22 @@ use PHPePub\Core\EPub;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class Manifest {
+class Manifest
+{
     private $items = [];
 
     /**
      * Class constructor.
      */
-    function __construct() {
-    }
+    public function __construct() {}
 
     /**
      * Class destructor
      *
      * @return void
      */
-    function __destruct() {
+    public function __destruct()
+    {
         unset($this->items);
     }
 
@@ -34,7 +36,8 @@ class Manifest {
      *
      * @param Item $item
      */
-    function addItem($item) {
+    public function addItem($item)
+    {
         if ($item != null && is_object($item) && $item instanceof Item) {
             $this->items[] = $item;
         }
@@ -46,7 +49,8 @@ class Manifest {
      *
      * @return string
      */
-    function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2) {
+    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2)
+    {
         $manifest = "\n\t<manifest>\n";
         foreach ($this->items as $item) {
             /** @var $item Item */
@@ -59,7 +63,8 @@ class Manifest {
     /**
      * @return array
      */
-    public function getItems() {
+    public function getItems()
+    {
         return $this->items;
     }
 }

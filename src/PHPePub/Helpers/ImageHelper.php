@@ -15,7 +15,8 @@ use grandt\ResizeGif\ResizeGif;
 use PHPePub\Core\EPub;
 use SimpleXMLElement;
 
-class ImageHelper {
+class ImageHelper
+{
     protected static $isGdInstalled = null;
     protected static $isExifInstalled = null;
     protected static $isAnimatedGifResizeInstalled = null;
@@ -31,11 +32,14 @@ class ImageHelper {
      *
      * @return string
      */
-    public static function getImageFileTypeFromBinary($binary) {
+    public static function getImageFileTypeFromBinary($binary)
+    {
         $hits = null;
         if (!preg_match(
             '/\A(?:(\xff\xd8\xff)|(GIF8[79]a)|(\x89PNG\x0d\x0a)|(BM)|(\x49\x49(?:\x2a\x00|\x00\x4a))|(FORM.{4}ILBM))/',
-            $binary, $hits)
+            $binary,
+            $hits
+        )
         ) {
             return 'application/octet-stream';
         }
@@ -55,7 +59,8 @@ class ImageHelper {
      *
      * @return float
      */
-    public static function getImageScale($width, $height, $maxImageWidth, $maxImageHeight) {
+    public static function getImageScale($width, $height, $maxImageWidth, $maxImageHeight)
+    {
         $ratio = 1;
         if ($width > $maxImageWidth) {
             $ratio = $maxImageWidth / $width;
@@ -75,7 +80,8 @@ class ImageHelper {
      *
      * @return array
      */
-    public static function splitCSV($attr, $sep=',') {
+    public static function splitCSV($attr, $sep = ',')
+    {
 
         if (strpos((string) $attr, $sep) > 0) {
             return preg_split('/\s*' . $sep . '\s*/', (string) $attr);
@@ -97,7 +103,8 @@ class ImageHelper {
      *
      * @return float
      */
-    public static function scaleSVGUnit( $length, $portSize = 512 ) {
+    public static function scaleSVGUnit($length, $portSize = 512)
+    {
         static $unitLength = [
             'px' => 1.0,
             'pt' => 1.25,
@@ -112,17 +119,17 @@ class ImageHelper {
             '' => 1.0,
         ];
         $matches = [];
-        if ( preg_match( '/^\s*(\d+(?:\.\d+)?)(em|ex|px|pt|pc|cm|mm|in|%|)\s*$/', (string) $length, $matches ) ) {
-            $length = floatval( $matches[1] );
+        if (preg_match('/^\s*(\d+(?:\.\d+)?)(em|ex|px|pt|pc|cm|mm|in|%|)\s*$/', (string) $length, $matches)) {
+            $length = floatval($matches[1]);
             $unit = $matches[2];
-            if ( $unit == '%' ) {
+            if ($unit == '%') {
                 return $length * 0.01 * $portSize;
             } else {
                 return $length * $unitLength[$unit];
             }
         } else {
             // Assume pixels
-            return floatval( $length );
+            return floatval($length);
         }
     }
 
@@ -131,7 +138,8 @@ class ImageHelper {
      *
      * @return array
      */
-    public static function handleSVGAttribs($svg) {
+    public static function handleSVGAttribs($svg)
+    {
         $metadata = [];
         $attr = $svg->attributes();
         $viewWidth = 0;
@@ -142,54 +150,54 @@ class ImageHelper {
         $width = null;
         $height = null;
 
-        if ( $attr->viewBox ) {
+        if ($attr->viewBox) {
             // min-x min-y width height
-            $viewBoxAttr = trim( $attr->viewBox );
+            $viewBoxAttr = trim($attr->viewBox);
 
             $viewBox = self::splitCSV($viewBoxAttr);
-            if ( count( $viewBox ) == 4 ) {
-                $viewWidth = self::scaleSVGUnit( $viewBox[2] );
-                $viewHeight = self::scaleSVGUnit( $viewBox[3] );
-                if ( $viewWidth > 0 && $viewHeight > 0 ) {
+            if (count($viewBox) == 4) {
+                $viewWidth = self::scaleSVGUnit($viewBox[2]);
+                $viewHeight = self::scaleSVGUnit($viewBox[3]);
+                if ($viewWidth > 0 && $viewHeight > 0) {
                     $aspect = $viewWidth / $viewHeight;
                 }
             }
         }
 
-        if ( $attr->x) {
-            $x = self::scaleSVGUnit( $attr->x, 0);
-            $metadata['originalX'] = "".$attr->x;
+        if ($attr->x) {
+            $x = self::scaleSVGUnit($attr->x, 0);
+            $metadata['originalX'] = "" . $attr->x;
         }
-        if ( $attr->y) {
-            $y = self::scaleSVGUnit( $attr->y, 0);
-            $metadata['originalY'] = "".$attr->y;
-        }
-
-        if ( $attr->width ) {
-            $width = self::scaleSVGUnit( $attr->width, $viewWidth );
-            $metadata['originalWidth'] = "".$attr->width;
-        }
-        if ( $attr->height ) {
-            $height = self::scaleSVGUnit( $attr->height, $viewHeight );
-            $metadata['originalHeight'] = "".$attr->height;
+        if ($attr->y) {
+            $y = self::scaleSVGUnit($attr->y, 0);
+            $metadata['originalY'] = "" . $attr->y;
         }
 
-        if ( !isset( $width ) && !isset( $height ) ) {
+        if ($attr->width) {
+            $width = self::scaleSVGUnit($attr->width, $viewWidth);
+            $metadata['originalWidth'] = "" . $attr->width;
+        }
+        if ($attr->height) {
+            $height = self::scaleSVGUnit($attr->height, $viewHeight);
+            $metadata['originalHeight'] = "" . $attr->height;
+        }
+
+        if (!isset($width) && !isset($height)) {
             $width = 512;
             $height = $width / $aspect;
-        } elseif ( isset( $width ) && !isset( $height ) ) {
+        } elseif (isset($width) && !isset($height)) {
             $height = $width / $aspect;
-        } elseif ( isset( $height ) && !isset( $width ) ) {
+        } elseif (isset($height) && !isset($width)) {
             $width = $height * $aspect;
         }
 
-        if ( $x > 0 && $y > 0 ) {
-            $metadata['x'] = intval( round( $x ) );
-            $metadata['y'] = intval( round( $y ) );
+        if ($x > 0 && $y > 0) {
+            $metadata['x'] = intval(round($x));
+            $metadata['y'] = intval(round($y));
         }
-        if ( $width > 0 && $height > 0 ) {
-            $metadata['width'] = intval( round( $width ) );
-            $metadata['height'] = intval( round( $height ) );
+        if ($width > 0 && $height > 0) {
+            $metadata['width'] = intval(round($width));
+            $metadata['height'] = intval(round($height));
             $metadata['aspect'] = $aspect;
         }
 
@@ -212,7 +220,8 @@ class ImageHelper {
      * @return array|bool
      * @throws \Exception
      */
-    public static function getImage($book, $imageSource) {
+    public static function getImage($book, $imageSource)
+    {
         $width = -1;
         $height = -1;
         $mime = "application/octet-stream";
@@ -338,14 +347,16 @@ class ImageHelper {
     /**
      * @return boolean
      */
-    public static function isAnimatedGifResizeInstalled() {
+    public static function isAnimatedGifResizeInstalled()
+    {
         return self::$isAnimatedGifResizeInstalled;
     }
 
     /**
      * @return mixed
      */
-    public static function isGdInstalled() {
+    public static function isGdInstalled()
+    {
         if (!isset(self::$isGdInstalled)) {
             self::$isGdInstalled = (extension_loaded('gd') || extension_loaded('gd2')) && function_exists('gd_info');
         }
@@ -356,7 +367,8 @@ class ImageHelper {
     /**
      * @return mixed
      */
-    public static function isExifInstalled() {
+    public static function isExifInstalled()
+    {
         if (!isset(self::$isExifInstalled)) {
             self::$isExifInstalled = extension_loaded('exif') && function_exists('exif_imagetype');
         }

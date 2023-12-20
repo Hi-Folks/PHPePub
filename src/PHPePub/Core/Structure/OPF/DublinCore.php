@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPePub\Core\Structure\OPF;
 
 /**
@@ -8,7 +9,8 @@ namespace PHPePub\Core\Structure\OPF;
  * @copyright 2014- A. Grandt
  * @license   GNU LGPL 2.1
  */
-class DublinCore extends MetaValue {
+class DublinCore extends MetaValue
+{
     final public const CONTRIBUTOR = "contributor";
     final public const COVERAGE = "coverage";
     final public const CREATOR = "creator";
@@ -31,7 +33,8 @@ class DublinCore extends MetaValue {
      * @param string $name
      * @param string $value
      */
-    function __construct($name, $value) {
+    public function __construct($name, $value)
+    {
         $this->setDc($name, $value);
     }
 
@@ -42,7 +45,8 @@ class DublinCore extends MetaValue {
      * @param string $name
      * @param string $value
      */
-    function setDc($name, $value) {
+    public function setDc($name, $value)
+    {
         if (is_string($name)) {
             $this->setValue("dc:" . trim($name), $value);
         }

@@ -1,4 +1,5 @@
 <?php
+
 include 'vendor/autoload.php';
 
 use PHPePub\Core\EPub;
@@ -33,7 +34,7 @@ $bookEnd = "</body>\n</html>\n";
 // setting timezone for time functions used for logging to work properly
 date_default_timezone_set('Europe/Berlin');
 
-$log = new Logger("Example", TRUE);
+$log = new Logger("Example", true);
 
 $fileDir = './PHPePub';
 
