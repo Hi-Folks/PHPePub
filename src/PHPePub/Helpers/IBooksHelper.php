@@ -29,98 +29,98 @@ http://www.fantasycastlebooks.com/Tutorials/ibooks-tutorial-update.html
  * @license   GNU LGPL 2.1
  */
 class IBooksHelper {
-    const EPUB2_IBOOK_FILE_NAME = "com.apple.ibooks.display-options.xml";
+    final public const EPUB2_IBOOK_FILE_NAME = "com.apple.ibooks.display-options.xml";
 
     /**
      * Add with: $book->addCustomPrefix(iBooks::EPUB3_IBOOK_PREFIX_NAME, iBooks::EPUB3_IBOOK_PREFIX_URI);
      */
-    const EPUB3_IBOOK_PREFIX_NAME = "ibooks";
-    const EPUB3_IBOOK_PREFIX_URI = "http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0";
+    final public const EPUB3_IBOOK_PREFIX_NAME = "ibooks";
+    final public const EPUB3_IBOOK_PREFIX_URI = "http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0";
 
-    const ORIENTATION_NONE = "none";
-    const ORIENTATION_PORTRAIT_ONLY = "portrait-only";
-    const ORIENTATION_LANDSCAPE_ONLY = "landscape-only";
+    final public const ORIENTATION_NONE = "none";
+    final public const ORIENTATION_PORTRAIT_ONLY = "portrait-only";
+    final public const ORIENTATION_LANDSCAPE_ONLY = "landscape-only";
 
-    const PLATFORM_ALL = "*";
-    const PLATFORM_IPHONE = "iphone";
-    const PLATFORM_IPAD = "ipad";
+    final public const PLATFORM_ALL = "*";
+    final public const PLATFORM_IPHONE = "iphone";
+    final public const PLATFORM_IPAD = "ipad";
 
     /**
      * Enable fixed layout on iBooks
      * Values: true/false
      * Default: false
      */
-    const EPUB2_FIXED_LAYOUT = "fixed-layout";
+    final public const EPUB2_FIXED_LAYOUT = "fixed-layout";
 
     /**
      * If you use embedded fonts, iBooks requires this property to display them.
      * Values: true/false
      * Default: false
      */
-    const EPUB2_SPECIFIED_FONTS = "specified-fonts";
+    final public const EPUB2_SPECIFIED_FONTS = "specified-fonts";
 
     /**
      * Open the book to a full two-page spread, or zoom to a page?
      * Values: true/false
      * Default: false
      */
-    const EPUB2_OPEN_TO_SPREAD = "open-to-spread";
+    final public const EPUB2_OPEN_TO_SPREAD = "open-to-spread";
 
     /**
      * Lock orientation on the devices.
      * Values: "none", "portrait-only", "landscape-only"
      * Default: "none"
      */
-    const EPUB2_ORIENTATION_LOCK = "orientation-lock";
+    final public const EPUB2_ORIENTATION_LOCK = "orientation-lock";
 
     /**
      * Allow active content, such as scripting and canvas.
      * Values: true/false
      * Default: false
      */
-    const EPUB2_INTERACTIVE = "interactive";
+    final public const EPUB2_INTERACTIVE = "interactive";
 
     /**
      * Enable fixed layout on iBooks
      * Values: true/false
      * Default: false
      */
-    const EPUB3_FIXED_LAYOUT = "ibooks:fixed-layout";
+    final public const EPUB3_FIXED_LAYOUT = "ibooks:fixed-layout";
 
     /**
      * Lock orientation on iPhone devices. Omit this property if there is no orientation lock.
      * Values: "portrait-only", "landscape-only"
      * Default: "none"
      */
-    const EPUB3_IPHONE_ORIENTATION_LOCK = "ibooks:iphone-orientation-lock";
+    final public const EPUB3_IPHONE_ORIENTATION_LOCK = "ibooks:iphone-orientation-lock";
 
     /**
      * Lock orientation on iPad devices. Omit this property if there is no orientation lock.
      * Values: "portrait-only", "landscape-only"
      * Default: "none"
      */
-    const EPUB3_IPAD_ORIENTATION_LOCK = "ibooks:ipad-orientation-lock";
+    final public const EPUB3_IPAD_ORIENTATION_LOCK = "ibooks:ipad-orientation-lock";
 
     /**
      * If you use embedded fonts, iBooks requires this property to display them.
      * Values: true/false
      * Default: false
      */
-    const EPUB3_SPECIFIED_FONTS = "ibooks:specified-fonts";
+    final public const EPUB3_SPECIFIED_FONTS = "ibooks:specified-fonts";
 
     /**
      * Tell iBooks if it is to display the "faux" book binding.
      * Values: true/false
      * Default: true
      */
-    const EPUB3_BINDING = "ibooks:binding";
+    final public const EPUB3_BINDING = "ibooks:binding";
 
     /**
      * You can add a version number to your title in order to distinguish a new edition, with either major or minor changes. Readers who have purchased the book will be notified automatically that an updated file is available, and upon download the new version will replace their earlier one.
      *
      * The version number is in the typical 3 level major.minor.release format: ####.####.####
      */
-    const EPUB3_VERSION = "ibooks:version";
+    final public const EPUB3_VERSION = "ibooks:version";
 
     /**
      * Add iBooks prefix to the ePub book

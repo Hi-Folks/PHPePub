@@ -13,8 +13,8 @@ use PHPePub\Core\EPub;
 class MetaValue {
     private $tagName = null;
     private $tagValue = null;
-    private $attr = array();
-    private $opfAttr = array();
+    private $attr = [];
+    private $opfAttr = [];
 
     /**
      * Class constructor.

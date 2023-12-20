@@ -12,14 +12,14 @@ use PHPePub\Core\EPub;
  * @license   GNU LGPL 2.1
  */
 class NavPoint extends AbstractNavEntry {
-    const _VERSION = 3.30;
+    final public const _VERSION = 3.30;
 
     private $label = null;
     private $contentSrc = null;
     private $id = null;
     private $navClass = null;
     private $isNavHidden = false;
-    private $navPoints = array();
+    private $navPoints = [];
     /** @var $parent AbstractNavEntry */
     private $parent = null;
     private $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;

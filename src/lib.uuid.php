@@ -36,37 +36,37 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 
-class UUID {
- const MD5  = 3;
- const SHA1 = 5;
- const clearVer = 15;  // 00001111  Clears all bits of version byte with AND
- const clearVar = 63;  // 00111111  Clears all relevant bits of variant byte with AND
- const varRes   = 224; // 11100000  Variant reserved for future use
- const varMS    = 192; // 11000000  Microsft GUID variant
- const varRFC   = 128; // 10000000  The RFC 4122 variant (this variant)
- const varNCS   = 0;   // 00000000  The NCS compatibility variant
- const version1 = 16;  // 00010000
- const version3 = 48;  // 00110000
- const version4 = 64;  // 01000000
- const version5 = 80;  // 01010000
- const interval = "122192928000000000"; //  Time (in 100ns steps) between the start of the Gregorian and Unix epochs
- const nsDNS  = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
- const nsURL  = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
- const nsOID  = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
- const nsX500 = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
- const bigChoose = -1;
- const bigNot    = 0;
- const bigNative = 1;
- const bigGMP    = 2;
- const bigBC     = 3;
- const bigSecLib = 4;
- const randChoose  = -1;
- const randPoor    = 0;
- const randDev     = 1;
- const randCAPICOM = 2;
- const randOpenSSL = 3;
- const randMcrypt  = 4;
- const randNative  = 5;
+class UUID implements \Stringable {
+ final public const MD5  = 3;
+ final public const SHA1 = 5;
+ final public const clearVer = 15;  // 00001111  Clears all bits of version byte with AND
+ final public const clearVar = 63;  // 00111111  Clears all relevant bits of variant byte with AND
+ final public const varRes   = 224; // 11100000  Variant reserved for future use
+ final public const varMS    = 192; // 11000000  Microsft GUID variant
+ final public const varRFC   = 128; // 10000000  The RFC 4122 variant (this variant)
+ final public const varNCS   = 0;   // 00000000  The NCS compatibility variant
+ final public const version1 = 16;  // 00010000
+ final public const version3 = 48;  // 00110000
+ final public const version4 = 64;  // 01000000
+ final public const version5 = 80;  // 01010000
+ final public const interval = "122192928000000000"; //  Time (in 100ns steps) between the start of the Gregorian and Unix epochs
+ final public const nsDNS  = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+ final public const nsURL  = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+ final public const nsOID  = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
+ final public const nsX500 = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
+ final public const bigChoose = -1;
+ final public const bigNot    = 0;
+ final public const bigNative = 1;
+ final public const bigGMP    = 2;
+ final public const bigBC     = 3;
+ final public const bigSecLib = 4;
+ final public const randChoose  = -1;
+ final public const randPoor    = 0;
+ final public const randDev     = 1;
+ final public const randCAPICOM = 2;
+ final public const randOpenSSL = 3;
+ final public const randMcrypt  = 4;
+ final public const randNative  = 5;
  //static properties
  protected static $randomFunc   = self::randChoose;
  protected static $randomSource = NULL;
@@ -107,32 +107,20 @@ class UUID {
   /* If a randomness source hasn't been chosen, use the lowest common denominator. */
   if (self::$randomFunc == self::randChoose) self::$randomFunc = self::randPoor;
   /* Create a new UUID based on provided data and output a string rather than an object. */
-  switch((int) $ver) {
-   case 1:
-    $uuid = self::mintTime($node, $ns, $time);
-    break;
-   case 2:
-    // Version 2 is not supported
-    throw new UUIDException("Version 2 is unsupported.",2);
-    break;
-   case 3:
-    $uuid = self::mintName(self::MD5, $node, $ns);
-    break;
-   case 4:
-    $uuid = self::mintRand();
-    break;
-   case 5:
-    $uuid = self::mintName(self::SHA1, $node, $ns);
-    break;
-   default:
-    throw new UUIDException("Selected version is invalid or unsupported.",1);
-  }
+  $uuid = match ((int) $ver) {
+      1 => self::mintTime($node, $ns, $time),
+      2 => throw new UUIDException("Version 2 is unsupported.",2),
+      3 => self::mintName(self::MD5, $node, $ns),
+      4 => self::mintRand(),
+      5 => self::mintName(self::SHA1, $node, $ns),
+      default => throw new UUIDException("Selected version is invalid or unsupported.",1),
+  };
   return
-      bin2hex(substr($uuid,0,4))."-".
-      bin2hex(substr($uuid,4,2))."-".
-      bin2hex(substr($uuid,6,2))."-".
-      bin2hex(substr($uuid,8,2))."-".
-      bin2hex(substr($uuid,10,6));
+      bin2hex(substr((string) $uuid,0,4))."-".
+      bin2hex(substr((string) $uuid,4,2))."-".
+      bin2hex(substr((string) $uuid,6,2))."-".
+      bin2hex(substr((string) $uuid,8,2))."-".
+      bin2hex(substr((string) $uuid,10,6));
  }
 
  public static function import($uuid) {
@@ -157,8 +145,8 @@ class UUID {
   return $seq;
  }
 
- public function __toString() {
-  return $this->string;
+ public function __toString(): string {
+  return (string) $this->string;
  }
 
  public function __get($var) {
@@ -166,7 +154,7 @@ class UUID {
    case "bytes":
     return $this->bytes;
    case "hex":
-    return bin2hex($this->bytes);
+    return bin2hex((string) $this->bytes);
    case "string":
     return $this->string;
    case "urn":
@@ -185,7 +173,7 @@ class UUID {
      return 0;
    case "node":
     if (ord($this->bytes[6])>>4==1)
-     return bin2hex(strrev(substr($this->bytes,10)));
+     return bin2hex(strrev(substr((string) $this->bytes,10)));
     else
      return NULL;
    case "time":
@@ -206,16 +194,16 @@ class UUID {
  }
 
  protected function __construct($uuid) {
-  if (strlen($uuid) != 16)
+  if (strlen((string) $uuid) != 16)
    throw new UUIDException("Input must be a valid UUID.",3);
   $this->bytes  = $uuid;
   // Optimize the most common use
   $this->string =
-      bin2hex(substr($uuid,0,4))."-".
-      bin2hex(substr($uuid,4,2))."-".
-      bin2hex(substr($uuid,6,2))."-".
-      bin2hex(substr($uuid,8,2))."-".
-      bin2hex(substr($uuid,10,6));
+      bin2hex(substr((string) $uuid,0,4))."-".
+      bin2hex(substr((string) $uuid,4,2))."-".
+      bin2hex(substr((string) $uuid,6,2))."-".
+      bin2hex(substr((string) $uuid,8,2))."-".
+      bin2hex(substr((string) $uuid,10,6));
  }
 
  protected static function mintTime($node = NULL, $seq = NULL, $time = NULL) {
@@ -228,7 +216,7 @@ class UUID {
   if (self::$store === NULL)
    self::$store = new UUIDStorageVolatile;
   // check any input for correctness and communicate with the store where appropriate
-  list($node, $seq, $time) = self::checkTimeInput($node, $seq, $time);
+  [$node, $seq, $time] = self::checkTimeInput($node, $seq, $time);
   // construct a 60-bit timestamp, padded to 64 bits
   $time = self::buildTime($time);
   // Reorder bytes to their proper locations in the UUID
@@ -302,7 +290,7 @@ class UUID {
     throw new UUIDException("Node must be a valid MAC address.", 101);
   }
   // Do a sanity check on clock sequence if one is provided
-  if ($seq !== NULL && strlen($seq) != 2)
+  if ($seq !== NULL && strlen((string) $seq) != 2)
    throw UUIDException("Clock sequence must be a two-byte binary string.",102);
   // If one is not provided, check stable/volatile storage for a valid clock sequence
   if ($seq === NULL)
@@ -313,7 +301,7 @@ class UUID {
    self::$store->setSequence($seq);
   }
   self::$store->setTimestamp($time);
-  return array($node, $seq, $time);
+  return [$node, $seq, $time];
  }
 
  protected static function normalizeTime($time, $expected = FALSE) {
@@ -356,7 +344,7 @@ class UUID {
     $out = gmp_strval(gmp_add($time, self::interval), 16);
     break;
    case self::bigBC:
-    $out = bcadd($time, self::interval, 0);
+    $out = bcadd((string) $time, self::interval, 0);
     $in = $out; $out = "";
     /* BC Math does not have a native equivalent of base_convert(),
        so we have to fake it.  Chunking the number to as many
@@ -377,7 +365,7 @@ class UUID {
     throw new UUIDException("Bignum method not implemented.",901);
   }
   // convert to binary, padding to 8 bytes
-  return pack("H*", str_pad($out, 16, "0", STR_PAD_LEFT));
+  return pack("H*", str_pad((string) $out, 16, "0", STR_PAD_LEFT));
  }
 
  protected static function decodeTimestamp($hex) {
@@ -388,7 +376,7 @@ class UUID {
    self::$bignum = (PHP_INT_SIZE >= 8) ? self::bigNative : self::bigNot;
   switch(self::$bignum) {
    case self::bigNative:
-    $time = hexdec($hex) - self::interval;
+    $time = hexdec((string) $hex) - self::interval;
     break;
    case self::bigGMP:
     $time = gmp_strval(gmp_sub("0x".$hex, self::interval));
@@ -400,7 +388,7 @@ class UUID {
     $mul = 1;
     $size = PHP_INT_SIZE * 2 - 1;
     $max = hexdec(str_repeat("f", $size))+1;
-    $hex = str_split(str_pad($hex, ceil(strlen($hex) / $size) * $size, 0, STR_PAD_LEFT), $size);
+    $hex = str_split(str_pad((string) $hex, ceil(strlen((string) $hex) / $size) * $size, 0, STR_PAD_LEFT), $size);
     do {
      $chunk = hexdec(array_pop($hex));
      $time = bcadd($time, bcmul($chunk, $mul));
@@ -415,14 +403,14 @@ class UUID {
     $time = $time->toString();
     break;
    case self::bigNot:
-    $time = sprintf("%F", hexdec($hex) - self::interval);
+    $time = sprintf("%F", hexdec((string) $hex) - self::interval);
     preg_match("/^\d+/", $time, $time);
     $time = $time[0];
     break;
    default:
     throw new UUIDException("Bignum method not implemented.",901);
   }
-  return substr($time,0,strlen($time)-7).".".substr($time,strlen($time)-7);
+  return substr((string) $time,0,strlen((string) $time)-7).".".substr((string) $time,strlen((string) $time)-7);
  }
 
  protected static function makeBin($str) {
@@ -431,10 +419,10 @@ class UUID {
   $len = 16;
   if ($str instanceof self)
    return $str->bytes;
-  if (strlen($str)==$len)
+  if (strlen((string) $str)==$len)
    return $str;
   else
-   $str = preg_replace("/^urn:uuid:/is", "", $str); // strip URN scheme and namespace
+   $str = preg_replace("/^urn:uuid:/is", "", (string) $str); // strip URN scheme and namespace
   $str = preg_replace("/[^a-f0-9]/is", "", $str);  // strip non-hex characters
   if (strlen($str) != ($len * 2))
    return FALSE;
@@ -446,10 +434,10 @@ class UUID {
   /* Parse a string to see if it's a MAC address.
      If it's six bytes, don't touch it; if it's hex, reverse bytes */
   $len = 6;
-  if (strlen($str)==$len)
+  if (strlen((string) $str)==$len)
    return $str;
   else
-   $str = preg_replace("/[^a-f0-9]/is", "", $str);  // strip non-hex characters
+   $str = preg_replace("/[^a-f0-9]/is", "", (string) $str);  // strip non-hex characters
   if (strlen($str) != ($len * 2))
    return FALSE;
   else // MAC addresses are little-endian and UUIDs are big-endian, so we reverse bytes
@@ -485,7 +473,7 @@ class UUID {
     /* Get the specified number of random bytes using Windows'
        randomness source via a COM object previously created by UUID::initRandom().
        Straight binary mysteriously doesn't work, hence the base64. */
-    return base64_decode(self::$randomSource->GetRandom($bytes,0));
+    return base64_decode((string) self::$randomSource->GetRandom($bytes,0));
    default:
     throw new UUIDException("Randomness source not implemented.",902);
   }
@@ -500,7 +488,7 @@ class UUID {
    throw new UUIDException("Secure random number generator is not available.",2002);
   if (!is_object(self::$store)) {
    try {
-    call_user_func_array(array("self","initStorage"),func_gets_args());
+    call_user_func_array(["self", "initStorage"],func_gets_args());
    } catch(Exception $e) {
     throw new UUIDStorageException("Stable storage not available.", 2003, $e);
    }
@@ -527,7 +515,7 @@ class UUID {
     $how = self::randCAPICOM;
    try {
     self::initRandom($how);
-   } catch(Exception $e) {
+   } catch(Exception) {
     self::$randomFunc = self::randPoor;
    }
   } else {
@@ -670,7 +658,7 @@ interface UUIDStorage {
  public function getSequence($timestamp, $node); // return bytes or NULL if sequence is not available; this method should also update the stored timestamp
  public function setSequence($sequence);
  public function setTimestamp($timestamp);
- const maxSequence = 16383; // 00111111 11111111
+ public const maxSequence = 16383; // 00111111 11111111
 }
 
 class UUIDStorageVolatile implements UUIDStorage {
@@ -692,13 +680,13 @@ class UUIDStorageVolatile implements UUIDStorage {
   if ($this->sequence === NULL)
    return;
   if ($timestamp <= $this->timestamp)
-   $this->sequence = pack("n", (unpack("nseq", $this->sequence)['seq'] + 1) & self::maxSequence);
+   $this->sequence = pack("n", (unpack("nseq", (string) $this->sequence)['seq'] + 1) & self::maxSequence);
   $this->setTimestamp($timestamp);
   return $this->sequence;
  }
 
  public function setSequence($sequence) {
-  $this->sequence = pack("n", unpack("nseq", $sequence)['seq'] & self::maxSequence);
+  $this->sequence = pack("n", unpack("nseq", (string) $sequence)['seq'] & self::maxSequence);
  }
 
  public function setTimestamp($timestamp) {
@@ -713,7 +701,7 @@ class UUIDStorageStable extends UUIDStorageVolatile {
 
  public function __construct($path) {
   if (!file_exists($path)) {
-   $dir = dirname($path);
+   $dir = dirname((string) $path);
    if (!is_writable($dir))
     throw new UUIDStorageException("Stable storage is not writable.", 1102);
    if (!is_readable($dir))
@@ -738,7 +726,7 @@ class UUIDStorageStable extends UUIDStorageVolatile {
   $data = @unserialize($data);
   if (!is_array($data) || count($data) < 3)
    throw new UUIDStorageException("Stable storage data is invalid or corrupted.", 1203);
-  list($this->node, $this->sequence, $this->timestamp) = $data;
+  [$this->node, $this->sequence, $this->timestamp] = $data;
  }
 
  public function getNode() {
@@ -762,7 +750,7 @@ class UUIDStorageStable extends UUIDStorageVolatile {
  }
 
  protected function write($check = 1) {
-  $data = serialize(array($this->node, $this->sequence, $this->timestamp));
+  $data = serialize([$this->node, $this->sequence, $this->timestamp]);
   $write = @file_put_contents($this->file,$data);
   if ($check)
    if ($write === FALSE) throw new UUIDStorageException("Stable storage could not be written.", 1202);

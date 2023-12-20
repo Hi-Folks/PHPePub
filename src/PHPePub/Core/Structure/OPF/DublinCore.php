@@ -9,21 +9,21 @@ namespace PHPePub\Core\Structure\OPF;
  * @license   GNU LGPL 2.1
  */
 class DublinCore extends MetaValue {
-    const CONTRIBUTOR = "contributor";
-    const COVERAGE = "coverage";
-    const CREATOR = "creator";
-    const DATE = "date";
-    const DESCRIPTION = "description";
-    const FORMAT = "format";
-    const IDENTIFIER = "identifier";
-    const LANGUAGE = "language";
-    const PUBLISHER = "publisher";
-    const RELATION = "relation";
-    const RIGHTS = "rights";
-    const SOURCE = "source";
-    const SUBJECT = "subject";
-    const TITLE = "title";
-    const TYPE = "type";
+    final public const CONTRIBUTOR = "contributor";
+    final public const COVERAGE = "coverage";
+    final public const CREATOR = "creator";
+    final public const DATE = "date";
+    final public const DESCRIPTION = "description";
+    final public const FORMAT = "format";
+    final public const IDENTIFIER = "identifier";
+    final public const LANGUAGE = "language";
+    final public const PUBLISHER = "publisher";
+    final public const RELATION = "relation";
+    final public const RIGHTS = "rights";
+    final public const SOURCE = "source";
+    final public const SUBJECT = "subject";
+    final public const TITLE = "title";
+    final public const TYPE = "type";
 
     /**
      * Class constructor.

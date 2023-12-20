@@ -13,10 +13,10 @@ use PHPePub\Core\StaticData;
  * @license   GNU LGPL 2.1
  */
 class Metadata {
-    private $dc = array();
-    private $meta = array();
-    private $metaProperties = array();
-    public $namespaces = array();
+    private $dc = [];
+    private $meta = [];
+    private $metaProperties = [];
+    public $namespaces = [];
 
     /**
      * Class constructor.
@@ -58,9 +58,7 @@ class Metadata {
             $content = is_string($content) ? trim($content) : null;
         }
         if (isset($content)) {
-            $this->meta[] = array(
-                $name => $content
-            );
+            $this->meta[] = [$name => $content];
         }
     }
 
@@ -77,9 +75,7 @@ class Metadata {
             $content = is_string($content) ? trim($content) : null;
         }
         if (isset($content)) {
-            $this->metaProperties[] = array(
-                $name => $content
-            );
+            $this->metaProperties[] = [$name => $content];
         }
     }
 

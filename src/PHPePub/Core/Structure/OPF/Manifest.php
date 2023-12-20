@@ -11,7 +11,7 @@ use PHPePub\Core\EPub;
  * @license   GNU LGPL 2.1
  */
 class Manifest {
-    private $items = array();
+    private $items = [];
 
     /**
      * Class constructor.

@@ -20,7 +20,7 @@ class Item {
     private $fallback = null;
     private $fallbackStyle = null;
 
-    private $indexPoints = array();
+    private $indexPoints = [];
 
     /**
      * Class constructor.

@@ -13,7 +13,7 @@ use PHPePub\Core\Structure\NCX\NavPoint;
  * @license   GNU LGPL, Attribution required for commercial implementations, requested for everything else.
  */
 class Ncx {
-    const MIMETYPE = "application/x-dtbncx+xml";
+    final public const MIMETYPE = "application/x-dtbncx+xml";
 
     private $bookVersion = EPub::BOOK_VERSION_EPUB2;
 
@@ -22,7 +22,7 @@ class Ncx {
 
     private $navMap = null;
     private $uid = null;
-    private $meta = array();
+    private $meta = [];
     private $docTitle = null;
     private $docAuthor = null;
 
@@ -32,12 +32,12 @@ class Ncx {
     private $languageCode = "en";
     private $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;
 
-    public $chapterList = array();
+    public $chapterList = [];
     public $referencesTitle = "Guide";
     public $referencesClass = "references";
     public $referencesId = "references";
-    public $referencesList = array();
-    public $referencesName = array();
+    public $referencesList = [];
+    public $referencesName = [];
     public $referencesOrder = null;
 
     /**
@@ -263,9 +263,7 @@ class Ncx {
         $content = is_string($content) ? trim($content) : null;
 
         if ($name != null && $content != null) {
-            $this->meta[] = array(
-                $name => $content
-            );
+            $this->meta[] = [$name => $content];
         }
     }
 

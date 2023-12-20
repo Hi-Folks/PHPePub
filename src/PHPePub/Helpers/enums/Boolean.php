@@ -11,8 +11,8 @@ use PHPePub\Helpers\Enum;
  * @license   GNU LGPL 2.1
  */
 abstract class Boolean extends Enum {
-    const TRUE = "true";
-    const FALSE = "false";
+    final public const TRUE = "true";
+    final public const FALSE = "false";
 
     /**
      * @param bool $value

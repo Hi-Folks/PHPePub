@@ -10,9 +10,9 @@ namespace PHPePub\Core\Structure\NCX;
  * @license   GNU LGPL 2.1
  */
 class NavMap extends AbstractNavEntry {
-    const _VERSION = 3.30;
+    final public const _VERSION = 3.30;
 
-    private $navPoints = array();
+    private $navPoints = [];
     private $navLevels = 0;
     private $writingDirection = null;
 

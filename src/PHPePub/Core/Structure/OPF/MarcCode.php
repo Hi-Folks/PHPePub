@@ -17,14 +17,14 @@ class MarcCode {
      * 1) reworks a musical composition, usually for a different medium, or
      * 2) rewrites novels or stories for motion pictures or other audiovisual medium.
      */
-    const ADAPTER = "adp";
+    final public const ADAPTER = "adp";
 
     /**
      * Annotator
      *
      * Use for a person who writes manuscript annotations on a printed item.
      */
-    const ANNOTATOR = "ann";
+    final public const ANNOTATOR = "ann";
 
     /**
      * Arranger
@@ -33,7 +33,7 @@ class MarcCode {
      *  medium from that of the original; in an arrangement the musical substance remains
      *  essentially unchanged.
      */
-    const ARRANGER = "arr";
+    final public const ARRANGER = "arr";
 
     /**
      * Artist
@@ -42,7 +42,7 @@ class MarcCode {
      *  an original graphic design or work of art, if specific codes (e.g., [egr],
      *  [etr]) are not desired. For book illustrators, prefer Illustrator [ill].
      */
-    const ARTIST = "art";
+    final public const ARTIST = "art";
 
     /**
      * Associated name
@@ -51,7 +51,7 @@ class MarcCode {
      *  collection, or which cannot be determined to be that of a Former owner [fmo]
      *  or other designated relator indicative of provenance.
      */
-    const ASSOCIATED_NAME = "asn";
+    final public const ASSOCIATED_NAME = "asn";
 
     /**
      * Author
@@ -60,7 +60,7 @@ class MarcCode {
      *  or artistic content of a work. This term may also be used when more than one
      *  person or body bears such responsibility.
      */
-    const AUTHOR = "aut";
+    final public const AUTHOR = "aut";
 
     /**
      * Author in quotations or text extracts
@@ -69,7 +69,7 @@ class MarcCode {
      *  he or she did not contribute directly. Such quotations are found particularly
      *  in exhibition catalogs, collections of photographs, etc.
      */
-    const AUTHOR_IN_QUOTES = "aqt";
+    final public const AUTHOR_IN_QUOTES = "aqt";
 
     /**
      * Author of afterword, colophon, etc.
@@ -77,7 +77,7 @@ class MarcCode {
      * Use for a person or corporate body responsible for an afterword, postface,
      *  colophon, etc. but who is not the chief author of a work.
      */
-    const AUTHOR_OF_AFTERWORD = "aft";
+    final public const AUTHOR_OF_AFTERWORD = "aft";
 
     /**
      * Author of introduction, etc.
@@ -85,7 +85,7 @@ class MarcCode {
      * Use for a person or corporate body responsible for an introduction, preface,
      *  foreword, or other critical matter, but who is not the chief author.
      */
-    const AUTHOR_OF_INTRO = "aui";
+    final public const AUTHOR_OF_INTRO = "aui";
 
     /**
      * Bibliographic antecedent
@@ -94,7 +94,7 @@ class MarcCode {
      *  the catalog record is based. This can be appropriate for adaptations, sequels,
      *  continuations, indexes, etc.
      */
-    const BIB_ANTECEDENT = "ant";
+    final public const BIB_ANTECEDENT = "ant";
 
     /**
      * Book producer
@@ -102,7 +102,7 @@ class MarcCode {
      * Use for the person or firm responsible for the production of books and other
      *  print media, if specific codes (e.g., [bkd], [egr], [tyd], [prt]) are not desired.
      */
-    const BOOK_PRODUCER = "bkp";
+    final public const BOOK_PRODUCER = "bkp";
 
     /**
      * Collaborator
@@ -111,7 +111,7 @@ class MarcCode {
      *  of a work of another author or that brings complements (e.g., appendices, notes)
      *  to the work of another author.
      */
-    const COLABORATOR = "clb";
+    final public const COLABORATOR = "clb";
 
     /**
      * Commentator
@@ -121,7 +121,7 @@ class MarcCode {
      *  Compiler [com] Use for a person who produces a work or publication by selecting
      *  and putting together material from the works of various persons or bodies.
      */
-    const COMMENTATOR = "cmm";
+    final public const COMMENTATOR = "cmm";
 
     /**
      * Designer
@@ -129,7 +129,7 @@ class MarcCode {
      * Use for a person or organization responsible for design if specific codes (e.g.,
      *  [bkd], [tyd]) are not desired.
      */
-    const DESIGNER = "dsr";
+    final public const DESIGNER = "dsr";
 
     /**
      * Editor
@@ -138,7 +138,7 @@ class MarcCode {
      *  such as by elucidating text, adding introductory or other critical matter, or
      *  technically directing an editorial staff.
      */
-    const EDITORT = "edt";
+    final public const EDITORT = "edt";
 
     /**
      * Illustrator
@@ -146,14 +146,14 @@ class MarcCode {
      * Use for the person who conceives, and perhaps also implements, a design or
      *  illustration, usually to accompany a written text.
      */
-    const ILLUSTRATOR = "ill";
+    final public const ILLUSTRATOR = "ill";
 
     /**
      * Lyricist
      *
      * Use for the writer of the text of a song.
      */
-    const LYRICIST = "lyr";
+    final public const LYRICIST = "lyr";
 
     /**
      * Metadata contact
@@ -162,7 +162,7 @@ class MarcCode {
      *  maintaining the original description of a metadata set (e.g., geospatial
      *  metadata set).
      */
-    const METADATA_CONTACT = "mdc";
+    final public const METADATA_CONTACT = "mdc";
 
     /**
      * Musician
@@ -171,7 +171,7 @@ class MarcCode {
      *  of a work when it is not possible or desirable to identify the function more
      *  precisely.
      */
-    const MUSICIAN = "mus";
+    final public const MUSICIAN = "mus";
 
     /**
      * Narrator
@@ -179,7 +179,7 @@ class MarcCode {
      * Use for the speaker who relates the particulars of an act, occurrence, or
      *  course of events.
      */
-    const NARRATOR = "nrt";
+    final public const NARRATOR = "nrt";
 
     /**
      * Other
@@ -187,7 +187,7 @@ class MarcCode {
      * Use for relator codes from other lists which have no equivalent in the MARC
      *  list or for terms which have not been assigned a code.
      */
-    const OTHER = "oth";
+    final public const OTHER = "oth";
 
     /**
      * Photographer
@@ -195,14 +195,14 @@ class MarcCode {
      * Use for the person or organization responsible for taking photographs, whether
      *  they are used in their original form or as reproductions.
      */
-    const PHOTOGRAPHER = "pht";
+    final public const PHOTOGRAPHER = "pht";
 
     /**
      * Printer
      *
      * Use for the person or organization who prints texts, whether from type or plates.
      */
-    const PRINTER = "prt";
+    final public const PRINTER = "prt";
 
     /**
      * Redactor
@@ -210,7 +210,7 @@ class MarcCode {
      * Use for a person who writes or develops the framework for an item without
      *  being intellectually responsible for its content.
      */
-    const REDACTOR = "red";
+    final public const REDACTOR = "red";
 
     /**
      * Reviewer
@@ -218,7 +218,7 @@ class MarcCode {
      * Use for a person or corporate body responsible for the review of book, motion
      *  picture, performance, etc.
      */
-    const REVIEWER = "rev";
+    final public const REVIEWER = "rev";
 
     /**
      * Sponsor
@@ -226,7 +226,7 @@ class MarcCode {
      * Use for the person or agency that issued a contract, or under whose auspices
      *  a work has been written, printed, published, etc.
      */
-    const SPONSOR = "spn";
+    final public const SPONSOR = "spn";
 
     /**
      * Thesis advisor
@@ -234,7 +234,7 @@ class MarcCode {
      * Use for the person under whose supervision a degree candidate develops and
      *  presents a thesis, memoir, or text of a dissertation.
      */
-    const THESIS_ADVISOR = "ths";
+    final public const THESIS_ADVISOR = "ths";
 
     /**
      * Transcriber
@@ -242,7 +242,7 @@ class MarcCode {
      * Use for a person who prepares a handwritten or typewritten copy from original
      *  material, including from dictated or orally recorded material.
      */
-    const TRANSCRIBER = "trc";
+    final public const TRANSCRIBER = "trc";
 
     /**
      * Translator
@@ -250,5 +250,5 @@ class MarcCode {
      * Use for a person who renders a text from one language into another, or from
      *  an older form of a language into the modern form.
      */
-    const TRANSLATOR = "trl";
+    final public const TRANSLATOR = "trl";
 }

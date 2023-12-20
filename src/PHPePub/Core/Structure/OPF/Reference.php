@@ -13,52 +13,52 @@ class Reference {
      */
 
     /** Acknowledgements page */
-    const ACKNOWLEDGEMENTS = "acknowledgements";
+    final public const ACKNOWLEDGEMENTS = "acknowledgements";
 
     /** Bibliography page */
-    const BIBLIOGRAPHY = "bibliography";
+    final public const BIBLIOGRAPHY = "bibliography";
 
     /** Colophon page */
-    const COLOPHON = "colophon";
+    final public const COLOPHON = "colophon";
 
     /** Copyright page */
-    const COPYRIGHT_PAGE = "copyright-page";
+    final public const COPYRIGHT_PAGE = "copyright-page";
 
     /** Dedication */
-    const DEDICATION = "dedication";
+    final public const DEDICATION = "dedication";
 
     /** Epigraph */
-    const EPIGRAPH = "epigraph";
+    final public const EPIGRAPH = "epigraph";
 
     /** Foreword */
-    const FOREWORD = "foreword";
+    final public const FOREWORD = "foreword";
 
     /** Glossary page */
-    const GLOSSARY = "glossary";
+    final public const GLOSSARY = "glossary";
 
     /** back-of-book style index */
-    const INDEX = "index";
+    final public const INDEX = "index";
 
     /** List of illustrations */
-    const LIST_OF_ILLUSTRATIONS = "loi";
+    final public const LIST_OF_ILLUSTRATIONS = "loi";
 
     /** List of tables */
-    const LIST_OF_TABLES = "lot";
+    final public const LIST_OF_TABLES = "lot";
 
     /** Notes page */
-    const NOTES = "notes";
+    final public const NOTES = "notes";
 
     /** Preface page */
-    const PREFACE = "preface";
+    final public const PREFACE = "preface";
 
     /** Table of contents */
-    const TABLE_OF_CONTENTS = "toc";
+    final public const TABLE_OF_CONTENTS = "toc";
 
     /** Page with possibly title, author, publisher, and other metadata */
-    const TITLE_PAGE = "titlepage";
+    final public const TITLE_PAGE = "titlepage";
 
     /** First page of the book, ie. first page of the first chapter */
-    const TEXT = "text";
+    final public const TEXT = "text";
 
     // ******************
     // ePub3 constants
@@ -66,16 +66,16 @@ class Reference {
 
     // Document partitions
     /** The publications cover(s), jacket information, etc. This is officially in ePub3, but works for ePub 2 as well */
-    const COVER = "cover";
+    final public const COVER = "cover";
 
     /** Preliminary material to the content body, such as tables of contents, dedications, etc. */
-    const FRONTMATTER = "frontmatter";
+    final public const FRONTMATTER = "frontmatter";
 
     /** The main (body) content of a document. */
-    const BODYMATTER = "bodymatter";
+    final public const BODYMATTER = "bodymatter";
 
     /** Ancillary material occurring after the document body, such as indices, appendices, etc. */
-    const BACKMATTER = "backmatter";
+    final public const BACKMATTER = "backmatter";
 
     private $type = null;
     private $title = null;

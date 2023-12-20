@@ -127,7 +127,7 @@ class StringHelper {
      * @return string
      */
     public static function removeComments($doc) {
-        $doc = preg_replace('~--\s+>~', '-->', $doc);
+        $doc = preg_replace('~--\s+>~', '-->', (string) $doc);
         $doc = preg_replace('~<\s*!\s*--~', '<!--', $doc);
         $cPos = BinStringStatic::_strpos($doc, "<!--");
         if ($cPos !== false) {
@@ -145,8 +145,8 @@ class StringHelper {
                     if ($ePos !== false) {
                         $lastEPos = $ePos;
                         $comment = BinStringStatic::_substr($doc, $cPos, ($lastEPos + 3) - $cPos);
-                        $startCount = substr_count($comment, "<!--");
-                        $endCount = substr_count($comment, "-->");
+                        $startCount = substr_count((string) $comment, "<!--");
+                        $endCount = substr_count((string) $comment, "-->");
                     } elseif ($lastEPos == $cPos) {
                         $lastEPos = BinStringStatic::_strlen($doc) - 3;
                     }

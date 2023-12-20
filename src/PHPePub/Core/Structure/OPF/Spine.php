@@ -9,7 +9,7 @@ namespace PHPePub\Core\Structure\OPF;
  * @license   GNU LGPL 2.1
  */
 class Spine {
-    private $itemrefs = array();
+    private $itemrefs = [];
     private $toc = null;
 
     /**

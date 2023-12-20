@@ -87,16 +87,14 @@ class EPubChapterSplitter {
      * @return array with 1 or more parts
      */
     function splitChapter($chapter, $splitOnSearchString = false, $searchString = '/^Chapter\\ /i') {
-        $chapterData = array();
+        $chapterData = [];
         $isSearchRegexp = $splitOnSearchString && (preg_match('#^(\D|\S|\W).+\1[imsxeADSUXJu]*$#m', $searchString) == 1);
         if ($splitOnSearchString && !$isSearchRegexp) {
             $searchString = '#^<.+?>' . preg_quote($searchString, '#') . "#";
         }
 
         if (!$splitOnSearchString && strlen($chapter) <= $this->splitDefaultSize) {
-            return array(
-                $chapter
-            );
+            return [$chapter];
         }
 
         switch ($this->htmlFormat) {
@@ -117,16 +115,16 @@ class EPubChapterSplitter {
         $htmlPos = stripos($chapter, "<html");
         $htmlEndPos = stripos($chapter, ">", $htmlPos);
         $newXML = substr($chapter, 0, $htmlEndPos + 1) . "\n</html>";
-        if (strpos(trim($newXML), "<?xml ") === false) {
+        if (!str_contains(trim($newXML), "<?xml ")) {
             $newXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" . $newXML;
         }
         $headerLength = strlen($newXML);
 
-        $files = array();
-        $chapterNames = array();
+        $files = [];
+        $chapterNames = [];
         $domDepth = 0;
-        $domPath = array();
-        $domClonedPath = array();
+        $domPath = [];
+        $domClonedPath = [];
 
         $curFile = $xmlDoc->createDocumentFragment();
         $files[] = $curFile;

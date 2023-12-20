@@ -13,7 +13,6 @@ class Logger {
     private $tStart;
     private $tLast;
     private $name = null;
-    private $isLogging = false;
     private $isDebugging = false;
 
     /**
@@ -22,13 +21,12 @@ class Logger {
      * @param string $name
      * @param bool $isLogging
      */
-    function __construct($name = null, $isLogging = false) {
+    function __construct($name = null, private $isLogging = false) {
         if ($name === null) {
             $this->name = "";
         } else {
             $this->name = $name . " : ";
         }
-        $this->isLogging = $isLogging;
         $this->start();
     }
 

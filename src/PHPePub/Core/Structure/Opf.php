@@ -25,17 +25,17 @@ class Opf {
      * These types are the only guaranteed mime types any ePub reader must understand.
      * Any other type muse define a fall back whose fallback chain will end in one of these.
      */
-    const TYPE_GIF = "image/gif";
-    const TYPE_JPEG = "image/jpeg";
-    const TYPE_PNG = "image/png";
-    const TYPE_SVG = "image/svg+xml";
-    const TYPE_XHTML = "application/xhtml+xml";
-    const TYPE_DTBOOK = "application/x-dtbook+xml";
-    const TYPE_CSS = "text/css";
-    const TYPE_XML = "application/xml";
-    const TYPE_OEB1_DOC = "text/x-oeb1-document"; // Deprecated
-    const TYPE_OEB1_CSS = "text/x-oeb1-css"; // Deprecated
-    const TYPE_NCX = "application/x-dtbncx+xml";
+    final public const TYPE_GIF = "image/gif";
+    final public const TYPE_JPEG = "image/jpeg";
+    final public const TYPE_PNG = "image/png";
+    final public const TYPE_SVG = "image/svg+xml";
+    final public const TYPE_XHTML = "application/xhtml+xml";
+    final public const TYPE_DTBOOK = "application/x-dtbook+xml";
+    final public const TYPE_CSS = "text/css";
+    final public const TYPE_XML = "application/xml";
+    final public const TYPE_OEB1_DOC = "text/x-oeb1-document"; // Deprecated
+    final public const TYPE_OEB1_CSS = "text/x-oeb1-css"; // Deprecated
+    final public const TYPE_NCX = "application/x-dtbncx+xml";
 
     private $bookVersion = EPub::BOOK_VERSION_EPUB2;
     private $ident = "BookId";
@@ -51,8 +51,8 @@ class Opf {
     /** @var $guide Guide */
     public $guide = null;
 
-    public $namespaces = array("xsi"=>"http://www.w3.org/2001/XMLSchema-instance");
-    public $prefixes = array();
+    public $namespaces = ["xsi"=>"http://www.w3.org/2001/XMLSchema-instance"];
+    public $prefixes = [];
 
     /**
      * Class constructor.
@@ -224,7 +224,7 @@ class Opf {
      * @return bool|array|Item Item if the href is found, else FALSE. If $startsWith is true, the returned object will be an array if any are found.
      */
     function getItemByHref($href, $startsWith = false) {
-        $rv = array();
+        $rv = [];
 
         /** @var Item $item */
         foreach ($this->manifest->getItems() as $item) {

@@ -38,41 +38,31 @@ use RelativePath;
  * @link      https://github.com/Grandt/PHPePub
  */
 class EPub {
-    const VERSION = '4.0.6';
+    final public const VERSION = '4.0.6';
 
-    const IDENTIFIER_UUID = 'UUID';
-    const IDENTIFIER_URI = 'URI';
-    const IDENTIFIER_ISBN = 'ISBN';
+    final public const IDENTIFIER_UUID = 'UUID';
+    final public const IDENTIFIER_URI = 'URI';
+    final public const IDENTIFIER_ISBN = 'ISBN';
 
     /** Ignore all external references, and do not process the file for these */
-    const EXTERNAL_REF_IGNORE = 0;
+    final public const EXTERNAL_REF_IGNORE = 0;
     /** Process the file for external references and add them to the book */
-    const EXTERNAL_REF_ADD = 1;
+    final public const EXTERNAL_REF_ADD = 1;
     /** Process the file for external references and add them to the book, but remove images, and img tags */
-    const EXTERNAL_REF_REMOVE_IMAGES = 2;
+    final public const EXTERNAL_REF_REMOVE_IMAGES = 2;
     /** Process the file for external references and add them to the book, but replace images, and img tags with [image] */
-    const EXTERNAL_REF_REPLACE_IMAGES = 3;
+    final public const EXTERNAL_REF_REPLACE_IMAGES = 3;
 
-    const DIRECTION_LEFT_TO_RIGHT = 'ltr';
-    const DIRECTION_RIGHT_TO_LEFT = 'rtl';
+    final public const DIRECTION_LEFT_TO_RIGHT = 'ltr';
+    final public const DIRECTION_RIGHT_TO_LEFT = 'rtl';
 
-    const BOOK_VERSION_EPUB2 = '2.0';
-    const BOOK_VERSION_EPUB3 = '3.0';
+    final public const BOOK_VERSION_EPUB2 = '2.0';
+    final public const BOOK_VERSION_EPUB3 = '3.0';
 
-    const FORMAT_XHTML = 'xhtml';
-    const FORMAT_HTML5 = 'html5';
+    final public const FORMAT_XHTML = 'xhtml';
+    final public const FORMAT_HTML5 = 'html5';
 
-    public $viewportMap = array(
-        "small" => array('width' => 600, 'height' => 800),
-        "medium" => array('width' => 720, 'height' => 1280),
-        "720p" => array('width' => 720, 'height' => 1280),
-        "ipad" => array('width' => 768, 'height' => 1024),
-        "large" => array('width' => 1080, 'height' => 1920),
-        "2k" => array('width' => 1080, 'height' => 1920),
-        "1080p" => array('width' => 1080, 'height' => 1920),
-        "ipad3" => array('width' => 1536, 'height' => 2048),
-        "4k" => array('width' => 2160, 'height' => 3840)
-    );
+    public $viewportMap = ["small" => ['width' => 600, 'height' => 800], "medium" => ['width' => 720, 'height' => 1280], "720p" => ['width' => 720, 'height' => 1280], "ipad" => ['width' => 768, 'height' => 1024], "large" => ['width' => 1080, 'height' => 1920], "2k" => ['width' => 1080, 'height' => 1920], "1080p" => ['width' => 1080, 'height' => 1920], "ipad3" => ['width' => 1536, 'height' => 2048], "4k" => ['width' => 2160, 'height' => 3840]];
 
     public $splitDefaultSize = 250000;
 
@@ -95,8 +85,6 @@ class EPub {
 
     public $isLogging = true;
     public $encodeHTML = false;
-
-    private $bookVersion = EPub::BOOK_VERSION_EPUB2;
     /** @var $Zip Zip */
     private $zip;
     private $title = '';
@@ -128,10 +116,7 @@ class EPub {
     private $tocCSSClass = null;
     private $tocAddReferences = false;
     private $tocCssFileName = null;
-    private $fileList = array();
-    private $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;
-    private $htmlFormat = EPub::FORMAT_XHTML;
-    private $languageCode = 'en';
+    private $fileList = [];
     private $dateformat = 'Y-m-d\TH:i:s.000000P';
     private $dateformatShort = 'Y-m-d';
     private $headerDateFormat = "D, d M Y H:i:s T";
@@ -157,16 +142,11 @@ class EPub {
      * @param string $htmlFormat
      */
     function __construct(
-        $bookVersion = EPub::BOOK_VERSION_EPUB2,
-        $languageCode = 'en',
-        $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT,
-        $htmlFormat = EPub::FORMAT_XHTML
+        private $bookVersion = EPub::BOOK_VERSION_EPUB2,
+        private $languageCode = 'en',
+        private $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT,
+        private $htmlFormat = EPub::FORMAT_XHTML
     ) {
-        $this->bookVersion = $bookVersion;
-        $this->writingDirection = $writingDirection;
-        $this->languageCode = $languageCode;
-        $this->htmlFormat = $htmlFormat;
-
         $this->log = new Logger('EPub', $this->isLogging);
 
         /* Prepare Logging. Just in case it's used. later */
@@ -178,25 +158,7 @@ class EPub {
     }
 
     private function setUp() {
-        $this->referencesOrder = array(
-            Reference::COVER                 => 'Cover Page',
-            Reference::TITLE_PAGE            => 'Title Page',
-            Reference::ACKNOWLEDGEMENTS      => 'Acknowledgements',
-            Reference::BIBLIOGRAPHY          => 'Bibliography',
-            Reference::COLOPHON              => 'Colophon',
-            Reference::COPYRIGHT_PAGE        => 'Copyright',
-            Reference::DEDICATION            => 'Dedication',
-            Reference::EPIGRAPH              => 'Epigraph',
-            Reference::FOREWORD              => 'Foreword',
-            Reference::TABLE_OF_CONTENTS     => 'Table of Contents',
-            Reference::NOTES                 => 'Notes',
-            Reference::PREFACE               => 'Preface',
-            Reference::TEXT                  => 'First Page',
-            Reference::LIST_OF_ILLUSTRATIONS => 'List of Illustrations',
-            Reference::LIST_OF_TABLES        => 'List of Tables',
-            Reference::GLOSSARY              => 'Glossary',
-            Reference::INDEX                 => 'Index'
-        );
+        $this->referencesOrder = [Reference::COVER                 => 'Cover Page', Reference::TITLE_PAGE            => 'Title Page', Reference::ACKNOWLEDGEMENTS      => 'Acknowledgements', Reference::BIBLIOGRAPHY          => 'Bibliography', Reference::COLOPHON              => 'Colophon', Reference::COPYRIGHT_PAGE        => 'Copyright', Reference::DEDICATION            => 'Dedication', Reference::EPIGRAPH              => 'Epigraph', Reference::FOREWORD              => 'Foreword', Reference::TABLE_OF_CONTENTS     => 'Table of Contents', Reference::NOTES                 => 'Notes', Reference::PREFACE               => 'Preface', Reference::TEXT                  => 'First Page', Reference::LIST_OF_ILLUSTRATIONS => 'List of Illustrations', Reference::LIST_OF_TABLES        => 'List of Tables', Reference::GLOSSARY              => 'Glossary', Reference::INDEX                 => 'Index'];
 
         $this->docRoot = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/';
 
@@ -379,7 +341,7 @@ class EPub {
 
         $xpath = new DomXpath($xmlDoc);
 
-        $rv = array();
+        $rv = [];
         // traverse all results
         foreach ($xpath->query('//@id') as $rowNode) {
             $rv[] = $rowNode->nodeValue;
@@ -424,7 +386,7 @@ class EPub {
      *
      * @return bool  false if unsuccessful (book is finalized or $externalReferences == EXTERNAL_REF_IGNORE).
      */
-    protected function processChapterExternalReferences(&$doc, $externalReferences = EPub::EXTERNAL_REF_ADD, $baseDir = "", $htmlDir = "") {
+    protected function processChapterExternalReferences(mixed &$doc, $externalReferences = EPub::EXTERNAL_REF_ADD, $baseDir = "", $htmlDir = "") {
         if ($this->isFinalized || $externalReferences === EPub::EXTERNAL_REF_IGNORE) {
             return false;
         }
@@ -523,7 +485,7 @@ class EPub {
             $styleData = preg_replace('#[/\*\s]*\]\]\>[\s\*/]*#im', "", $styleData);
 
             $this->processCSSExternalReferences($styleData, $externalReferences, $baseDir, $htmlDir);
-            $style->nodeValue = "\n" . trim($styleData) . "\n";
+            $style->nodeValue = "\n" . trim((string) $styleData) . "\n";
         }
 
         return true;
@@ -595,14 +557,14 @@ class EPub {
         if (preg_match('#^(http|ftp)s?://#i', $source) == 1) {
             $urlinfo = parse_url($source);
 
-            if (strpos($urlinfo['path'], $baseDir . "/") !== false) {
+            if (str_contains($urlinfo['path'], $baseDir . "/")) {
                 $internalSrc = FileHelper::sanitizeFileName(urldecode(substr($urlinfo['path'], strpos($urlinfo['path'], $baseDir . "/") + strlen($baseDir) + 1)));
             }
             $internalPath = $urlinfo["scheme"] . "/" . $urlinfo["host"] . "/" . pathinfo($urlinfo["path"], PATHINFO_DIRNAME);
             $isSourceExternal = true;
             $imageData = ImageHelper::getImage($this, $source);
         } else {
-            if (strpos($source, "/") === 0) {
+            if (str_starts_with($source, "/")) {
                 $internalPath = pathinfo($source, PATHINFO_DIRNAME);
 
                 $path = $source;
@@ -623,7 +585,7 @@ class EPub {
             }
         }
         if ($imageData !== false) {
-            $iSrcInfo = pathinfo($internalSrc);
+            $iSrcInfo = pathinfo((string) $internalSrc);
 
             if (!empty($imageData['ext']) && (!isset($iSrcInfo['extension']) || $imageData['ext'] != $iSrcInfo['extension'])) {
                 $internalSrc = $iSrcInfo['filename'] . "." . $imageData['ext'];
@@ -682,7 +644,7 @@ class EPub {
         }
         $fileName = FileHelper::normalizeFileName($fileName);
 
-        $compress = (strpos($mimetype, "image/") !== 0);
+        $compress = (!str_starts_with($mimetype, "image/"));
 
         $this->zip->addFile($fileData, $this->bookRoot . $fileName, 0, null, $compress);
         $this->fileList[$fileName] = $fileName;
@@ -722,13 +684,13 @@ class EPub {
             if (preg_match('#^(http|ftp)s?://#i', $source) == 1) {
                 $urlinfo = parse_url($source);
 
-                if (strpos($urlinfo['path'], $baseDir . "/") !== false) {
+                if (str_contains($urlinfo['path'], $baseDir . "/")) {
                     $internalSrc = substr($urlinfo['path'], strpos($urlinfo['path'], $baseDir . "/") + strlen($baseDir) + 1);
                 }
 
                 @$sourceData = FileHelper::getFileContents($source);
             } else {
-                if (strpos($source, "/") === 0) {
+                if (str_starts_with($source, "/")) {
                     @$sourceData = file_get_contents($this->docRoot . $source);
                 } else {
                     @$sourceData = file_get_contents($this->docRoot . $baseDir . "/" . $source);
@@ -808,7 +770,7 @@ class EPub {
             return false;
         }
         // process img tags.
-        $postProcDomElememts = array();
+        $postProcDomElememts = [];
         $images = $xmlDoc->getElementsByTagName("img");
         $itemCount = $images->length;
 
@@ -825,10 +787,7 @@ class EPub {
                     if ($altNode !== null && strlen($altNode->nodeValue) > 0) {
                         $alt = $altNode->nodeValue;
                     }
-                    $postProcDomElememts[] = array(
-                        $img,
-                        StringHelper::createDomFragment($xmlDoc, "<em>[" . $alt . "]</em>")
-                    );
+                    $postProcDomElememts[] = [$img, StringHelper::createDomFragment($xmlDoc, "<em>[" . $alt . "]</em>")];
                 } else {
                     $source = $img->attributes->getNamedItem("src")->nodeValue;
 
@@ -881,7 +840,7 @@ class EPub {
             $externalReferences = EPub::EXTERNAL_REF_REMOVE_IMAGES;
         }
 
-        $postProcDomElememts = array();
+        $postProcDomElememts = [];
         $images = $xmlDoc->getElementsByTagName("source");
         $itemCount = $images->length;
         for ($idx = 0; $idx < $itemCount; $idx++) {
@@ -896,10 +855,7 @@ class EPub {
                     if ($altNode !== null && strlen($altNode->nodeValue) > 0) {
                         $alt = $altNode->nodeValue;
                     }
-                    $postProcDomElememts[] = array(
-                        $img,
-                        StringHelper::createDomFragment($xmlDoc, "[" . $alt . "]")
-                    );
+                    $postProcDomElememts[] = [$img, StringHelper::createDomFragment($xmlDoc, "[" . $alt . "]")];
                 } else {
                     $source = $img->attributes->getNamedItem("src")->nodeValue;
 
@@ -944,7 +900,7 @@ class EPub {
         if (preg_match('#^(http|ftp)s?://#i', $source) == 1) {
             $urlInfo = parse_url($source);
 
-            if (strpos($urlInfo['path'], $baseDir . "/") !== false) {
+            if (str_contains($urlInfo['path'], $baseDir . "/")) {
                 $internalSrc = substr($urlInfo['path'], strpos($urlInfo['path'], $baseDir . "/") + strlen($baseDir) + 1);
             }
             $internalPath = $urlInfo["scheme"] . "/" . $urlInfo["host"] . "/" . pathinfo($urlInfo["path"], PATHINFO_DIRNAME);
@@ -952,7 +908,7 @@ class EPub {
             $mediaPath = FileHelper::getFileContents($source, true);
             $tmpFile = $mediaPath;
         } else {
-            if (strpos($source, "/") === 0) {
+            if (str_starts_with($source, "/")) {
                 $internalPath = pathinfo($source, PATHINFO_DIRNAME);
 
                 $mediaPath = $source;
@@ -1024,7 +980,7 @@ class EPub {
         if ($this->isInitialized) {
             return;
         }
-        if (strlen($this->bookRoot) != 0 && $this->bookRoot != 'OEBPS/') {
+        if (strlen((string) $this->bookRoot) != 0 && $this->bookRoot != 'OEBPS/') {
             $this->setBookRoot($this->bookRoot);
         }
 
@@ -1273,7 +1229,7 @@ class EPub {
 
         if (empty($mimetype) && file_exists($fileName)) {
             /** @noinspection PhpUnusedLocalVariableInspection */
-            list($width, $height, $type, $attr) = getimagesize($fileName);
+            [$width, $height, $type, $attr] = getimagesize($fileName);
             $mimetype = image_type_to_mime_type($type);
         }
         if (empty($mimetype)) {
@@ -2369,7 +2325,7 @@ class EPub {
             $width = $vp['width'];
             $height = $vp['height'];
         }
-        $this->viewport = array('width' => $width, 'height' => $height);
+        $this->viewport = ['width' => $width, 'height' => $height];
     }
 
     /**

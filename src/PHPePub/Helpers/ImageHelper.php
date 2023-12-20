@@ -39,14 +39,7 @@ class ImageHelper {
         ) {
             return 'application/octet-stream';
         }
-        static $type = array(
-            1 => 'image/jpeg',
-            2 => 'image/gif',
-            3 => 'image/png',
-            4 => 'image/x-windows-bmp',
-            5 => 'image/tiff',
-            6 => 'image/x-ilbm'
-        );
+        static $type = [1 => 'image/jpeg', 2 => 'image/gif', 3 => 'image/png', 4 => 'image/x-windows-bmp', 5 => 'image/tiff', 6 => 'image/x-ilbm'];
 
         return $type[count($hits) - 1];
     }
@@ -84,14 +77,14 @@ class ImageHelper {
      */
     public static function splitCSV($attr, $sep=',') {
 
-        if (strpos($attr, $sep) > 0) {
-            return preg_split('/\s*' . $sep . '\s*/', $attr);
-        } elseif ($sep !== ',' && strpos($attr, ',') > 0) {
-            return preg_split('/\s*,\s*/', $attr);
-        } elseif (strpos($attr, ';') > 0) {
-            return preg_split('/\s*;\s*/', $attr);
+        if (strpos((string) $attr, $sep) > 0) {
+            return preg_split('/\s*' . $sep . '\s*/', (string) $attr);
+        } elseif ($sep !== ',' && strpos((string) $attr, ',') > 0) {
+            return preg_split('/\s*,\s*/', (string) $attr);
+        } elseif (strpos((string) $attr, ';') > 0) {
+            return preg_split('/\s*;\s*/', (string) $attr);
         } else {
-            return preg_split('/\s+/', $attr);
+            return preg_split('/\s+/', (string) $attr);
         }
     }
 
@@ -105,19 +98,21 @@ class ImageHelper {
      * @return float
      */
     public static function scaleSVGUnit( $length, $portSize = 512 ) {
-        static $unitLength = array(
+        static $unitLength = [
             'px' => 1.0,
             'pt' => 1.25,
             'pc' => 15.0,
             'mm' => 3.543307,
             'cm' => 35.43307,
             'in' => 90.0,
-            'em' => 16.0, // fake it?
-            'ex' => 12.0, // fake it?
-            '' => 1.0, // "User units" pixels by default
-        );
-        $matches = array();
-        if ( preg_match( '/^\s*(\d+(?:\.\d+)?)(em|ex|px|pt|pc|cm|mm|in|%|)\s*$/', $length, $matches ) ) {
+            'em' => 16.0,
+            // fake it?
+            'ex' => 12.0,
+            // fake it?
+            '' => 1.0,
+        ];
+        $matches = [];
+        if ( preg_match( '/^\s*(\d+(?:\.\d+)?)(em|ex|px|pt|pc|cm|mm|in|%|)\s*$/', (string) $length, $matches ) ) {
             $length = floatval( $matches[1] );
             $unit = $matches[2];
             if ( $unit == '%' ) {
@@ -137,7 +132,7 @@ class ImageHelper {
      * @return array
      */
     public static function handleSVGAttribs($svg) {
-        $metadata = array();
+        $metadata = [];
         $attr = $svg->attributes();
         $viewWidth = 0;
         $viewHeight = 0;
@@ -226,10 +221,10 @@ class ImageHelper {
         $image = FileHelper::getFileContents($imageSource);
         $ratio = 1;
 
-        if ($image !== false && strlen($image) > 0) {
-            if (BinStringStatic::startsWith(trim($image), '<svg') || (BinStringStatic::startsWith(trim($image), '<?xml') || strpos($image, '<svg') > 0)) {
+        if ($image !== false && strlen((string) $image) > 0) {
+            if (BinStringStatic::startsWith(trim((string) $image), '<svg') || (BinStringStatic::startsWith(trim((string) $image), '<?xml') || strpos((string) $image, '<svg') > 0)) {
                 // SVG image.
-                $xml = simplexml_load_string($image);
+                $xml = simplexml_load_string((string) $image);
                 $attr = $xml->attributes();
 
                 $meta = ImageHelper::handleSVGAttribs($xml);
@@ -323,19 +318,14 @@ class ImageHelper {
         }
 
         if ($ext === "") {
-            static $mimeToExt = array(
-                'image/jpeg'    => 'jpg',
-                'image/gif'     => 'gif',
-                'image/png'     => 'png',
-                'image/svg+xml' => "svg"
-            );
+            static $mimeToExt = ['image/jpeg'    => 'jpg', 'image/gif'     => 'gif', 'image/png'     => 'png', 'image/svg+xml' => "svg"];
 
             if (isset($mimeToExt[$mime])) {
                 $ext = $mimeToExt[$mime];
             }
         }
 
-        $rv = array();
+        $rv = [];
         $rv['width'] = $width * $ratio;
         $rv['height'] = $height * $ratio;
         $rv['mime'] = $mime;

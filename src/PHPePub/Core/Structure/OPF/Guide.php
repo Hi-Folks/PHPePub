@@ -10,7 +10,7 @@ namespace PHPePub\Core\Structure\OPF;
  */
 class Guide {
 
-    private $references = array();
+    private $references = [];
 
     /**
      * Class constructor.

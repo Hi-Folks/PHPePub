@@ -1,5 +1,5 @@
 {
-    "name": "wallabag/phpepub",
+    "name": "hi-folks/phpepub",
     "type": "library",
     "description": "Package to create and stream e-books in the ePub 2.0 and 3.0 formats.",
     "keywords": ["epub", "e-book"],
@@ -28,10 +28,15 @@
             "name": "Kevin Decherf",
             "homepage": "https://kdecherf.com",
             "role": "Contributor"
+        },
+        {
+            "name": "Roberto Butti",
+            "homepage": "https://hi-folks.dev",
+            "role": "Contributor"
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=8.1.0",
         "phpzip/phpzip": "~2.0.7",
         "grandt/phpresizegif": "~1.0.3",
         "grandt/relativepath": "~1.0.1",
@@ -44,5 +49,8 @@
         "classmap": [
             "src/lib.uuid.php"
         ]
+    },
+    "require-dev": {
+        "rector/rector": "^0.18.13"
     }
 }

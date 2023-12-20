@@ -16,7 +16,7 @@ abstract class Enum {
 
     public function __construct($value) {
         if (!self::has($value)) {
-            throw new UnexpectedValueException("Value '$value' is not part of the enum " . get_called_class());
+            throw new UnexpectedValueException("Value '$value' is not part of the enum " . static::class);
         }
 
         $this->value = $value;
@@ -35,7 +35,7 @@ abstract class Enum {
     }
 
     public static function toArray() {
-        $calledClass = get_called_class();
+        $calledClass = static::class;
 
         if(!array_key_exists($calledClass, self::$constantsCache)) {
             $reflection = new ReflectionClass($calledClass);
