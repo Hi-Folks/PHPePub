@@ -23,23 +23,35 @@ class Ncx
     private $parentBook;
 
     private ?\PHPePub\Core\Structure\NCX\NavMap $navMap = null;
+
     private ?string $uid = null;
+
     private array $meta = [];
+
     private ?string $docTitle = null;
+
     private ?string $docAuthor = null;
 
     private $currentLevel;
+
     private $lastLevel;
 
     private string $languageCode = "en";
+
     private string $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;
 
     public $chapterList = [];
+
     public $referencesTitle = "Guide";
+
     public $referencesClass = "references";
+
     public $referencesId = "references";
+
     public $referencesList = [];
+
     public $referencesName = [];
+
     public $referencesOrder;
 
     /**
@@ -170,9 +182,11 @@ class Ncx
         if ($navMap == null) {
             return;
         }
+
         if (!is_object($navMap)) {
             return;
         }
+
         $this->navMap = $navMap;
     }
 
@@ -194,6 +208,7 @@ class Ncx
             $navPoint = new NavPoint($navTitle, null, $navId, $navClass, $isNavHidden, $writingDirection);
             $this->addNavPoint($navPoint);
         }
+
         if ($this->lastLevel !== null) {
             $this->currentLevel = $this->lastLevel;
         }
@@ -287,9 +302,11 @@ class Ncx
         if ($name == null) {
             return;
         }
+
         if ($content == null) {
             return;
         }
+
         $this->meta[] = [$name => $content];
     }
 
@@ -306,7 +323,8 @@ class Ncx
             $ncx .= "<!DOCTYPE ncx PUBLIC \"-//NISO//DTD ncx 2005-1//EN\"\n"
                 . "  \"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd\">\n";
         }
-        $ncx .= "<ncx xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" version=\"2005-1\" xml:lang=\"" . $this->languageCode . "\" dir=\"" . $this->writingDirection . "\">\n"
+
+        $ncx .= '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="' . $this->languageCode . '" dir="' . $this->writingDirection . "\">\n"
             . "\t<head>\n"
             . "\t\t<meta name=\"dtb:uid\" content=\"" . $this->uid . "\" />\n"
             . "\t\t<meta name=\"dtb:depth\" content=\"" . $this->navMap->getNavLevels() . "\" />\n"
@@ -316,7 +334,7 @@ class Ncx
         foreach ($this->meta as $metaEntry) {
             $content = reset($metaEntry);
             $name = key($metaEntry);
-            $ncx .= "\t\t<meta name=\"" . $name . "\" content=\"" . $content . "\" />\n";
+            $ncx .= "\t\t<meta name=\"" . $name . '" content="' . $content . "\" />\n";
         }
 
         $ncx .= "\t</head>\n\n\t<docTitle>\n\t\t<text>"
@@ -340,7 +358,7 @@ class Ncx
 <html xmlns="http://www.w3.org/1999/xhtml"
 '
             . "      xmlns:epub=\"http://www.idpf.org/2007/ops\"\n"
-            . "      xml:lang=\"" . $this->languageCode . "\" lang=\"" . $this->languageCode . "\" dir=\"" . $this->writingDirection . "\">\n"
+            . '      xml:lang="' . $this->languageCode . '" lang="' . $this->languageCode . '" dir="' . $this->writingDirection . "\">\n"
             . "\t<head>\n"
             . "\t\t<title>" . $this->docTitle . "</title>\n"
             . "\t\t<meta http-equiv=\"default-style\" content=\"text/html; charset=utf-8\"/>\n";
@@ -393,7 +411,7 @@ class Ncx
         if ($this->referencesList !== null && count($this->referencesList) > 0) {
             $lm = '			<nav epub:type="landmarks">
 				<h2'
-                . ($this->writingDirection === EPub::DIRECTION_RIGHT_TO_LEFT ? " dir=\"rtl\"" : "") . ">"
+                . ($this->writingDirection === EPub::DIRECTION_RIGHT_TO_LEFT ? ' dir="rtl"' : "") . ">"
                 . $this->referencesTitle . "</h2>\n"
                 . "\t\t\t\t<ol>\n";
 
@@ -402,11 +420,12 @@ class Ncx
                 if (array_key_exists($item, $this->referencesList)) {
                     $li .= "\t\t\t\t\t<li><a epub:type=\""
                         . $item
-                        . "\" href=\"" . $this->referencesList[$item] . "\">"
+                        . '" href="' . $this->referencesList[$item] . '">'
                         . (empty($this->referencesName[$item]) ? $descriptive : $this->referencesName[$item])
                         . "</a></li>\n";
                 }
             }
+
             if ($li === '' || $li === '0') {
                 return "";
             }

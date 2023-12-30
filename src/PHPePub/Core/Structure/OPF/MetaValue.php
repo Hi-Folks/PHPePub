@@ -14,8 +14,11 @@ use PHPePub\Core\EPub;
 class MetaValue
 {
     private ?string $tagName = null;
+
     private ?string $tagValue = null;
+
     private array $attr = [];
+
     private array $opfAttr = [];
 
     /**
@@ -68,6 +71,7 @@ class MetaValue
         if (isset($attrName)) {
             $attrValue = is_string($attrValue) ? trim($attrValue) : null;
         }
+
         if (isset($attrValue)) {
             $this->attr[$attrName] = $attrValue;
         }
@@ -87,6 +91,7 @@ class MetaValue
         if (isset($opfAttrName)) {
             $opfAttrValue = is_string($opfAttrValue) ? trim($opfAttrValue) : null;
         }
+
         if (isset($opfAttrValue)) {
             $this->opfAttr[$opfAttrName] = $opfAttrValue;
         }
@@ -103,12 +108,12 @@ class MetaValue
         $dc = "\t\t<" . $this->tagName;
 
         foreach ($this->attr as $name => $content) {
-            $dc .= " " . $name . "=\"" . $content . "\"";
+            $dc .= " " . $name . '="' . $content . '"';
         }
 
         if ($bookVersion === EPub::BOOK_VERSION_EPUB2 && $this->opfAttr !== []) {
             foreach ($this->opfAttr as $name => $content) {
-                $dc .= " opf:" . $name . "=\"" . $content . "\"";
+                $dc .= " opf:" . $name . '="' . $content . '"';
             }
         }
 

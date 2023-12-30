@@ -15,8 +15,11 @@ use PHPePub\Core\StaticData;
 class Metadata
 {
     private array $dc = [];
+
     private array $meta = [];
+
     private array $metaProperties = [];
+
     public $namespaces = [];
 
     /**
@@ -40,9 +43,11 @@ class Metadata
         if ($dc == null) {
             return;
         }
+
         if (!is_object($dc)) {
             return;
         }
+
         $this->dc[] = $dc;
     }
 
@@ -59,6 +64,7 @@ class Metadata
         if (isset($name)) {
             $content = is_string($content) ? trim($content) : null;
         }
+
         if (isset($content)) {
             $this->meta[] = [$name => $content];
         }
@@ -77,6 +83,7 @@ class Metadata
         if (isset($name)) {
             $content = is_string($content) ? trim($content) : null;
         }
+
         if (isset($content)) {
             $this->metaProperties[] = [$name => $content];
         }
@@ -106,6 +113,7 @@ class Metadata
             if (!isset($date)) {
                 $date = time();
             }
+
             $this->addNamespace("dcterms", StaticData::$namespaces["dcterms"]);
             $this->addMetaProperty("dcterms:modified", gmdate('Y-m-d\TH:i:s\Z', $date));
         }
@@ -124,13 +132,13 @@ class Metadata
         foreach ($this->metaProperties as $data) {
             $content = current($data);
             $name = key($data);
-            $metadata .= "\t\t<meta property=\"" . $name . "\">" . $content . "</meta>\n";
+            $metadata .= "\t\t<meta property=\"" . $name . '">' . $content . "</meta>\n";
         }
 
         foreach ($this->meta as $data) {
             $content = current($data);
             $name = key($data);
-            $metadata .= "\t\t<meta name=\"" . $name . "\" content=\"" . $content . "\" />\n";
+            $metadata .= "\t\t<meta name=\"" . $name . '" content="' . $content . "\" />\n";
         }
 
         return $metadata . "\t</metadata>\n";

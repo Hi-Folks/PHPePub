@@ -12,6 +12,7 @@ namespace PHPePub\Core\Structure\OPF;
 class Itemref
 {
     private ?string $idref = null;
+
     private bool $linear = true;
 
     /**
@@ -75,7 +76,7 @@ class Itemref
      */
     public function finalize(): string
     {
-        $itemref = "\t\t<itemref idref=\"" . $this->idref . "\"";
+        $itemref = "\t\t<itemref idref=\"" . $this->idref . '"';
 
         return $itemref . ($this->linear == false ? ' linear="no"' : '') . " />\n";
     }

@@ -14,12 +14,13 @@ use UnexpectedValueException;
 abstract class Enum
 {
     private static array $constantsCache = [];
+
     private $value;
 
     public function __construct($value)
     {
         if (!self::has($value)) {
-            throw new UnexpectedValueException("Value '$value' is not part of the enum " . static::class);
+            throw new UnexpectedValueException(sprintf("Value '%s' is not part of the enum ", $value) . static::class);
         }
 
         $this->value = $value;

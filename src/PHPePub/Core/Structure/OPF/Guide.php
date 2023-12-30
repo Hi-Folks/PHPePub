@@ -44,9 +44,11 @@ class Guide
         if ($reference == null) {
             return;
         }
+
         if (!is_object($reference)) {
             return;
         }
+
         $this->references[] = $reference;
     }
 
@@ -63,6 +65,7 @@ class Guide
                 /** @var $reference Reference */
                 $ref .= $reference->finalize();
             }
+
             $ref .= "\t</guide>\n";
         }
 

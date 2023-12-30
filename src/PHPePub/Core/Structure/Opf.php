@@ -27,32 +27,49 @@ class Opf
      * Any other type muse define a fall back whose fallback chain will end in one of these.
      */
     final public const TYPE_GIF = "image/gif";
+
     final public const TYPE_JPEG = "image/jpeg";
+
     final public const TYPE_PNG = "image/png";
+
     final public const TYPE_SVG = "image/svg+xml";
+
     final public const TYPE_XHTML = "application/xhtml+xml";
+
     final public const TYPE_DTBOOK = "application/x-dtbook+xml";
+
     final public const TYPE_CSS = "text/css";
+
     final public const TYPE_XML = "application/xml";
-    final public const TYPE_OEB1_DOC = "text/x-oeb1-document"; // Deprecated
-    final public const TYPE_OEB1_CSS = "text/x-oeb1-css"; // Deprecated
+
+    final public const TYPE_OEB1_DOC = "text/x-oeb1-document";
+
+    // Deprecated
+    final public const TYPE_OEB1_CSS = "text/x-oeb1-css";
+
+    // Deprecated
     final public const TYPE_NCX = "application/x-dtbncx+xml";
 
     private string $bookVersion = EPub::BOOK_VERSION_EPUB2;
+
     private string $ident = "BookId";
 
     public $date;
 
     /** @var $metadata Metadata */
     public $metadata;
+
     /** @var $manifest Manifest */
     public $manifest;
+
     /** @var $spine Spine */
     public $spine;
+
     /** @var $guide Guide */
     public $guide;
 
     public $namespaces = ["xsi" => "http://www.w3.org/2001/XMLSchema-instance"];
+
     public $prefixes = [];
 
     /**
@@ -125,7 +142,7 @@ class Opf
 ';
 
         foreach($this->namespaces as $ns => $uri) {
-            $opf .= "\txmlns:$ns=\"$uri\"\n";
+            $opf .= "\txmlns:{$ns}=\"{$uri}\"\n";
         }
 
         if ($this->bookVersion === EPub::BOOK_VERSION_EPUB3 && count($this->prefixes) > 0) {
@@ -137,12 +154,14 @@ class Opf
                 } else {
                     $addSpace = true;
                 }
-                $opf .= "$name: $uri";
+
+                $opf .= sprintf('%s: %s', $name, $uri);
             }
+
             $opf .= "\"\n";
         }
 
-        $opf .= "\tunique-identifier=\"" . $this->ident . "\" version=\"" . $this->bookVersion . "\">\n";
+        $opf .= "\tunique-identifier=\"" . $this->ident . '" version="' . $this->bookVersion . "\">\n";
         $opf .= $metadata;
         $opf .= $this->manifest->finalize($this->bookVersion);
         $opf .= $this->spine->finalize();
@@ -173,6 +192,7 @@ class Opf
         $dc = new DublinCore("identifier", $identifier);
         $dc->addAttr("id", $this->ident);
         $dc->addOpfAttr("scheme", $identifierScheme);
+
         $this->metadata->addDublinCore($dc);
     }
 
@@ -225,6 +245,7 @@ class Opf
                 return $item;
             }
         }
+
         return false;
     }
 
@@ -243,17 +264,22 @@ class Opf
             if (!$startsWith && $item->getHref() == $href) {
                 return $item;
             }
+
             if (!$startsWith) {
                 continue;
             }
+
             if (!str_starts_with((string) $item->getHref(), $href)) {
                 continue;
             }
+
             $rv[] = $item;
         }
+
         if ($rv !== []) {
             return $rv;
         }
+
         return false;
     }
 

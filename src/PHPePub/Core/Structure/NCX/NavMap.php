@@ -14,7 +14,9 @@ class NavMap extends AbstractNavEntry
     final public const _VERSION = 3.30;
 
     private array $navPoints = [];
+
     private int $navLevels = 0;
+
     private ?string $writingDirection = null;
 
     /**
@@ -66,6 +68,7 @@ class NavMap extends AbstractNavEntry
             if ($navPoint->getWritingDirection() == null) {
                 $navPoint->setWritingDirection($this->writingDirection);
             }
+
             $this->navPoints[] = $navPoint;
 
             return $navPoint;
@@ -109,7 +112,7 @@ class NavMap extends AbstractNavEntry
 
         $nav = "\t<navMap>\n";
         if ($this->navPoints !== []) {
-            $this->navLevels++;
+            ++$this->navLevels;
             foreach ($this->navPoints as $navPoint) {
                 /** @var $navPoint NavPoint */
                 $retLevel = $navPoint->finalize($nav, $playOrder, 0);
@@ -135,7 +138,7 @@ class NavMap extends AbstractNavEntry
         $nav = "\t\t<nav epub:type=\"toc\" id=\"toc\">\n";
 
         if ($this->navPoints !== []) {
-            $this->navLevels++;
+            ++$this->navLevels;
 
             $nav .= str_repeat("\t", $level) . "\t\t\t<ol epub:type=\"list\">\n";
             foreach ($this->navPoints as $navPoint) {
@@ -145,6 +148,7 @@ class NavMap extends AbstractNavEntry
                     $this->navLevels = $retLevel;
                 }
             }
+
             $nav .= str_repeat("\t", $level) . "\t\t\t</ol>\n";
         }
 

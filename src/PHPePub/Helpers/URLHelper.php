@@ -38,6 +38,7 @@ class URLHelper
         if ($https === "on") {
             $serverURL .= "s";
         }
+
         $serverURL .= "://" . filter_input(INPUT_SERVER, "SERVER_NAME");
         if ($port != "80") {
             $serverURL .= ":" . $port;

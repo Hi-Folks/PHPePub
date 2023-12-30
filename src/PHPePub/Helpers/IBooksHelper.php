@@ -37,14 +37,19 @@ class IBooksHelper
      * Add with: $book->addCustomPrefix(iBooks::EPUB3_IBOOK_PREFIX_NAME, iBooks::EPUB3_IBOOK_PREFIX_URI);
      */
     final public const EPUB3_IBOOK_PREFIX_NAME = "ibooks";
+
     final public const EPUB3_IBOOK_PREFIX_URI = "http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0";
 
     final public const ORIENTATION_NONE = "none";
+
     final public const ORIENTATION_PORTRAIT_ONLY = "portrait-only";
+
     final public const ORIENTATION_LANDSCAPE_ONLY = "landscape-only";
 
     final public const PLATFORM_ALL = "*";
+
     final public const PLATFORM_IPHONE = "iphone";
+
     final public const PLATFORM_IPAD = "ipad";
 
     /**

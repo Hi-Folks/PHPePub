@@ -14,12 +14,19 @@ use PHPePub\Core\EPub;
 class Item
 {
     private ?string $id = null;
+
     private ?string $href = null;
+
     private ?string $mediaType = null;
+
     private ?string $properties = null;
+
     private ?string $requiredNamespace = null;
+
     private ?string $requiredModules = null;
+
     private ?string $fallback = null;
+
     private ?string $fallbackStyle = null;
 
     private array $indexPoints = [];
@@ -145,21 +152,24 @@ class Item
      */
     public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2): string
     {
-        $item = "\t\t<item id=\"" . $this->id . "\" href=\"" . $this->href . "\" media-type=\"" . $this->mediaType . "\" ";
+        $item = "\t\t<item id=\"" . $this->id . '" href="' . $this->href . '" media-type="' . $this->mediaType . '" ';
         if ($bookVersion === EPub::BOOK_VERSION_EPUB3 && $this->properties !== null) {
-            $item .= "properties=\"" . $this->properties . "\" ";
+            $item .= 'properties="' . $this->properties . '" ';
         }
+
         if ($this->requiredNamespace !== null) {
-            $item .= "\n\t\t\trequired-namespace=\"" . $this->requiredNamespace . "\" ";
+            $item .= "\n\t\t\trequired-namespace=\"" . $this->requiredNamespace . '" ';
             if ($this->requiredModules !== null) {
-                $item .= "required-modules=\"" . $this->requiredModules . "\" ";
+                $item .= 'required-modules="' . $this->requiredModules . '" ';
             }
         }
+
         if ($this->fallback !== null) {
-            $item .= "\n\t\t\tfallback=\"" . $this->fallback . "\" ";
+            $item .= "\n\t\t\tfallback=\"" . $this->fallback . '" ';
         }
+
         if ($this->fallbackStyle !== null) {
-            $item .= "\n\t\t\tfallback-style=\"" . $this->fallbackStyle . "\" ";
+            $item .= "\n\t\t\tfallback-style=\"" . $this->fallbackStyle . '" ';
         }
 
         return $item . "/>\n";

@@ -36,9 +36,11 @@ class Manifest
         if ($item == null) {
             return;
         }
+
         if (!is_object($item)) {
             return;
         }
+
         $this->items[] = $item;
     }
 

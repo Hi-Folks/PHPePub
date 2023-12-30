@@ -12,6 +12,7 @@ namespace PHPePub\Core\Structure\OPF;
 class Spine
 {
     private array $itemrefs = [];
+
     private ?string $toc = null;
 
     /**
@@ -56,12 +57,15 @@ class Spine
         if ($itemref == null) {
             return;
         }
+
         if (!is_object($itemref)) {
             return;
         }
+
         if (isset($this->itemrefs[$itemref->getIdref()])) {
             return;
         }
+
         $this->itemrefs[$itemref->getIdref()] = $itemref;
     }
 

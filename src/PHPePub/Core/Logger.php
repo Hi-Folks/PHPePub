@@ -12,9 +12,13 @@ namespace PHPePub\Core;
 class Logger
 {
     private string $log = "";
+
     private array|float|null $tStart = null;
+
     private $tLast;
+
     private ?string $name = null;
+
     private bool $isDebugging = false;
 
     /**

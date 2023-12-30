@@ -32,6 +32,7 @@ class StringHelper
         if (mb_detect_encoding($in_str) == "UTF-8" && mb_check_encoding($in_str, "UTF-8")) {
             return $in_str;
         }
+
         return mb_convert_encoding($in_str, 'UTF-8', 'ISO-8859-1');
     }
 
@@ -128,6 +129,7 @@ class StringHelper
     {
         $doc = preg_replace('~--\s+>~', '-->', (string) $doc);
         $doc = preg_replace('~<\s*!\s*--~', '<!--', $doc);
+
         $cPos = mb_strpos($doc, "<!--");
         if ($cPos !== false) {
             $startCount = substr_count($doc, "<!--");

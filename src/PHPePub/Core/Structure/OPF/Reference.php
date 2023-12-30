@@ -80,7 +80,9 @@ class Reference
     final public const BACKMATTER = "backmatter";
 
     private ?string $type = null;
+
     private ?string $title = null;
+
     private ?string $href = null;
 
     /**
@@ -146,6 +148,6 @@ class Reference
      */
     public function finalize(): string
     {
-        return "\t\t<reference type=\"" . $this->type . "\" title=\"" . $this->title . "\" href=\"" . $this->href . "\" />\n";
+        return "\t\t<reference type=\"" . $this->type . '" title="' . $this->title . '" href="' . $this->href . "\" />\n";
     }
 }

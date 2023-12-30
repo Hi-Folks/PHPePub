@@ -39,50 +39,104 @@ OTHER DEALINGS IN THE SOFTWARE.
 class UUID implements \Stringable
 {
     final public const MD5  = 3;
+
     final public const SHA1 = 5;
-    final public const clearVer = 15;  // 00001111  Clears all bits of version byte with AND
-    final public const clearVar = 63;  // 00111111  Clears all relevant bits of variant byte with AND
-    final public const varRes   = 224; // 11100000  Variant reserved for future use
-    final public const varMS    = 192; // 11000000  Microsft GUID variant
-    final public const varRFC   = 128; // 10000000  The RFC 4122 variant (this variant)
-    final public const varNCS   = 0;   // 00000000  The NCS compatibility variant
-    final public const version1 = 16;  // 00010000
-    final public const version3 = 48;  // 00110000
-    final public const version4 = 64;  // 01000000
-    final public const version5 = 80;  // 01010000
-    final public const interval = "122192928000000000"; //  Time (in 100ns steps) between the start of the Gregorian and Unix epochs
+
+    final public const clearVer = 15;
+
+    // 00001111  Clears all bits of version byte with AND
+    final public const clearVar = 63;
+
+    // 00111111  Clears all relevant bits of variant byte with AND
+    final public const varRes   = 224;
+
+    // 11100000  Variant reserved for future use
+    final public const varMS    = 192;
+
+    // 11000000  Microsft GUID variant
+    final public const varRFC   = 128;
+
+    // 10000000  The RFC 4122 variant (this variant)
+    final public const varNCS   = 0;
+
+    // 00000000  The NCS compatibility variant
+    final public const version1 = 16;
+
+    // 00010000
+    final public const version3 = 48;
+
+    // 00110000
+    final public const version4 = 64;
+
+    // 01000000
+    final public const version5 = 80;
+
+    // 01010000
+    final public const interval = "122192928000000000";
+
+    //  Time (in 100ns steps) between the start of the Gregorian and Unix epochs
     final public const nsDNS  = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+
     final public const nsURL  = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+
     final public const nsOID  = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
+
     final public const nsX500 = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
+
     final public const bigChoose = -1;
+
     final public const bigNot    = 0;
+
     final public const bigNative = 1;
+
     final public const bigGMP    = 2;
+
     final public const bigBC     = 3;
+
     final public const bigSecLib = 4;
+
     final public const randChoose  = -1;
+
     final public const randPoor    = 0;
+
     final public const randDev     = 1;
+
     final public const randCAPICOM = 2;
+
     final public const randOpenSSL = 3;
+
     final public const randMcrypt  = 4;
+
     final public const randNative  = 5;
+
     //static properties
     protected static $randomFunc   = self::randChoose;
+
     protected static $randomSource;
+
     protected static $bignum       = self::bigChoose;
+
     protected static $storeClass   = "UUIDStorageStable";
+
     protected static $store;
+
     protected static $secLib;
+
     //instance properties
     protected $bytes;
+
     protected $hex;
+
     protected string $string;
+
     protected $urn;
+
     protected $version;
+
     protected $variant;
+
     protected $node;
+
     protected $time;
 
     public static function mint($ver = 1, $node = null, $ns = null, $time = null)
@@ -111,6 +165,7 @@ class UUID implements \Stringable
         if (self::$randomFunc == self::randChoose) {
             self::$randomFunc = self::randPoor;
         }
+
         /* Create a new UUID based on provided data and output a string rather than an object. */
         $uuid = match ((int) $ver) {
             1 => self::mintTime($node, $ns, $time),
@@ -173,17 +228,21 @@ class UUID implements \Stringable
                 if ($byte >= self::varRes) {
                     return 3;
                 }
+
                 if ($byte >= self::varMS) {
                     return 2;
                 }
+
                 if ($byte >= self::varRFC) {
                     return 1;
                 }
+
                 return 0;
             case "node":
                 if (ord($this->bytes[6]) >> 4 == 1) {
                     return bin2hex(strrev(substr((string) $this->bytes, 10)));
                 }
+
                 return null;
             case "time":
                 if (ord($this->bytes[6]) >> 4 == 1) {
@@ -195,6 +254,7 @@ class UUID implements \Stringable
                     $time = self::decodeTimestamp($time);
                     return $time;
                 }
+
                 return null;
             default:
                 return null;
@@ -206,6 +266,7 @@ class UUID implements \Stringable
         if (strlen((string) $uuid) != 16) {
             throw new UUIDException("Input must be a valid UUID.", 3);
         }
+
         $this->bytes  = $uuid;
         // Optimize the most common use
         $this->string =
@@ -224,10 +285,12 @@ class UUID implements \Stringable
         if (self::$bignum == self::bigChoose) {
             self::$bignum = (PHP_INT_SIZE >= 8) ? self::bigNative : self::bigNot;
         }
+
         // ensure a store is available
         if (self::$store === null) {
             self::$store = new UUIDStorageVolatile();
         }
+
         // check any input for correctness and communicate with the store where appropriate
         [$node, $seq, $time] = self::checkTimeInput($node, $seq, $time);
         // construct a 60-bit timestamp, padded to 64 bits
@@ -265,11 +328,13 @@ class UUID implements \Stringable
         if ($ver == 3 && !$node) {
             throw new UUIDException("A name-string is required for Version 3 or 5 UUIDs.", 201);
         }
+
         // if the namespace UUID isn't binary, make it so
         $ns = self::makeBin($ns);
         if (!$ns) {
             throw new UUIDException("A valid UUID namespace is required for Version 3 or 5 UUIDs.", 202);
         }
+
         switch($ver) {
             case self::MD5:
                 $version = self::version3;
@@ -280,6 +345,7 @@ class UUID implements \Stringable
                 $uuid = substr(sha1($ns . $node, 1), 0, 16);
                 break;
         }
+
         // set variant
         $uuid[8] = chr(ord($uuid[8]) & self::clearVar | self::varRFC);
         // set version
@@ -307,19 +373,23 @@ class UUID implements \Stringable
                 throw new UUIDException("Node must be a valid MAC address.", 101);
             }
         }
+
         // Do a sanity check on clock sequence if one is provided
         if ($seq !== null && strlen((string) $seq) != 2) {
             throw UUIDException("Clock sequence must be a two-byte binary string.", 102);
         }
+
         // If one is not provided, check stable/volatile storage for a valid clock sequence
         if ($seq === null) {
             $seq = self::$store->getSequence($time, $node);
         }
+
         // Generate a random clock sequence if one is not available
         if (!$seq) {
             $seq = self::seq();
             self::$store->setSequence($seq);
         }
+
         self::$store->setTimestamp($time);
         return [$node, $seq, $time];
     }
@@ -331,12 +401,14 @@ class UUID implements \Stringable
         if(is_a($time, "DateTimeInterface") || is_a($time, "DateTime")) {
             return $time->format("U") . str_pad((string) $time->format("u"), 7, "0", STR_PAD_RIGHT);
         }
+
         switch(gettype($time)) {
             case "string":
                 $time = explode(" ", $time);
                 if(count($time) != 2) {
                     throw new UUIDException("Time input was of an unexpected format.", 103);
                 }
+
                 return $time[1] . substr(str_pad($time[0], 9, "0", STR_PAD_RIGHT), 2, 7);
             case "integer": // assume a second-precision timestamp
                 return $time . "0000000";
@@ -381,6 +453,7 @@ class UUID implements \Stringable
                     $in = bcdiv($in, $base, 0);
                     $out = base_convert($mod, 10, 16) . $out;
                 } while($in > 0);
+
                 break;
             case self::bigSecLib:
                 $out = new self::$secLib($time);
@@ -390,6 +463,7 @@ class UUID implements \Stringable
             default:
                 throw new UUIDException("Bignum method not implemented.", 901);
         }
+
         // convert to binary, padding to 8 bytes
         return pack("H*", str_pad((string) $out, 16, "0", STR_PAD_LEFT));
     }
@@ -402,6 +476,7 @@ class UUID implements \Stringable
         if (self::$bignum == self::bigChoose) {
             self::$bignum = (PHP_INT_SIZE >= 8) ? self::bigNative : self::bigNot;
         }
+
         switch(self::$bignum) {
             case self::bigNative:
                 $time = hexdec((string) $hex) - self::interval;
@@ -422,6 +497,7 @@ class UUID implements \Stringable
                     $time = bcadd($time, bcmul($chunk, $mul));
                     $mul = bcmul($max, $mul);
                 } while (count($hex));
+
                 // And finally subtract the magic number to get the correct timestamp
                 $time = bcsub($time, self::interval);
                 break;
@@ -438,6 +514,7 @@ class UUID implements \Stringable
             default:
                 throw new UUIDException("Bignum method not implemented.", 901);
         }
+
         return substr((string) $time, 0, strlen((string) $time) - 7) . "." . substr((string) $time, strlen((string) $time) - 7);
     }
 
@@ -449,14 +526,17 @@ class UUID implements \Stringable
         if ($str instanceof self) {
             return $str->bytes;
         }
+
         if (strlen((string) $str) == $len) {
             return $str;
         }
+
         $str = preg_replace("/^urn:uuid:/is", "", (string) $str); // strip URN scheme and namespace
         $str = preg_replace("/[^a-f0-9]/is", "", $str);  // strip non-hex characters
         if (strlen($str) != ($len * 2)) {
             return false;
         }
+
         return pack("H*", $str);
     }
 
@@ -468,10 +548,12 @@ class UUID implements \Stringable
         if (strlen((string) $str) == $len) {
             return $str;
         }
+
         $str = preg_replace("/[^a-f0-9]/is", "", (string) $str);  // strip non-hex characters
         if (strlen($str) != ($len * 2)) {
             return false;
         }
+
         // MAC addresses are little-endian and UUIDs are big-endian, so we reverse bytes
         return strrev(pack("H*", $str));
     }
@@ -483,9 +565,10 @@ class UUID implements \Stringable
             case self::randPoor:
                 /* Get the specified number of random bytes, using mt_rand(). */
                 $rand = "";
-                for ($a = 0; $a < $bytes; $a++) {
+                for ($a = 0; $a < $bytes; ++$a) {
                     $rand .= chr(mt_rand(0, 255));
                 }
+
                 return $rand;
             case self::randNative:
                 /* Get the specified number of bytes from the PHP core.
@@ -518,10 +601,12 @@ class UUID implements \Stringable
         if ($big == self::bigNot) {
             throw new UUIDException("64-bit integer arithmetic is not available.", 2001);
         }
+
         $rand = self::initRandom();
         if ($rand == self::randPoor) {
             throw new UUIDException("Secure random number generator is not available.", 2002);
         }
+
         if (!is_object(self::$store)) {
             try {
                 call_user_func_array(["self", "initStorage"], func_gets_args());
@@ -541,6 +626,7 @@ class UUID implements \Stringable
             if (self::$randomFunc != self::randChoose) {
                 return self::$randomFunc;
             }
+
             if (function_exists('random_bytes')) {
                 $how = self::randNative;
             } elseif (function_exists('openssl_random_pseudo_bytes')) {
@@ -552,6 +638,7 @@ class UUID implements \Stringable
             } else {
                 $how = self::randCAPICOM;
             }
+
             try {
                 self::initRandom($how);
             } catch(Exception) {
@@ -570,39 +657,47 @@ class UUID implements \Stringable
                     if (!function_exists('random_bytes')) {
                         throw new UUIDException("Randomness source is not available.", 802);
                     }
+
                     break;
                 case self::randDev:
                     $source = @fopen('/dev/urandom', 'rb');
                     if (!$source) {
                         throw new UUIDException("Randomness source is not available.", 802);
                     }
+
                     break;
                 case self::randOpenSSL:
                     if (!function_exists('openssl_random_pseudo_bytes')) {
                         throw new UUIDException("Randomness source is not available.", 802);
                     }
+
                     break;
                 case self::randMcrypt:
                     if (!function_exists('mcrypt_create_iv')) {
                         throw new UUIDException("Randomness source is not available.", 802);
                     }
+
                     break;
                 case self::randCAPICOM: // See http://msdn.microsoft.com/en-us/library/aa388182(VS.85).aspx
                     if (!class_exists('COM', 0)) {
                         throw new UUIDException("Randomness source is not available.", 802);
                     }
+
                     try {
                         $source = new COM('CAPICOM.Utilities.1');
                     } catch(Exception $e) {
                         throw new UUIDException("Randomness source is not available.", 802, $e);
                     }
+
                     break;
                 default:
                     throw new UUIDException("Randomness source not implemented.", 902);
             }
+
             self::$randomSource = $source;
             self::$randomFunc = $how;
         }
+
         return self::$randomFunc;
     }
 
@@ -615,6 +710,7 @@ class UUID implements \Stringable
                 // determination has already been made
                 return self::$bignum;
             }
+
             if (PHP_INT_SIZE >= 8) {
                 self::$bignum = self::bigNative;
             } elseif (function_exists("gmp_add")) {
@@ -641,16 +737,19 @@ class UUID implements \Stringable
                     if (PHP_INT_SIZE < 8) {
                         throw new UUIDException("Bignum method is not available.", 801);
                     }
+
                     break;
                 case self::bigGMP:
                     if (!function_exists("gmp_add")) {
                         throw new UUIDException("Bignum method is not available.", 801);
                     }
+
                     break;
                 case self::bigBC:
                     if (!function_exists("bcadd")) {
                         throw new UUIDException("Bignum method is not available.", 801);
                     }
+
                     break;
                 case self::bigSecLib:
                     if (class_exists("\phpseclib\Math\BigInteger", 0)) { //v2.x
@@ -660,12 +759,15 @@ class UUID implements \Stringable
                     } else {
                         throw new UUIDException("Bignum method is not available.", 801);
                     }
+
                     break;
                 default:
                     throw new UUIDException("Bignum method not implemented.", 901);
             }
+
             self::$bignum = $how;
         }
+
         return self::$bignum;
     }
 
@@ -677,14 +779,16 @@ class UUID implements \Stringable
             } catch(Exception $e) {
                 throw new UUIDStorageException("Storage class could not be instantiated with supplied arguments.", 1003, $e);
             }
+
             return;
         }
+
         $store = new ReflectionClass(self::$storeClass);
         $args = func_get_args();
         try {
             self::$store = $store->newInstanceArgs($args);
-        } catch(Exception $e) {
-            throw new UUIDStorageException("Storage class could not be instantiated with supplied arguments.", 1003, $e);
+        } catch(Exception $exception) {
+            throw new UUIDStorageException("Storage class could not be instantiated with supplied arguments.", 1003, $exception);
         }
     }
 
@@ -692,12 +796,14 @@ class UUID implements \Stringable
     {
         try {
             $store = new ReflectionClass($name);
-        } catch(Exception $e) {
-            throw new UUIDStorageException("Storage class does not exist.", 1001, $e);
+        } catch(Exception $exception) {
+            throw new UUIDStorageException("Storage class does not exist.", 1001, $exception);
         }
+
         if (!in_array("UUIDStorage", $store->getInterfaceNames())) {
             throw new UUIDStorageException("Storage class does not implement the UUIDStorage interface.", 1002);
         }
+
         self::$storeClass = $name;
         if (func_num_args() > 1) {
             $args = func_get_args();
@@ -712,21 +818,30 @@ class UUID implements \Stringable
 }
 
 class UUIDException extends Exception {}
+
 class UUIDStorageException extends UUIDException {}
 
 interface UUIDStorage
 {
-    public function getNode(); // return bytes or NULL if node cannot be retrieved
-    public function getSequence($timestamp, $node); // return bytes or NULL if sequence is not available; this method should also update the stored timestamp
+    public function getNode();
+
+    // return bytes or NULL if node cannot be retrieved
+    public function getSequence($timestamp, $node);
+
+    // return bytes or NULL if sequence is not available; this method should also update the stored timestamp
     public function setSequence($sequence);
+
     public function setTimestamp($timestamp);
+
     public const maxSequence = 16383; // 00111111 11111111
 }
 
 class UUIDStorageVolatile implements UUIDStorage
 {
     protected $node;
+
     protected $timestamp;
+
     protected $sequence;
 
     public function getNode()
@@ -734,6 +849,7 @@ class UUIDStorageVolatile implements UUIDStorage
         if ($this->node === null) {
             return;
         }
+
         return $this->node;
     }
 
@@ -743,12 +859,15 @@ class UUIDStorageVolatile implements UUIDStorage
             $this->node = $node;
             return;
         }
+
         if ($this->sequence === null) {
             return;
         }
+
         if ($timestamp <= $this->timestamp) {
             $this->sequence = pack("n", (unpack("nseq", (string) $this->sequence)['seq'] + 1) & self::maxSequence);
         }
+
         $this->setTimestamp($timestamp);
         return $this->sequence;
     }
@@ -767,7 +886,9 @@ class UUIDStorageVolatile implements UUIDStorage
 class UUIDStorageStable extends UUIDStorageVolatile
 {
     protected $file;
+
     protected $read = false;
+
     protected $wrote = true;
 
     public function __construct($path)
@@ -777,6 +898,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
             if (!is_writable($dir)) {
                 throw new UUIDStorageException("Stable storage is not writable.", 1102);
             }
+
             if (!is_readable($dir)) {
                 throw new UUIDStorageException("Stable storage is not readable.", 1101);
             }
@@ -785,6 +907,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
         } elseif (!is_readable($path)) {
             throw new UUIDStorageException("Stable storage is not readable.", 1101);
         }
+
         $this->file = $path;
     }
 
@@ -793,19 +916,23 @@ class UUIDStorageStable extends UUIDStorageVolatile
         if (!file_exists($this->file)) { // a missing file is not an error
             return;
         }
+
         $data = @file_get_contents($this->file);
         if ($data === false) {
             throw new UUIDStorageException("Stable storage could not be read.", 1201);
         }
+
         $this->read = true;
         $this->wrote = false;
         if ($data === '' || $data === '0') { // an empty file is not an error
             return;
         }
+
         $data = @unserialize($data);
         if (!is_array($data) || count($data) < 3) {
             throw new UUIDStorageException("Stable storage data is invalid or corrupted.", 1203);
         }
+
         [$this->node, $this->sequence, $this->timestamp] = $data;
     }
 
@@ -820,6 +947,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
         if (!$this->read) {
             $this->readState();
         }
+
         parent::setSequence($sequence);
         $this->write();
     }
@@ -830,6 +958,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
         if ($this->wrote) {
             return;
         }
+
         $this->write();
     }
 
@@ -840,6 +969,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
         if ($check && $write === false) {
             throw new UUIDStorageException("Stable storage could not be written.", 1202);
         }
+
         $this->wrote = true;
         $this->read = false;
     }

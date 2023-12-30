@@ -17,7 +17,9 @@ use SimpleXMLElement;
 class ImageHelper
 {
     protected static $isGdInstalled;
+
     protected static $isExifInstalled;
+
     protected static $isAnimatedGifResizeInstalled;
 
     /**
@@ -42,6 +44,7 @@ class ImageHelper
         ) {
             return 'application/octet-stream';
         }
+
         static $type = [1 => 'image/jpeg', 2 => 'image/gif', 3 => 'image/png', 4 => 'image/x-windows-bmp', 5 => 'image/tiff', 6 => 'image/x-ilbm'];
 
         return $type[count($hits) - 1];
@@ -61,6 +64,7 @@ class ImageHelper
         if ($width > $maxImageWidth) {
             return $maxImageWidth / $width;
         }
+
         if ($height > $maxImageHeight) {
             return $maxImageHeight / $height;
         }
@@ -79,12 +83,15 @@ class ImageHelper
         if (strpos((string) $attr, $sep) > 0) {
             return preg_split('/\s*' . $sep . '\s*/', (string) $attr);
         }
+
         if ($sep !== ',' && strpos((string) $attr, ',') > 0) {
             return preg_split('/\s*,\s*/', (string) $attr);
         }
+
         if (strpos((string) $attr, ';') > 0) {
             return preg_split('/\s*;\s*/', (string) $attr);
         }
+
         return preg_split('/\s+/', (string) $attr);
     }
 
@@ -117,8 +124,10 @@ class ImageHelper
             if ($unit == '%') {
                 return $length * 0.01 * $portSize;
             }
+
             return $length * $unitLength[$unit];
         }
+
         // Assume pixels
         return (float) $length;
     }
@@ -156,6 +165,7 @@ class ImageHelper
             $x = self::scaleSVGUnit($attr->x, 0);
             $metadata['originalX'] = "" . $attr->x;
         }
+
         if ($attr->y !== null) {
             $y = self::scaleSVGUnit($attr->y, 0);
             $metadata['originalY'] = "" . $attr->y;
@@ -165,6 +175,7 @@ class ImageHelper
             $width = self::scaleSVGUnit($attr->width, $viewWidth);
             $metadata['originalWidth'] = "" . $attr->width;
         }
+
         if ($attr->height !== null) {
             $height = self::scaleSVGUnit($attr->height, $viewHeight);
             $metadata['originalHeight'] = "" . $attr->height;
@@ -183,6 +194,7 @@ class ImageHelper
             $metadata['x'] = (int) round($x);
             $metadata['y'] = (int) round($y);
         }
+
         if ($width > 0 && $height > 0) {
             $metadata['width'] = (int) round($width);
             $metadata['height'] = (int) round($height);
@@ -238,6 +250,7 @@ class ImageHelper
                     $attr->width = $width * $ratio;
                     $attr->height = $height * $ratio;
                 }
+
                 $image = $xml->asXML();
             } else {
 
@@ -246,13 +259,16 @@ class ImageHelper
                     $width = ImageSX($imageFile);
                     $height = ImageSY($imageFile);
                 }
+
                 if (self::isExifInstalled()) {
                     @$type = exif_imagetype($imageSource);
                     $mime = image_type_to_mime_type($type);
                 }
+
                 if ($mime === "application/octet-stream") {
                     $mime = ImageHelper::getImageFileTypeFromBinary($image);
                 }
+
                 if ($mime === "application/octet-stream") {
                     $mime = MimeHelper::getMimeTypeFromUrl($imageSource);
                 }

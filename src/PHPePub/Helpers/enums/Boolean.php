@@ -14,6 +14,7 @@ use PHPePub\Helpers\Enum;
 abstract class Boolean extends Enum
 {
     final public const TRUE = "true";
+
     final public const FALSE = "false";
 
     /**
@@ -26,9 +27,11 @@ abstract class Boolean extends Enum
         if (is_bool($value)) {
             return $value ? self::TRUE : self::FALSE;
         }
+
         if (is_numeric($value)) { // 0 is false, everything else is true.
             return $value !== 0 ? self::TRUE : self::FALSE;
         }
+
         if (is_string($value)) { // 0 is false, everything else is true.
             $value = strtolower($value);
 

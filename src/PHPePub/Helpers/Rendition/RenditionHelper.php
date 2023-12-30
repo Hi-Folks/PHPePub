@@ -16,23 +16,33 @@ use PHPePub\Core\EPub;
 class RenditionHelper
 {
     final public const RENDITION_PREFIX_NAME = "rendition";
+
     final public const RENDITION_PREFIX_URI = "http://www.idpf.org/vocab/rendition/#";
 
     final public const RENDITION_LAYOUT = "rendition:layout";
+
     final public const RENDITION_ORIENTATION = "rendition:orientation";
+
     final public const RENDITION_SPREAD = "rendition:spread";
 
     final public const LAYOUT_REFLOWABLE = "reflowable";
+
     final public const LAYOUT_PRE_PAGINATED = "pre-paginated";
 
     final public const ORIENTATION_LANDSCAPE = "landscape";
+
     final public const ORIENTATION_PORTRAIT = "portrait";
+
     final public const ORIENTATION_AUTO = "auto";
 
     final public const SPREAD_NONE = "none";
+
     final public const SPREAD_LANDSCAPE = "landscape";
+
     final public const SPREAD_PORTRAIT = "portrait";
+
     final public const SPREAD_BOTH = "both";
+
     final public const SPREAD_AUTO = "auto";
 
     /**

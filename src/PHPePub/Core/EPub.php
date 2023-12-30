@@ -41,25 +41,33 @@ class EPub
     final public const VERSION = '4.0.6';
 
     final public const IDENTIFIER_UUID = 'UUID';
+
     final public const IDENTIFIER_URI = 'URI';
+
     final public const IDENTIFIER_ISBN = 'ISBN';
 
     /** Ignore all external references, and do not process the file for these */
     final public const EXTERNAL_REF_IGNORE = 0;
+
     /** Process the file for external references and add them to the book */
     final public const EXTERNAL_REF_ADD = 1;
+
     /** Process the file for external references and add them to the book, but remove images, and img tags */
     final public const EXTERNAL_REF_REMOVE_IMAGES = 2;
+
     /** Process the file for external references and add them to the book, but replace images, and img tags with [image] */
     final public const EXTERNAL_REF_REPLACE_IMAGES = 3;
 
     final public const DIRECTION_LEFT_TO_RIGHT = 'ltr';
+
     final public const DIRECTION_RIGHT_TO_LEFT = 'rtl';
 
     final public const BOOK_VERSION_EPUB2 = '2.0';
+
     final public const BOOK_VERSION_EPUB3 = '3.0';
 
     final public const FORMAT_XHTML = 'xhtml';
+
     final public const FORMAT_HTML5 = 'html5';
 
     public $viewportMap = ["small" => ['width' => 600, 'height' => 800], "medium" => ['width' => 720, 'height' => 1280], "720p" => ['width' => 720, 'height' => 1280], "ipad" => ['width' => 768, 'height' => 1024], "large" => ['width' => 1080, 'height' => 1920], "2k" => ['width' => 1080, 'height' => 1920], "1080p" => ['width' => 1080, 'height' => 1920], "ipad3" => ['width' => 1536, 'height' => 2048], "4k" => ['width' => 2160, 'height' => 3840]];
@@ -67,7 +75,9 @@ class EPub
     public $splitDefaultSize = 250000;
 
     public $maxImageWidth = 768;
+
     public $maxImageHeight = 1024;
+
     /**
      * Gifs can crash some early ADE based readers, and are disabled by default.
      * getImage will convert these if it can, unless this is set to TRUE.
@@ -75,6 +85,7 @@ class EPub
     public $isGifImagesEnabled = false;
 
     public $isReferencesAddedToToc = true;
+
     /**
      * Used for building the TOC.
      * If this list is overwritten it MUST contain at least "text" as an element.
@@ -84,48 +95,90 @@ class EPub
     public $pluginDir = 'extLib';
 
     public $isLogging = true;
+
     public $encodeHTML = false;
+
     /** @var $Zip Zip */
     private \PHPZip\Zip\File\Zip $zip;
+
     private string $title = '';
+
     private string $language = 'en';
+
     private string $identifier = '';
+
     private string $identifierType = '';
+
     private string $description = '';
+
     private string $author = '';
+
     private string $authorSortKey = '';
+
     private string $publisherName = '';
+
     private string $publisherURL = '';
+
     private int $date = 0;
+
     private string $rights = '';
+
     private string $coverage = '';
+
     private string $relation = '';
+
     private string $sourceURL = '';
+
     private int $chapterCount = 0;
+
     /** @var $opf Opf */
     private ?\PHPePub\Core\Structure\Opf $opf = null;
+
     /** @var $ncx Ncx */
     private ?\PHPePub\Core\Structure\Ncx $ncx = null;
+
     private bool $isFinalized = false;
+
     private bool $isInitialized = false;
+
     private bool $isCoverImageSet = false;
-    private bool $buildTOC = false; // ISO 8601 long
-    private $tocTitle; // short date format to placate ePubChecker.
+
+    private bool $buildTOC = false;
+
+    // ISO 8601 long
+    private $tocTitle;
+
+    // short date format to placate ePubChecker.
     private ?string $tocFileName = null;
+
     private bool $tocNavAdded = false;
+
     private $tocCSSClass;
+
     private bool $tocAddReferences = false;
+
     private ?string $tocCssFileName = null;
+
     private array $fileList = [];
+
     private string $dateformat = 'Y-m-d\TH:i:s.000000P';
+
     private string $dateformatShort = 'Y-m-d';
+
     private string $headerDateFormat = "D, d M Y H:i:s T";
+
     private ?string $docRoot = null;
+
     private string $bookRoot = 'OEBPS/';
+
     private bool $EPubMark = true;
+
     private string $generator = '';
+
     private ?\PHPePub\Core\Logger $log = null;
+
     private string $htmlContentHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n    \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n<title></title>\n</head>\n<body>\n";
+
     private string $htmlContentFooter = "</body>\n</html>\n";
 
     private ?array $viewport = null;
@@ -153,6 +206,7 @@ class EPub
             $this->log->logLine('EPub class version....: ' . self::VERSION);
             $this->log->dumpInstalledModules();
         }
+
         $this->setUp();
     }
 
@@ -216,8 +270,10 @@ class EPub
         if ($this->isFinalized) {
             return false;
         }
+
         $fileName = RelativePath::getRelativePath($fileName);
         $fileName = preg_replace('#^[/\.]+#i', "", $fileName);
+
         $navPoint = false;
 
         $chapter = $chapterData;
@@ -242,7 +298,7 @@ class EPub
                 $chapter = StringHelper::encodeHtml($chapter);
             }
 
-            $this->chapterCount++;
+            ++$this->chapterCount;
             $this->addFile($fileName, "chapter" . $this->chapterCount, $chapter, "application/xhtml+xml");
             $this->extractIdAttributes("chapter" . $this->chapterCount, $chapter);
 
@@ -252,13 +308,13 @@ class EPub
             $this->ncx->addNavPoint($navPoint);
             $this->ncx->chapterList[$chapterName] = $navPoint;
         } elseif (is_array($chapter)) {
-            $this->log->logLine("addChapter: \$chapterName: $chapterName ; \$fileName: $fileName ; ");
+            $this->log->logLine(sprintf('addChapter: $chapterName: %s ; $fileName: %s ; ', $chapterName, $fileName));
             $fileNameParts = pathinfo($fileName);
             $extension = $fileNameParts['extension'];
             $name = $fileNameParts['filename'];
 
             $partCount = 0;
-            $this->chapterCount++;
+            ++$this->chapterCount;
 
             foreach ($chapter as $oneChapter) {
                 if ($this->encodeHTML === true) {
@@ -268,13 +324,15 @@ class EPub
                 if ($externalReferences !== EPub::EXTERNAL_REF_IGNORE) {
                     $this->processChapterExternalReferences($oneChapter, $externalReferences, $baseDir);
                 }
-                $partCount++;
+
+                ++$partCount;
                 $partName = $name . "_" . $partCount;
                 $this->addFile($partName . "." . $extension, $partName, $oneChapter, "application/xhtml+xml");
                 $this->extractIdAttributes($partName, $oneChapter);
 
                 $this->opf->addItemRef($partName);
             }
+
             $partName = $name . "_1." . $extension;
             $navPoint = new NavPoint(StringHelper::decodeHtmlEntities($chapterName), $partName, $partName);
 
@@ -282,7 +340,7 @@ class EPub
 
             $this->ncx->chapterList[$chapterName] = $navPoint;
         } elseif (!isset($chapterData) && strpos($fileName, "#") > 0) {
-            $this->chapterCount++;
+            ++$this->chapterCount;
             //$this->opf->addItemRef("chapter" . $this->chapterCount);
 
             $id = preg_split("/[#]/", $fileName);
@@ -310,7 +368,7 @@ class EPub
             $this->ncx->addNavPoint($navPoint);
             $this->ncx->chapterList[$chapterName] = $navPoint;
         } elseif (!isset($chapterData) && $fileName == "TOC.xhtml") {
-            $this->chapterCount++;
+            ++$this->chapterCount;
             $this->opf->addItemRef("toc");
 
             $navPoint = new NavPoint(StringHelper::decodeHtmlEntities($chapterName), $fileName, "chapter" . $this->chapterCount);
@@ -430,12 +488,12 @@ class EPub
             $bodyNode = $xmlDoc->getElementsByTagName("body");
 
             $htmlNS = "";
-            for ($index = 0; $index < $htmlNode->item(0)->attributes->length; $index++) {
+            for ($index = 0; $index < $htmlNode->item(0)->attributes->length; ++$index) {
                 $nodeName = $htmlNode->item(0)->attributes->item($index)->nodeName;
                 $nodeValue = $htmlNode->item(0)->attributes->item($index)->nodeValue;
 
                 if ($nodeName != "xmlns") {
-                    $htmlNS .= " $nodeName=\"$nodeValue\"";
+                    $htmlNS .= sprintf(' %s="%s"', $nodeName, $nodeValue);
                 }
             }
 
@@ -448,7 +506,7 @@ class EPub
             $xml2Doc->lookupPrefix("http://www.w3.org/1999/xhtml");
             $xml2Doc->loadXML("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n"
                 . "   \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"
-                . "<html xmlns=\"http://www.w3.org/1999/xhtml\"" . $htmlNS . ">\n</html>\n");
+                . '<html xmlns="http://www.w3.org/1999/xhtml"' . $htmlNS . ">\n</html>\n");
             $html = $xml2Doc->getElementsByTagName("html")->item(0);
             $html->appendChild($xml2Doc->importNode($headNode->item(0), true));
             $html->appendChild($xml2Doc->importNode($bodyNode->item(0), true));
@@ -480,10 +538,11 @@ class EPub
         if ($this->isFinalized || $externalReferences === EPub::EXTERNAL_REF_IGNORE) {
             return false;
         }
+
         // process inlined CSS styles in style tags.
         $styles = $xmlDoc->getElementsByTagName("style");
         $styleCount = $styles->length;
-        for ($styleIdx = 0; $styleIdx < $styleCount; $styleIdx++) {
+        for ($styleIdx = 0; $styleIdx < $styleCount; ++$styleIdx) {
             $style = $styles->item($styleIdx);
 
             $styleData = preg_replace('#[/\*\s]*\<\!\[CDATA\[[\s\*/]*#im', "", $style->nodeValue);
@@ -519,7 +578,7 @@ class EPub
         preg_match_all('#url\s*\([\'\"\s]*(.+?)[\'\"\s]*\)#im', $cssFile, $imgs, PREG_SET_ORDER);
 
         $itemCount = count($imgs);
-        for ($idx = 0; $idx < $itemCount; $idx++) {
+        for ($idx = 0; $idx < $itemCount; ++$idx) {
             $img = $imgs[$idx];
             if ($externalReferences === EPub::EXTERNAL_REF_REMOVE_IMAGES || $externalReferences === EPub::EXTERNAL_REF_REPLACE_IMAGES) {
                 $cssFile = str_replace($img[0], "", $cssFile);
@@ -557,6 +616,7 @@ class EPub
         if ($this->isFinalized) {
             return false;
         }
+
         $imageData = null;
 
         if (preg_match('#^(http|ftp)s?://#i', $source) == 1) {
@@ -564,6 +624,7 @@ class EPub
             if (str_contains($urlinfo['path'], $baseDir . "/")) {
                 $internalSrc = FileHelper::sanitizeFileName(urldecode(substr($urlinfo['path'], strpos($urlinfo['path'], $baseDir . "/") + strlen($baseDir) + 1)));
             }
+
             $internalPath = $urlinfo["scheme"] . "/" . $urlinfo["host"] . "/" . pathinfo($urlinfo["path"], PATHINFO_DIRNAME);
             $isSourceExternal = true;
             $imageData = ImageHelper::getImage($this, $source);
@@ -573,6 +634,7 @@ class EPub
             if (!file_exists($path)) {
                 $path = $this->docRoot . $path;
             }
+
             $imageData = ImageHelper::getImage($this, $path);
         } else {
             $internalPath = $htmlDir . "/" . preg_replace('#^[/\.]+#', '', pathinfo($source, PATHINFO_DIRNAME));
@@ -584,12 +646,14 @@ class EPub
 
             $imageData = ImageHelper::getImage($this, $path);
         }
+
         if ($imageData !== false) {
             $iSrcInfo = pathinfo((string) $internalSrc);
 
             if (!empty($imageData['ext']) && (!isset($iSrcInfo['extension']) || $imageData['ext'] != $iSrcInfo['extension'])) {
                 $internalSrc = $iSrcInfo['filename'] . "." . $imageData['ext'];
             }
+
             $internalPath = RelativePath::getRelativePath("images/" . $internalPath . "/" . $internalSrc);
             if (!array_key_exists($internalPath, $this->fileList)) {
                 $this->addFile($internalPath, "i_" . $internalSrc, $imageData['image'], $imageData['mime']);
@@ -616,9 +680,11 @@ class EPub
         if ($this->isFinalized) {
             return false;
         }
+
         if (!$this->isInitialized) {
             $this->initialize();
         }
+
         $fileName = FileHelper::normalizeFileName($fileName);
 
         $this->zip->addFile($fileData, "META-INF/" . $fileName);
@@ -641,9 +707,11 @@ class EPub
         if ($this->isFinalized || array_key_exists($fileName, $this->fileList)) {
             return false;
         }
+
         if (!$this->isInitialized) {
             $this->initialize();
         }
+
         $fileName = FileHelper::normalizeFileName($fileName);
 
         $compress = (!str_starts_with($mimetype, "image/"));
@@ -672,10 +740,11 @@ class EPub
         if ($this->isFinalized || $externalReferences === EPub::EXTERNAL_REF_IGNORE) {
             return false;
         }
+
         // process link tags.
         $links = $xmlDoc->getElementsByTagName("link");
         $linkCount = $links->length;
-        for ($linkIdx = 0; $linkIdx < $linkCount; $linkIdx++) {
+        for ($linkIdx = 0; $linkIdx < $linkCount; ++$linkIdx) {
             /** @var $link \DOMElement */
             $link = $links->item($linkIdx);
             $source = $link->attributes->getNamedItem("href")->nodeValue;
@@ -689,6 +758,7 @@ class EPub
                 if (str_contains($urlinfo['path'], $baseDir . "/")) {
                     $internalSrc = substr($urlinfo['path'], strpos($urlinfo['path'], $baseDir . "/") + strlen($baseDir) + 1);
                 }
+
                 @$sourceData = FileHelper::getFileContents($source);
             } elseif (str_starts_with($source, "/")) {
                 @$sourceData = file_get_contents($this->docRoot . $source);
@@ -702,6 +772,7 @@ class EPub
                     if (empty($mime)) {
                         $mime = "text/plain";
                     }
+
                     if ($mime == "text/css") {
                         $this->processCSSExternalReferences($sourceData, $externalReferences, $baseDir, $htmlDir);
                         $this->addCSSFile($internalSrc, $internalSrc, $sourceData, EPub::EXTERNAL_REF_IGNORE, $baseDir);
@@ -709,6 +780,7 @@ class EPub
                     } else {
                         $this->addFile($internalSrc, $internalSrc, $sourceData, $mime);
                     }
+
                     $this->fileList[$internalSrc] = $source;
                 } else {
                     $link->setAttribute("href", $backPath . $internalSrc);
@@ -735,6 +807,7 @@ class EPub
         if ($this->isFinalized || array_key_exists($fileName, $this->fileList)) {
             return false;
         }
+
         $fileName = RelativePath::getRelativePath($fileName);
         $fileName = preg_replace('#^[/\.]+#i', "", $fileName);
 
@@ -770,12 +843,13 @@ class EPub
         if ($this->isFinalized || $externalReferences === EPub::EXTERNAL_REF_IGNORE) {
             return false;
         }
+
         // process img tags.
         $postProcDomElememts = [];
         $images = $xmlDoc->getElementsByTagName("img");
         $itemCount = $images->length;
 
-        for ($idx = 0; $idx < $itemCount; $idx++) {
+        for ($idx = 0; $idx < $itemCount; ++$idx) {
             /** @var $img \DOMElement */
             $img = $images->item($idx);
 
@@ -787,6 +861,7 @@ class EPub
                 if ($altNode !== null && strlen($altNode->nodeValue) > 0) {
                     $alt = $altNode->nodeValue;
                 }
+
                 $postProcDomElememts[] = [$img, StringHelper::createDomFragment($xmlDoc, "<em>[" . $alt . "]</em>")];
             } else {
                 $source = $img->attributes->getNamedItem("src")->nodeValue;
@@ -842,7 +917,7 @@ class EPub
         $postProcDomElememts = [];
         $images = $xmlDoc->getElementsByTagName("source");
         $itemCount = $images->length;
-        for ($idx = 0; $idx < $itemCount; $idx++) {
+        for ($idx = 0; $idx < $itemCount; ++$idx) {
             /** @var $img \DOMElement */
             $img = $images->item($idx);
             if ($externalReferences === EPub::EXTERNAL_REF_REMOVE_IMAGES) {
@@ -853,6 +928,7 @@ class EPub
                 if ($altNode !== null && strlen($altNode->nodeValue) > 0) {
                     $alt = $altNode->nodeValue;
                 }
+
                 $postProcDomElememts[] = [$img, StringHelper::createDomFragment($xmlDoc, "[" . $alt . "]")];
             } else {
                 $source = $img->attributes->getNamedItem("src")->nodeValue;
@@ -889,6 +965,7 @@ class EPub
         if ($this->isFinalized) {
             return false;
         }
+
         $mediaPath = null;
         $tmpFile = null;
 
@@ -897,6 +974,7 @@ class EPub
             if (str_contains($urlInfo['path'], $baseDir . "/")) {
                 $internalSrc = substr($urlInfo['path'], strpos($urlInfo['path'], $baseDir . "/") + strlen($baseDir) + 1);
             }
+
             $internalPath = $urlInfo["scheme"] . "/" . $urlInfo["host"] . "/" . pathinfo($urlInfo["path"], PATHINFO_DIRNAME);
             $isSourceExternal = true;
             $mediaPath = FileHelper::getFileContents($source, true);
@@ -925,6 +1003,7 @@ class EPub
             ) {
                 $this->fileList[$internalPath] = $source;
             }
+
             if (isset($tmpFile)) {
                 unlink($tmpFile);
             }
@@ -950,9 +1029,11 @@ class EPub
         if ($this->isFinalized || array_key_exists($fileName, $this->fileList)) {
             return false;
         }
+
         if (!$this->isInitialized) {
             $this->initialize();
         }
+
         $fileName = FileHelper::normalizeFileName($fileName);
 
         if ($this->zip->addLargeFile($filePath, $this->bookRoot . $fileName)) {
@@ -973,6 +1054,7 @@ class EPub
         if ($this->isInitialized) {
             return;
         }
+
         if (strlen($this->bookRoot) != 0 && $this->bookRoot != 'OEBPS/') {
             $this->setBookRoot($this->bookRoot);
         }
@@ -1011,12 +1093,14 @@ class EPub
         if ($this->isInitialized) {
             die("bookRoot can't be set after book initialization (first file added).");
         }
+
         $bookRoot = trim($bookRoot);
         if (strlen($bookRoot) <= 1 || $bookRoot == '/') {
             $bookRoot = '';
         } elseif (!str_ends_with($bookRoot, '/')) {
             $bookRoot .= '/';
         }
+
         $this->bookRoot = $bookRoot;
     }
 
@@ -1154,6 +1238,7 @@ class EPub
 
         $this->opf->addMetaProperty($name, $content);
     }
+
     /**
      * Add custom metadata to the book.
      *
@@ -1217,10 +1302,12 @@ class EPub
                     $fileName = $rp;
                 }
             }
+
             $image = ImageHelper::getImage($this, $fileName);
             if (false === $image) {
                 return false;
             }
+
             $imageData = $image['image'];
             $mimetype = $image['mime'];
             $fileName = preg_replace('#\.[^\.]+$#', "." . $image['ext'], $fileName);
@@ -1234,11 +1321,13 @@ class EPub
             [$width, $height, $type, $attr] = getimagesize($fileName);
             $mimetype = image_type_to_mime_type($type);
         }
+
         if (empty($mimetype)) {
             $ext = strtolower($path['extension']);
             if ($ext == "jpg") {
                 $ext = "jpeg";
             }
+
             $mimetype = "image/" . $ext;
         }
 
@@ -1275,6 +1364,7 @@ class EPub
                 . "\t</body>\n"
                 . "</html>\n";
         }
+
         $coverPageCss = '@page, body, div, img {
 	padding: 0pt;
 	margin:0pt;
@@ -1313,6 +1403,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $fileName = RelativePath::getRelativePath($fileName);
         $fileName = preg_replace('#^[/\.]+#i', "", $fileName);
 
@@ -1394,6 +1485,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->title = $title;
 
         return true;
@@ -1428,6 +1520,7 @@ body {
         if ($this->isFinalized || 0 === preg_match('/^((?<language>([A-Za-z]{2,3}(-(?<extlang>[A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-(?<region>[A-Za-z]{2}|\d{3}))?)$/', $language)) {
             return false;
         }
+
         $this->language = $language;
 
         return true;
@@ -1471,6 +1564,7 @@ body {
         if ($this->isFinalized || ($identifierType !== EPub::IDENTIFIER_URI && $identifierType !== EPub::IDENTIFIER_ISBN && $identifierType !== EPub::IDENTIFIER_UUID)) {
             return false;
         }
+
         $this->identifier = $identifier;
         $this->identifierType = $identifierType;
 
@@ -1519,6 +1613,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->description = $description;
 
         return true;
@@ -1559,6 +1654,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->author = $author;
         $this->authorSortKey = $authorSortKey;
 
@@ -1584,6 +1680,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->publisherName = $publisherName;
         $this->publisherURL = $publisherURL;
 
@@ -1645,6 +1742,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->date = $timestamp;
         $this->opf->date = $timestamp;
 
@@ -1682,6 +1780,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->rights = $rightsText;
 
         return true;
@@ -1704,6 +1803,7 @@ body {
         if ($this->isFinalized) {
             return;
         }
+
         $this->opf->addDCMeta(DublinCore::SUBJECT, StringHelper::decodeHtmlEntities($subject));
     }
 
@@ -1738,6 +1838,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->sourceURL = $sourceURL;
 
         return true;
@@ -1782,6 +1883,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->coverage = $coverage;
 
         return true;
@@ -1810,6 +1912,7 @@ body {
         if ($this->isFinalized) {
             return;
         }
+
         $this->relation = $relation;
     }
 
@@ -1834,6 +1937,7 @@ body {
         if ($this->isFinalized) {
             return;
         }
+
         $this->generator = $generator;
     }
 
@@ -1852,6 +1956,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->dateformat = $this->dateformatShort;
 
         return true;
@@ -1869,6 +1974,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->ncx->referencesTitle = is_string($referencesTitle) ? trim($referencesTitle) : "Guide";
         $this->ncx->referencesId = is_string($referencesId) ? trim($referencesId) : "references";
         $this->ncx->referencesClass = is_string($referencesClass) ? trim($referencesClass) : "references";
@@ -1886,6 +1992,7 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->isReferencesAddedToToc = $isReferencesAddedToToc === true;
 
         return true;
@@ -1916,12 +2023,14 @@ body {
         if ($this->isFinalized) {
             return false;
         }
+
         $this->buildTOC = true;
         $this->tocTitle = $title;
         $this->tocFileName = FileHelper::normalizeFileName($tocFileName);
         if (!empty($cssFileName)) {
             $this->tocCssFileName = FileHelper::normalizeFileName($cssFileName);
         }
+
         $this->tocCSSClass = $tocCSSClass;
         $this->tocAddReferences = $addReferences;
 
@@ -1937,6 +2046,7 @@ body {
                 $this->ncx->referencesName[Reference::TABLE_OF_CONTENTS] = $title;
             }
         }
+
         return true;
     }
 
@@ -2010,6 +2120,7 @@ body {
 
         $DCdate = new DublinCore(DublinCore::DATE, gmdate($this->dateformat, $this->date));
         $DCdate->addOpfAttr("event", "publication");
+
         $this->opf->metadata->addDublinCore($DCdate);
 
         if ($this->description !== '' && $this->description !== '0') {
@@ -2134,6 +2245,7 @@ body {
             $tocData .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n"
                 . "<head>\n<meta http-equiv=\"Default-Style\" content=\"text/html; charset=utf-8\" />\n";
         }
+
         $tocData .= $this->getViewportMetaLine();
         $tocData .= "<style type=\"text/css\">\n"
             . $tocCssCls . ".level1 {text-indent:  0em;}\n"
@@ -2146,7 +2258,7 @@ body {
             . $tocCssCls . ".reference {}\n"
             . "</style>\n";
         if ($this->tocCssFileName !== null && $this->tocCssFileName !== '' && $this->tocCssFileName !== '0') {
-            $tocData .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $this->tocCssFileName . "\" />\n";
+            $tocData .= '<link rel="stylesheet" type="text/css" href="' . $this->tocCssFileName . "\" />\n";
         }
 
         $tocData .= "<title>" . $this->tocTitle . "</title>\n"
@@ -2155,8 +2267,9 @@ body {
             . "<h3>" . $this->tocTitle . "</h3>\n<div";
 
         if (!empty($this->tocCSSClass)) {
-            $tocData .= " class=\"" . $this->tocCSSClass . "\"";
+            $tocData .= ' class="' . $this->tocCSSClass . '"';
         }
+
         $tocData .= ">\n";
 
         foreach ($this->referencesOrder as $item => $descriptive) {
@@ -2167,11 +2280,11 @@ body {
                     $level = $navPoint->getLevel() - 2;
                     $tocData .= "\t<p class='level" . ($level + 1) . "'>"
                         /* . str_repeat(" &#160;  &#160;  &#160;", $level) . */
-                        . "<a href=\"" . $fileName . "\">" . $chapterName . "</a></p>\n";
+                        . '<a href="' . $fileName . '">' . $chapterName . "</a></p>\n";
                 }
             } elseif ($this->tocAddReferences) {
                 if (array_key_exists($item, $this->ncx->referencesList)) {
-                    $tocData .= "\t<p class='level1 reference'><a href=\"" . $this->ncx->referencesList[$item] . "\">" . $descriptive . "</a></p>\n";
+                    $tocData .= "\t<p class='level1 reference'><a href=\"" . $this->ncx->referencesList[$item] . '">' . $descriptive . "</a></p>\n";
                 } elseif ($item === "toc") {
                     $tocData .= "\t<p class='level1 reference'><a href=\"TOC.xhtml\">" . $this->tocTitle . "</a></p>\n";
                 } elseif ($item === "cover" && $this->isCoverImageSet) {
@@ -2179,6 +2292,7 @@ body {
                 }
             }
         }
+
         $tocData .= "</div>\n</body>\n</html>\n";
 
         $this->addReferencePage($this->tocTitle, $this->tocFileName, $tocData, Reference::TABLE_OF_CONTENTS);
@@ -2195,6 +2309,7 @@ body {
         if ($this->isEPubVersion2() || $this->isFinalized || array_key_exists($fileName, $this->fileList)) {
             return false;
         }
+
         if (!$this->isInitialized) {
             $this->initialize();
         }
@@ -2333,11 +2448,13 @@ body {
         if ($width == null) {
             unset($this->viewport);
         }
+
         if (is_string($width) && in_array($width, $this->viewportMap)) {
             $vp = $this->viewportMap[$width];
             $width = $vp['width'];
             $height = $vp['height'];
         }
+
         $this->viewport = ['width' => $width, 'height' => $height];
     }
 
@@ -2351,12 +2468,15 @@ body {
         if (is_null($this->viewport)) {
             return "";
         }
+
         if ($this->viewport === []) {
             return "";
         }
+
         if (!array_key_exists("width", $this->viewport)) {
             return "";
         }
+
         if (!array_key_exists("height", $this->viewport)) {
             return "";
         }
