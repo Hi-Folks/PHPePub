@@ -287,11 +287,11 @@ class ImageHelper
             if ($ratio < 1 || empty($mime)) {
                 if ($mime == "image/png" || ($book->isGifImagesEnabled === false && $mime == "image/gif")) {
                     $image_o = imagecreatefromstring($image);
-                    $image_p = imagecreatetruecolor($width * $ratio, $height * $ratio);
+                    $image_p = imagecreatetruecolor((int) ($width * $ratio), (int) ($height * $ratio));
                     imagealphablending($image_p, false);
                     imagesavealpha($image_p, true);
                     imagealphablending($image_o, true);
-                    imagecopyresampled($image_p, $image_o, 0, 0, 0, 0, ($width * $ratio), ($height * $ratio), $width, $height);
+                    imagecopyresampled($image_p, $image_o, 0, 0, 0, 0, (int) ($width * $ratio), (int) ($height * $ratio), $width, $height);
                     ob_start();
                     imagepng($image_p, null, 9);
                     $image = ob_get_contents();
