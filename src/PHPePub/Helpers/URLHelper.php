@@ -18,11 +18,9 @@ class URLHelper
      *
      * $return string Page URL.
      */
-    public static function getCurrentPageURL()
+    public static function getCurrentPageURL(): string
     {
-        $pageURL = self::getCurrentServerURL() . filter_input(INPUT_SERVER, "REQUEST_URI");
-
-        return $pageURL;
+        return self::getCurrentServerURL() . filter_input(INPUT_SERVER, "REQUEST_URI");
     }
 
     /**
@@ -31,7 +29,7 @@ class URLHelper
      *
      * $return string Server URL.
      */
-    public static function getCurrentServerURL()
+    public static function getCurrentServerURL(): string
     {
         $serverURL = 'http';
         $https = filter_input(INPUT_SERVER, "HTTPS");
@@ -40,6 +38,7 @@ class URLHelper
         if ($https === "on") {
             $serverURL .= "s";
         }
+
         $serverURL .= "://" . filter_input(INPUT_SERVER, "SERVER_NAME");
         if ($port != "80") {
             $serverURL .= ":" . $port;

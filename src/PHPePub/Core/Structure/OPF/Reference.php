@@ -79,9 +79,11 @@ class Reference
     /** Ancillary material occurring after the document body, such as indices, appendices, etc. */
     final public const BACKMATTER = "backmatter";
 
-    private $type = null;
-    private $title = null;
-    private $href = null;
+    private ?string $type = null;
+
+    private ?string $title = null;
+
+    private ?string $href = null;
 
     /**
      * Class constructor.
@@ -103,7 +105,7 @@ class Reference
      *
      * @param string $type
      */
-    public function setType($type)
+    public function setType($type): void
     {
         $this->type = is_string($type) ? trim($type) : null;
     }
@@ -114,7 +116,7 @@ class Reference
      *
      * @param string $title
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = is_string($title) ? trim($title) : null;
     }
@@ -125,7 +127,7 @@ class Reference
      *
      * @param string $href
      */
-    public function setHref($href)
+    public function setHref($href): void
     {
         $this->href = is_string($href) ? trim($href) : null;
     }
@@ -143,11 +145,9 @@ class Reference
     /**
      *
      * Enter description here ...
-     *
-     * @return string
      */
-    public function finalize()
+    public function finalize(): string
     {
-        return "\t\t<reference type=\"" . $this->type . "\" title=\"" . $this->title . "\" href=\"" . $this->href . "\" />\n";
+        return "\t\t<reference type=\"" . $this->type . '" title="' . $this->title . '" href="' . $this->href . "\" />\n";
     }
 }

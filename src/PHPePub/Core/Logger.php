@@ -11,11 +11,15 @@ namespace PHPePub\Core;
  */
 class Logger
 {
-    private $log = "";
-    private $tStart;
+    private string $log = "";
+
+    private array|float|null $tStart = null;
+
     private $tLast;
-    private $name = null;
-    private $isDebugging = false;
+
+    private ?string $name = null;
+
+    private bool $isDebugging = false;
 
     /**
      * Class constructor.
@@ -25,15 +29,11 @@ class Logger
      */
     public function __construct($name = null, private $isLogging = false)
     {
-        if ($name === null) {
-            $this->name = "";
-        } else {
-            $this->name = $name . " : ";
-        }
+        $this->name = $name === null ? "" : $name . " : ";
         $this->start();
     }
 
-    public function start()
+    public function start(): void
     {
         /* Prepare Logging. Just in case it's used. later */
         if ($this->isLogging) {
@@ -44,7 +44,7 @@ class Logger
         }
     }
 
-    public function logLine($line)
+    public function logLine(string $line): void
     {
         if ($this->isLogging) {
             $tTemp = gettimeofday();
@@ -73,7 +73,7 @@ class Logger
         unset($this->log);
     }
 
-    public function dumpInstalledModules()
+    public function dumpInstalledModules(): void
     {
         if ($this->isLogging) {
             $isCurlInstalled = extension_loaded('curl') && function_exists('curl_version');
@@ -90,17 +90,15 @@ class Logger
         }
     }
 
-    public function getLog()
+    public function getLog(): string
     {
         return $this->log;
     }
 
     /**
      * @param $isCurlInstalled
-     *
-     * @return string
      */
-    public function boolYN($isCurlInstalled)
+    public function boolYN($isCurlInstalled): string
     {
         return ($isCurlInstalled ? "Yes" : "No");
     }

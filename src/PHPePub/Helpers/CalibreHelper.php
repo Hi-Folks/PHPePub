@@ -17,10 +17,9 @@ class CalibreHelper
     /**
      * @param EPub   $book
      * @param string $seriesName
-     * @param string $seriesIndex
      * @param string $sortTitle
      */
-    public static function setCalibreMetadata($book, $seriesName, $seriesIndex, $sortTitle = null)
+    public static function setCalibreMetadata($book, $seriesName, string $seriesIndex, $sortTitle = null): void
     {
         $book->addCustomMetadata("calibre:series", $seriesName);
         $book->addCustomMetadata("calibre:series_index", "" . $seriesIndex);

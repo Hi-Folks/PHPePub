@@ -11,8 +11,9 @@ namespace PHPePub\Core\Structure\OPF;
  */
 class Itemref
 {
-    private $idref = null;
-    private $linear = true;
+    private ?string $idref = null;
+
+    private bool $linear = true;
 
     /**
      * Class constructor.
@@ -32,7 +33,7 @@ class Itemref
      *
      * @param bool $linear
      */
-    public function setLinear($linear = true)
+    public function setLinear($linear = true): void
     {
         $this->linear = $linear === true;
     }
@@ -53,7 +54,7 @@ class Itemref
      *
      * @return string $idref
      */
-    public function getIdref()
+    public function getIdref(): ?string
     {
         return $this->idref;
     }
@@ -64,7 +65,7 @@ class Itemref
      *
      * @param string $idref
      */
-    public function setIdref($idref)
+    public function setIdref($idref): void
     {
         $this->idref = is_string($idref) ? trim($idref) : null;
     }
@@ -72,12 +73,10 @@ class Itemref
     /**
      *
      * Enter description here ...
-     *
-     * @return string
      */
-    public function finalize()
+    public function finalize(): string
     {
-        $itemref = "\t\t<itemref idref=\"" . $this->idref . "\"";
+        $itemref = "\t\t<itemref idref=\"" . $this->idref . '"';
 
         return $itemref . ($this->linear == false ? ' linear="no"' : '') . " />\n";
     }

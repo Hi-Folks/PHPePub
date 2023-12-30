@@ -10,16 +10,17 @@
 
 namespace PHPePub\Helpers;
 
-use com\grandt\BinStringStatic;
 use grandt\ResizeGif\ResizeGif;
 use PHPePub\Core\EPub;
 use SimpleXMLElement;
 
 class ImageHelper
 {
-    protected static $isGdInstalled = null;
-    protected static $isExifInstalled = null;
-    protected static $isAnimatedGifResizeInstalled = null;
+    protected static $isGdInstalled;
+
+    protected static $isExifInstalled;
+
+    protected static $isAnimatedGifResizeInstalled;
 
     /**
      * get mime type from image data
@@ -43,6 +44,7 @@ class ImageHelper
         ) {
             return 'application/octet-stream';
         }
+
         static $type = [1 => 'image/jpeg', 2 => 'image/gif', 3 => 'image/png', 4 => 'image/x-windows-bmp', 5 => 'image/tiff', 6 => 'image/x-ilbm'];
 
         return $type[count($hits) - 1];
@@ -56,42 +58,41 @@ class ImageHelper
      *
      * @param $maxImageWidth
      * @param $maxImageHeight
-     *
-     * @return float
      */
-    public static function getImageScale($width, $height, $maxImageWidth, $maxImageHeight)
+    public static function getImageScale($width, $height, $maxImageWidth, $maxImageHeight): int|float
     {
-        $ratio = 1;
         if ($width > $maxImageWidth) {
-            $ratio = $maxImageWidth / $width;
-        }
-        if ($height * $ratio > $maxImageHeight) {
-            $ratio = $maxImageHeight / $height;
-
-            return $ratio;
+            return $maxImageWidth / $width;
         }
 
-        return $ratio;
+        if ($height > $maxImageHeight) {
+            return $maxImageHeight / $height;
+        }
+
+        return 1;
     }
 
     /**
      * @param        $attr
-     * @param string $sep
      *
      * @return array
      */
-    public static function splitCSV($attr, $sep = ',')
+    public static function splitCSV($attr, string $sep = ','): array|false
     {
 
         if (strpos((string) $attr, $sep) > 0) {
             return preg_split('/\s*' . $sep . '\s*/', (string) $attr);
-        } elseif ($sep !== ',' && strpos((string) $attr, ',') > 0) {
-            return preg_split('/\s*,\s*/', (string) $attr);
-        } elseif (strpos((string) $attr, ';') > 0) {
-            return preg_split('/\s*;\s*/', (string) $attr);
-        } else {
-            return preg_split('/\s+/', (string) $attr);
         }
+
+        if ($sep !== ',' && strpos((string) $attr, ',') > 0) {
+            return preg_split('/\s*,\s*/', (string) $attr);
+        }
+
+        if (strpos((string) $attr, ';') > 0) {
+            return preg_split('/\s*;\s*/', (string) $attr);
+        }
+
+        return preg_split('/\s+/', (string) $attr);
     }
 
     /**
@@ -100,10 +101,8 @@ class ImageHelper
      *
      * @param     $length
      * @param int $portSize
-     *
-     * @return float
      */
-    public static function scaleSVGUnit($length, $portSize = 512)
+    public static function scaleSVGUnit($length, $portSize = 512): float
     {
         static $unitLength = [
             'px' => 1.0,
@@ -120,25 +119,23 @@ class ImageHelper
         ];
         $matches = [];
         if (preg_match('/^\s*(\d+(?:\.\d+)?)(em|ex|px|pt|pc|cm|mm|in|%|)\s*$/', (string) $length, $matches)) {
-            $length = floatval($matches[1]);
+            $length = (float) $matches[1];
             $unit = $matches[2];
             if ($unit == '%') {
                 return $length * 0.01 * $portSize;
-            } else {
-                return $length * $unitLength[$unit];
             }
-        } else {
-            // Assume pixels
-            return floatval($length);
+
+            return $length * $unitLength[$unit];
         }
+
+        // Assume pixels
+        return (float) $length;
     }
 
     /**
      * @param SimpleXMLElement $svg
-     *
-     * @return array
      */
-    public static function handleSVGAttribs($svg)
+    public static function handleSVGAttribs($svg): array
     {
         $metadata = [];
         $attr = $svg->attributes();
@@ -150,7 +147,7 @@ class ImageHelper
         $width = null;
         $height = null;
 
-        if ($attr->viewBox) {
+        if ($attr->viewBox !== null) {
             // min-x min-y width height
             $viewBoxAttr = trim($attr->viewBox);
 
@@ -164,20 +161,22 @@ class ImageHelper
             }
         }
 
-        if ($attr->x) {
+        if ($attr->x !== null) {
             $x = self::scaleSVGUnit($attr->x, 0);
             $metadata['originalX'] = "" . $attr->x;
         }
-        if ($attr->y) {
+
+        if ($attr->y !== null) {
             $y = self::scaleSVGUnit($attr->y, 0);
             $metadata['originalY'] = "" . $attr->y;
         }
 
-        if ($attr->width) {
+        if ($attr->width !== null) {
             $width = self::scaleSVGUnit($attr->width, $viewWidth);
             $metadata['originalWidth'] = "" . $attr->width;
         }
-        if ($attr->height) {
+
+        if ($attr->height !== null) {
             $height = self::scaleSVGUnit($attr->height, $viewHeight);
             $metadata['originalHeight'] = "" . $attr->height;
         }
@@ -192,12 +191,13 @@ class ImageHelper
         }
 
         if ($x > 0 && $y > 0) {
-            $metadata['x'] = intval(round($x));
-            $metadata['y'] = intval(round($y));
+            $metadata['x'] = (int) round($x);
+            $metadata['y'] = (int) round($y);
         }
+
         if ($width > 0 && $height > 0) {
-            $metadata['width'] = intval(round($width));
-            $metadata['height'] = intval(round($height));
+            $metadata['width'] = (int) round($width);
+            $metadata['height'] = (int) round($height);
             $metadata['aspect'] = $aspect;
         }
 
@@ -217,10 +217,9 @@ class ImageHelper
      * @param EPub   $book
      * @param string $imageSource path or url to file.
      *
-     * @return array|bool
      * @throws \Exception
      */
-    public static function getImage($book, $imageSource)
+    public static function getImage($book, $imageSource): bool|array
     {
         $width = -1;
         $height = -1;
@@ -231,7 +230,7 @@ class ImageHelper
         $ratio = 1;
 
         if ($image !== false && strlen((string) $image) > 0) {
-            if (BinStringStatic::startsWith(trim((string) $image), '<svg') || (BinStringStatic::startsWith(trim((string) $image), '<?xml') || strpos((string) $image, '<svg') > 0)) {
+            if (str_starts_with(trim((string) $image), '<svg') || (str_starts_with(trim((string) $image), '<?xml') || strpos((string) $image, '<svg') > 0)) {
                 // SVG image.
                 $xml = simplexml_load_string((string) $image);
                 $attr = $xml->attributes();
@@ -247,23 +246,29 @@ class ImageHelper
                 $ratio = ImageHelper::getImageScale($width, $height, $book->maxImageWidth, $book->maxImageHeight);
 
                 if ($ratio < 1) {
+
                     $attr->width = $width * $ratio;
                     $attr->height = $height * $ratio;
                 }
+
                 $image = $xml->asXML();
             } else {
+
                 $imageFile = imagecreatefromstring($image);
                 if ($imageFile !== false) {
                     $width = ImageSX($imageFile);
                     $height = ImageSY($imageFile);
                 }
+
                 if (self::isExifInstalled()) {
                     @$type = exif_imagetype($imageSource);
                     $mime = image_type_to_mime_type($type);
                 }
+
                 if ($mime === "application/octet-stream") {
                     $mime = ImageHelper::getImageFileTypeFromBinary($image);
                 }
+
                 if ($mime === "application/octet-stream") {
                     $mime = MimeHelper::getMimeTypeFromUrl($imageSource);
                 }
@@ -283,45 +288,37 @@ class ImageHelper
                 if ($mime == "image/png" || ($book->isGifImagesEnabled === false && $mime == "image/gif")) {
                     $image_o = imagecreatefromstring($image);
                     $image_p = imagecreatetruecolor($width * $ratio, $height * $ratio);
-
                     imagealphablending($image_p, false);
                     imagesavealpha($image_p, true);
                     imagealphablending($image_o, true);
-
                     imagecopyresampled($image_p, $image_o, 0, 0, 0, 0, ($width * $ratio), ($height * $ratio), $width, $height);
                     ob_start();
                     imagepng($image_p, null, 9);
+                    $image = ob_get_contents();
+                    ob_end_clean();
+                    imagedestroy($image_o);
+                    imagedestroy($image_p);
+                    $ext = "png";
+                } elseif ($book->isGifImagesEnabled !== false && $mime == "image/gif") {
+                    $tFileD = tempnam("BewareOfGeeksBearingGifs", "grD");
+                    ResizeGif::ResizeByRatio($imageSource, $tFileD, $ratio);
+                    $image = file_get_contents($tFileD);
+                    unlink($tFileD);
+                } else {
+                    $image_o = imagecreatefromstring($image);
+                    $image_p = imagecreatetruecolor($width * $ratio, $height * $ratio);
+
+                    imagecopyresampled($image_p, $image_o, 0, 0, 0, 0, ($width * $ratio), ($height * $ratio), $width, $height);
+                    ob_start();
+                    imagejpeg($image_p, null, 80);
                     $image = ob_get_contents();
                     ob_end_clean();
 
                     imagedestroy($image_o);
                     imagedestroy($image_p);
 
-                    $ext = "png";
-                } else {
-                    if ($book->isGifImagesEnabled !== false && $mime == "image/gif") {
-
-                        $tFileD = tempnam("BewareOfGeeksBearingGifs", "grD");
-
-                        ResizeGif::ResizeByRatio($imageSource, $tFileD, $ratio);
-                        $image = file_get_contents($tFileD);
-                        unlink($tFileD);
-                    } else {
-                        $image_o = imagecreatefromstring($image);
-                        $image_p = imagecreatetruecolor($width * $ratio, $height * $ratio);
-
-                        imagecopyresampled($image_p, $image_o, 0, 0, 0, 0, ($width * $ratio), ($height * $ratio), $width, $height);
-                        ob_start();
-                        imagejpeg($image_p, null, 80);
-                        $image = ob_get_contents();
-                        ob_end_clean();
-
-                        imagedestroy($image_o);
-                        imagedestroy($image_p);
-
-                        $mime = "image/jpeg";
-                        $ext = "jpg";
-                    }
+                    $mime = "image/jpeg";
+                    $ext = "jpg";
                 }
             }
         }

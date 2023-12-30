@@ -74,7 +74,7 @@ $book->addCSSFile("styles.css", "css1", $cssData);
 
 // This test requires you have an image, change "demo/cover-image.jpg" to match your location.
 $log->logLine("Add Cover Image");
-$book->setCoverImage("Cover.jpg", file_get_contents("demo/cover-image.jpg"), "image/jpeg");
+$book->setCoverImage("Cover.jpg", file_get_contents("tests/demo/cover-image.jpg"), "image/jpeg");
 
 // A better way is to let EPub handle the image itself, as it may need resizing. Most e-books are only about 600x800
 //  pixels, adding mega-pixel images is a waste of place and spends bandwidth. setCoverImage can resize the image.
@@ -200,7 +200,7 @@ $book->addChapter("Chapter 2: Vivamus bibendum massa", "Chapter002.html", $conte
 // Chapter 2 contains an image reference "demo/DemoInlineImage.jpg" which we didn't get it to import
 // automatically. So we will do that manually.
 $log->logLine("Add referenced image from Chapter 2");
-$book->addLargeFile("demo/DemoInlineImage.jpg", "DemoInlineImage", "demo/DemoInlineImage.jpg", "image/jpeg");
+$book->addLargeFile("demo/DemoInlineImage.jpg", "DemoInlineImage", "tests/demo/DemoInlineImage.jpg", "image/jpeg");
 
 $log->logLine("Add Chapter 3");
 $book->addChapter("Chapter 3: Vivamus bibendum massa again", "Chapter003.html", $chapter3);
@@ -363,7 +363,7 @@ if (ob_get_contents() !== false && ob_get_contents() != '') {
 //$book->saveBook('epub-filename', '.');
 
 // Send the book to the client. ".epub" will be appended if missing.
-$zipData = $book->sendBook("ExampleBook2");
+$zipData = $book->saveBook("ExampleBook2b");
 
 // After this point your script should call exit. If anything is written to the output,
 // it'll be appended to the end of the book, causing the epub file to become corrupt.

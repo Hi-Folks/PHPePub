@@ -12,7 +12,7 @@ namespace PHPePub\Core;
 class StaticData
 {
     public static $htmlEntities = [
-        "&quot;"     => "\x22",
+        "&quot;"     => '"',
         // &#34; ((double) quotation mark)
         "&amp;"      => "\x26",
         // &#38; (ampersand)
@@ -526,7 +526,7 @@ class StaticData
 
     public static $opsContentTypes = ["application/xhtml+xml", "application/x-dtbook+xml", "application/xml", "application/x-dtbncx+xml", "text/x-oeb1-document"];
 
-    public static $forbiddenCharacters = ["?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}", "%"];
+    public static $forbiddenCharacters = ["?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", '"', "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}", "%"];
 
     public static $namespaces = ["xsi" => "http://www.w3.org/2001/XMLSchema-instance", "opf" => "http://www.idpf.org/2007/opf", "dcterms" => "http://purl.org/dc/terms/", "dc" => "http://purl.org/dc/elements/1.1/"];
 }

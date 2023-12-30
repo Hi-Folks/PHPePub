@@ -10,7 +10,6 @@
 
 namespace PHPePub\Helpers;
 
-use com\grandt\BinStringStatic;
 use DOMDocument;
 use DOMNode;
 use PHPePub\Core\StaticData;
@@ -32,9 +31,9 @@ class StringHelper
     {
         if (mb_detect_encoding($in_str) == "UTF-8" && mb_check_encoding($in_str, "UTF-8")) {
             return $in_str;
-        } else {
-            return mb_convert_encoding($in_str, 'UTF-8', 'ISO-8859-1');
         }
+
+        return mb_convert_encoding($in_str, 'UTF-8', 'ISO-8859-1');
     }
 
     /**
@@ -44,7 +43,7 @@ class StringHelper
      *
      * @return string
      */
-    public static function html2text($string)
+    public static function html2text($string): ?string
     {
         return preg_replace('~<[^>]*>~', '', $string);
     }
@@ -74,14 +73,10 @@ class StringHelper
      * http://www.php.net/manual/en/function.htmlentities.php#90111
      *
      * @param string $string string to encode.
-     *
-     * @return string
      */
-    public static function encodeHtml($string)
+    public static function encodeHtml($string): string
     {
-        $string = strtr($string, StaticData::$htmlEntities);
-
-        return $string;
+        return strtr($string, StaticData::$htmlEntities);
     }
 
     /**
@@ -91,9 +86,9 @@ class StringHelper
      *
      * @return string with the stripped entities.
      */
-    public static function decodeHtmlEntities($string)
+    public static function decodeHtmlEntities($string): string
     {
-        $string = preg_replace('~\s*<br\s*/*\s*>\s*~i', "\n", $string);
+        $string = preg_replace('~\s*<br\s*/*\s*>\s*~i', "\n", (string) $string);
         $string = preg_replace('~\s*</(p|div)\s*>\s*~i', "\n\n", $string);
         $string = preg_replace('~<[^>]*>~', '', $string);
 
@@ -103,9 +98,8 @@ class StringHelper
         $string = str_replace('&amp;amp;', '&amp;', $string);
         $string = preg_replace('~&amp;(#x*[a-fA-F0-9]+;)~', '&\1', $string);
         $string = str_replace('<', '&lt;', $string);
-        $string = str_replace('>', '&gt;', $string);
 
-        return $string;
+        return str_replace('>', '&gt;', $string);
     }
 
     /**
@@ -131,11 +125,12 @@ class StringHelper
      *
      * @return string
      */
-    public static function removeComments($doc)
+    public static function removeComments($doc): string|array|null
     {
         $doc = preg_replace('~--\s+>~', '-->', (string) $doc);
         $doc = preg_replace('~<\s*!\s*--~', '<!--', $doc);
-        $cPos = BinStringStatic::_strpos($doc, "<!--");
+
+        $cPos = mb_strpos($doc, "<!--");
         if ($cPos !== false) {
             $startCount = substr_count($doc, "<!--");
             $endCount = substr_count($doc, "-->");
@@ -147,19 +142,19 @@ class StringHelper
                 $lastEPos = $cPos;
                 $ePos = $cPos;
                 do {
-                    $ePos = BinStringStatic::_strpos($doc, "-->", $ePos + 1);
+                    $ePos = mb_strpos($doc, "-->", $ePos + 1);
                     if ($ePos !== false) {
                         $lastEPos = $ePos;
-                        $comment = BinStringStatic::_substr($doc, $cPos, ($lastEPos + 3) - $cPos);
-                        $startCount = substr_count((string) $comment, "<!--");
-                        $endCount = substr_count((string) $comment, "-->");
+                        $comment = mb_substr($doc, $cPos, ($lastEPos + 3) - $cPos);
+                        $startCount = substr_count($comment, "<!--");
+                        $endCount = substr_count($comment, "-->");
                     } elseif ($lastEPos == $cPos) {
-                        $lastEPos = BinStringStatic::_strlen($doc) - 3;
+                        $lastEPos = mb_strlen($doc) - 3;
                     }
-                } while ($startCount != $endCount && $ePos !== false);
+                } while ($startCount !== $endCount && $ePos !== false);
 
                 $doc = substr_replace($doc, "", $cPos, ($lastEPos + 3) - $cPos);
-                $cPos = BinStringStatic::_strpos($doc, "<!--");
+                $cPos = mb_strpos($doc, "<!--");
             }
         }
 

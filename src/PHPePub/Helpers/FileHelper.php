@@ -17,7 +17,9 @@ use RelativePath;
 class FileHelper
 {
     protected static $isCurlInstalled;
+
     protected static $isFileGetContentsInstalled;
+
     protected static $isFileGetContentsExtInstalled;
 
     /**
@@ -28,6 +30,7 @@ class FileHelper
         if (!isset(self::$isCurlInstalled)) {
             self::$isCurlInstalled = extension_loaded('curl') && function_exists('curl_version');
         }
+
         return self::$isCurlInstalled;
     }
 
@@ -39,6 +42,7 @@ class FileHelper
         if (!isset(self::$isFileGetContentsInstalled)) {
             self::$isFileGetContentsInstalled = function_exists('file_get_contents');
         }
+
         return self::$isFileGetContentsInstalled;
     }
 
@@ -50,6 +54,7 @@ class FileHelper
         if (!isset(self::$isFileGetContentsExtInstalled)) {
             self::$isFileGetContentsExtInstalled = self::getIsFileGetContentsInstalled() && ini_get('allow_url_fopen');
         }
+
         return self::$isFileGetContentsExtInstalled;
     }
 
@@ -60,7 +65,7 @@ class FileHelper
      *
      * @return mixed|string
      */
-    public static function sanitizeFileName($fileName)
+    public static function sanitizeFileName($fileName): string
     {
         $fileName1 = str_replace(StaticData::$forbiddenCharacters, '', $fileName);
         $fileName2 = preg_replace('/[\s-]+/', '-', $fileName1);
@@ -147,7 +152,7 @@ class FileHelper
      *
      * @return string normalized filename
      */
-    public static function normalizeFileName($fileName)
+    public static function normalizeFileName($fileName): ?string
     {
         return preg_replace('#^[/\.]+#i', "", RelativePath::getRelativePath($fileName));
     }

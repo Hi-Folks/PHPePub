@@ -13,10 +13,13 @@ use PHPePub\Core\EPub;
  */
 class MetaValue
 {
-    private $tagName = null;
-    private $tagValue = null;
-    private $attr = [];
-    private $opfAttr = [];
+    private ?string $tagName = null;
+
+    private ?string $tagValue = null;
+
+    private array $attr = [];
+
+    private array $opfAttr = [];
 
     /**
      * Class constructor.
@@ -36,13 +39,11 @@ class MetaValue
      * @param string $name
      * @param string $value
      */
-    public function setValue($name, $value)
+    public function setValue($name, $value): void
     {
         $this->tagName = is_string($name) ? trim($name) : null;
-        if (isset($this->tagName)) {
-            $this->tagValue = isset($value) ? (string)$value : null;
-        }
-        if (!isset($this->tagValue)) {
+        $this->tagValue = isset($value) ? (string)$value : null;
+        if ($this->tagValue === null) {
             $this->tagName = null;
         }
     }
@@ -64,12 +65,13 @@ class MetaValue
      * @param string $attrName
      * @param string $attrValue
      */
-    public function addAttr($attrName, $attrValue)
+    public function addAttr($attrName, $attrValue): void
     {
         $attrName = is_string($attrName) ? trim($attrName) : null;
         if (isset($attrName)) {
             $attrValue = is_string($attrValue) ? trim($attrValue) : null;
         }
+
         if (isset($attrValue)) {
             $this->attr[$attrName] = $attrValue;
         }
@@ -83,12 +85,13 @@ class MetaValue
      * @param string $opfAttrName
      * @param string $opfAttrValue
      */
-    public function addOpfAttr($opfAttrName, $opfAttrValue)
+    public function addOpfAttr($opfAttrName, $opfAttrValue): void
     {
         $opfAttrName = is_string($opfAttrName) ? trim($opfAttrName) : null;
         if (isset($opfAttrName)) {
             $opfAttrValue = is_string($opfAttrValue) ? trim($opfAttrValue) : null;
         }
+
         if (isset($opfAttrValue)) {
             $this->opfAttr[$opfAttrName] = $opfAttrValue;
         }
@@ -104,15 +107,13 @@ class MetaValue
     {
         $dc = "\t\t<" . $this->tagName;
 
-        if (count($this->attr) > 0) {
-            foreach ($this->attr as $name => $content) {
-                $dc .= " " . $name . "=\"" . $content . "\"";
-            }
+        foreach ($this->attr as $name => $content) {
+            $dc .= " " . $name . '="' . $content . '"';
         }
 
-        if ($bookVersion === EPub::BOOK_VERSION_EPUB2 && count($this->opfAttr) > 0) {
+        if ($bookVersion === EPub::BOOK_VERSION_EPUB2 && $this->opfAttr !== []) {
             foreach ($this->opfAttr as $name => $content) {
-                $dc .= " opf:" . $name . "=\"" . $content . "\"";
+                $dc .= " opf:" . $name . '="' . $content . '"';
             }
         }
 

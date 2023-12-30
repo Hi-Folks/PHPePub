@@ -2,7 +2,7 @@
 
     use com\grandt\EPub;
 
-    include_once("EPub.php");
+include_once("EPub.php");
 
 error_reporting(E_ALL | E_STRICT);
 ini_set('error_reporting', E_ALL | E_STRICT);

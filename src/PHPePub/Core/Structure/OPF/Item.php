@@ -13,16 +13,23 @@ use PHPePub\Core\EPub;
  */
 class Item
 {
-    private $id = null;
-    private $href = null;
-    private $mediaType = null;
-    private $properties = null;
-    private $requiredNamespace = null;
-    private $requiredModules = null;
-    private $fallback = null;
-    private $fallbackStyle = null;
+    private ?string $id = null;
 
-    private $indexPoints = [];
+    private ?string $href = null;
+
+    private ?string $mediaType = null;
+
+    private ?string $properties = null;
+
+    private ?string $requiredNamespace = null;
+
+    private ?string $requiredModules = null;
+
+    private ?string $fallback = null;
+
+    private ?string $fallbackStyle = null;
+
+    private array $indexPoints = [];
 
     /**
      * Class constructor.
@@ -46,7 +53,7 @@ class Item
      *
      * @param string $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = is_string($id) ? trim($id) : null;
     }
@@ -57,7 +64,7 @@ class Item
      *
      * @param string $href
      */
-    public function setHref($href)
+    public function setHref($href): void
     {
         $this->href = is_string($href) ? trim($href) : null;
     }
@@ -68,7 +75,7 @@ class Item
      *
      * @param string $mediaType
      */
-    public function setMediaType($mediaType)
+    public function setMediaType($mediaType): void
     {
         $this->mediaType = is_string($mediaType) ? trim($mediaType) : null;
     }
@@ -79,7 +86,7 @@ class Item
      *
      * @param string $properties
      */
-    public function setProperties($properties)
+    public function setProperties($properties): void
     {
         $this->properties = is_string($properties) ? trim($properties) : null;
     }
@@ -101,7 +108,7 @@ class Item
      *
      * @param string $requiredNamespace
      */
-    public function setRequiredNamespace($requiredNamespace)
+    public function setRequiredNamespace($requiredNamespace): void
     {
         $this->requiredNamespace = is_string($requiredNamespace) ? trim($requiredNamespace) : null;
     }
@@ -112,7 +119,7 @@ class Item
      *
      * @param string $requiredModules
      */
-    public function setRequiredModules($requiredModules)
+    public function setRequiredModules($requiredModules): void
     {
         $this->requiredModules = is_string($requiredModules) ? trim($requiredModules) : null;
     }
@@ -123,7 +130,7 @@ class Item
      *
      * @param string $fallback
      */
-    public function setfallback($fallback)
+    public function setfallback($fallback): void
     {
         $this->fallback = is_string($fallback) ? trim($fallback) : null;
     }
@@ -134,7 +141,7 @@ class Item
      *
      * @param string $fallbackStyle
      */
-    public function setFallbackStyle($fallbackStyle)
+    public function setFallbackStyle($fallbackStyle): void
     {
         $this->fallbackStyle = is_string($fallbackStyle) ? trim($fallbackStyle) : null;
     }
@@ -142,35 +149,33 @@ class Item
     /**
      *
      * @param string $bookVersion
-     *
-     * @return string
      */
-    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2)
+    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2): string
     {
-        $item = "\t\t<item id=\"" . $this->id . "\" href=\"" . $this->href . "\" media-type=\"" . $this->mediaType . "\" ";
-        if ($bookVersion === EPub::BOOK_VERSION_EPUB3 && isset($this->properties)) {
-            $item .= "properties=\"" . $this->properties . "\" ";
+        $item = "\t\t<item id=\"" . $this->id . '" href="' . $this->href . '" media-type="' . $this->mediaType . '" ';
+        if ($bookVersion === EPub::BOOK_VERSION_EPUB3 && $this->properties !== null) {
+            $item .= 'properties="' . $this->properties . '" ';
         }
-        if (isset($this->requiredNamespace)) {
-            $item .= "\n\t\t\trequired-namespace=\"" . $this->requiredNamespace . "\" ";
-            if (isset($this->requiredModules)) {
-                $item .= "required-modules=\"" . $this->requiredModules . "\" ";
+
+        if ($this->requiredNamespace !== null) {
+            $item .= "\n\t\t\trequired-namespace=\"" . $this->requiredNamespace . '" ';
+            if ($this->requiredModules !== null) {
+                $item .= 'required-modules="' . $this->requiredModules . '" ';
             }
         }
-        if (isset($this->fallback)) {
-            $item .= "\n\t\t\tfallback=\"" . $this->fallback . "\" ";
+
+        if ($this->fallback !== null) {
+            $item .= "\n\t\t\tfallback=\"" . $this->fallback . '" ';
         }
-        if (isset($this->fallbackStyle)) {
-            $item .= "\n\t\t\tfallback-style=\"" . $this->fallbackStyle . "\" ";
+
+        if ($this->fallbackStyle !== null) {
+            $item .= "\n\t\t\tfallback-style=\"" . $this->fallbackStyle . '" ';
         }
 
         return $item . "/>\n";
     }
 
-    /**
-     * @return array
-     */
-    public function getIndexPoints()
+    public function getIndexPoints(): array
     {
         return $this->indexPoints;
     }
@@ -178,32 +183,27 @@ class Item
     /**
      * @param string $indexPoint
      */
-    public function addIndexPoint($indexPoint)
+    public function addIndexPoint($indexPoint): void
     {
         $this->indexPoints[] = $indexPoint;
     }
 
     /**
      * @param string $indexPoint
-     * @return bool
      */
-    public function hasIndexPoint($indexPoint)
+    public function hasIndexPoint($indexPoint): bool
     {
         return in_array($indexPoint, $this->indexPoints);
     }
 
-    /**
-     * @return null
-     */
-    public function getId()
+
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    /**
-     * @return null
-     */
-    public function getHref()
+
+    public function getHref(): ?string
     {
         return $this->href;
     }

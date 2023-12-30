@@ -12,19 +12,33 @@ namespace PHPePub\Core\Structure\OPF;
 class DublinCore extends MetaValue
 {
     final public const CONTRIBUTOR = "contributor";
+
     final public const COVERAGE = "coverage";
+
     final public const CREATOR = "creator";
+
     final public const DATE = "date";
+
     final public const DESCRIPTION = "description";
+
     final public const FORMAT = "format";
+
     final public const IDENTIFIER = "identifier";
+
     final public const LANGUAGE = "language";
+
     final public const PUBLISHER = "publisher";
+
     final public const RELATION = "relation";
+
     final public const RIGHTS = "rights";
+
     final public const SOURCE = "source";
+
     final public const SUBJECT = "subject";
+
     final public const TITLE = "title";
+
     final public const TYPE = "type";
 
     /**
@@ -45,7 +59,7 @@ class DublinCore extends MetaValue
      * @param string $name
      * @param string $value
      */
-    public function setDc($name, $value)
+    public function setDc($name, $value): void
     {
         if (is_string($name)) {
             $this->setValue("dc:" . trim($name), $value);

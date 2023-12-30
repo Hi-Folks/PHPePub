@@ -14,15 +14,13 @@ use PHPePub\Core\StaticData;
  */
 class Metadata
 {
-    private $dc = [];
-    private $meta = [];
-    private $metaProperties = [];
-    public $namespaces = [];
+    private array $dc = [];
 
-    /**
-     * Class constructor.
-     */
-    public function __construct() {}
+    private array $meta = [];
+
+    private array $metaProperties = [];
+
+    public $namespaces = [];
 
     /**
      * Class destructor
@@ -40,11 +38,17 @@ class Metadata
      *
      * @param MetaValue $dc
      */
-    public function addDublinCore($dc)
+    public function addDublinCore($dc): void
     {
-        if ($dc != null && is_object($dc) && $dc instanceof MetaValue) {
-            $this->dc[] = $dc;
+        if ($dc == null) {
+            return;
         }
+
+        if (!is_object($dc)) {
+            return;
+        }
+
+        $this->dc[] = $dc;
     }
 
     /**
@@ -54,12 +58,13 @@ class Metadata
      * @param string $name
      * @param string $content
      */
-    public function addMeta($name, $content)
+    public function addMeta($name, $content): void
     {
         $name = is_string($name) ? trim($name) : null;
         if (isset($name)) {
             $content = is_string($content) ? trim($content) : null;
         }
+
         if (isset($content)) {
             $this->meta[] = [$name => $content];
         }
@@ -72,12 +77,13 @@ class Metadata
      * @param string $name
      * @param string $content
      */
-    public function addMetaProperty($name, $content)
+    public function addMetaProperty($name, $content): void
     {
         $name = is_string($name) ? trim($name) : null;
         if (isset($name)) {
             $content = is_string($content) ? trim($content) : null;
         }
+
         if (isset($content)) {
             $this->metaProperties[] = [$name => $content];
         }
@@ -87,7 +93,7 @@ class Metadata
      * @param string $nsName
      * @param string $nsURI
      */
-    public function addNamespace($nsName, $nsURI)
+    public function addNamespace($nsName, $nsURI): void
     {
         if (!array_key_exists($nsName, $this->namespaces)) {
             $this->namespaces[$nsName] = $nsURI;
@@ -98,10 +104,8 @@ class Metadata
      *
      * @param string $bookVersion
      * @param int    $date
-     *
-     * @return string
      */
-    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2, $date = null)
+    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2, $date = null): string
     {
         if ($bookVersion === EPub::BOOK_VERSION_EPUB2) {
             $this->addNamespace("opf", StaticData::$namespaces["opf"]);
@@ -109,11 +113,12 @@ class Metadata
             if (!isset($date)) {
                 $date = time();
             }
+
             $this->addNamespace("dcterms", StaticData::$namespaces["dcterms"]);
             $this->addMetaProperty("dcterms:modified", gmdate('Y-m-d\TH:i:s\Z', $date));
         }
 
-        if (count($this->dc) > 0) {
+        if ($this->dc !== []) {
             $this->addNamespace("dc", StaticData::$namespaces["dc"]);
         }
 
@@ -127,13 +132,13 @@ class Metadata
         foreach ($this->metaProperties as $data) {
             $content = current($data);
             $name = key($data);
-            $metadata .= "\t\t<meta property=\"" . $name . "\">" . $content . "</meta>\n";
+            $metadata .= "\t\t<meta property=\"" . $name . '">' . $content . "</meta>\n";
         }
 
         foreach ($this->meta as $data) {
             $content = current($data);
             $name = key($data);
-            $metadata .= "\t\t<meta name=\"" . $name . "\" content=\"" . $content . "\" />\n";
+            $metadata .= "\t\t<meta name=\"" . $name . '" content="' . $content . "\" />\n";
         }
 
         return $metadata . "\t</metadata>\n";

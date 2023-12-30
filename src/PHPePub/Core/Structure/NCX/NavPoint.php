@@ -15,15 +15,22 @@ class NavPoint extends AbstractNavEntry
 {
     final public const _VERSION = 3.30;
 
-    private $label = null;
-    private $contentSrc = null;
-    private $id = null;
-    private $navClass = null;
-    private $isNavHidden = false;
-    private $navPoints = [];
+    private ?string $label = null;
+
+    private ?string $contentSrc = null;
+
+    private ?string $id = null;
+
+    private ?string $navClass = null;
+
+    private bool $isNavHidden = false;
+
+    private array $navPoints = [];
+
     /** @var $parent AbstractNavEntry */
-    private $parent = null;
-    private $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;
+    private ?\PHPePub\Core\Structure\NCX\AbstractNavEntry $parent = null;
+
+    private ?string $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;
 
     /**
      * Class constructor.
@@ -54,7 +61,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @param string $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = is_string($id) ? trim($id) : null;
     }
@@ -64,7 +71,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @param string $navClass
      */
-    public function setNavClass($navClass)
+    public function setNavClass($navClass): void
     {
         $this->navClass = isset($navClass) && is_string($navClass) ? trim($navClass) : null;
     }
@@ -74,7 +81,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @param $isNavHidden
      */
-    public function setNavHidden($isNavHidden)
+    public function setNavHidden($isNavHidden): void
     {
         $this->isNavHidden = $isNavHidden === true;
     }
@@ -95,7 +102,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @return string Label
      */
-    public function getLabel()
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -107,7 +114,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @param string $label
      */
-    public function setLabel($label)
+    public function setLabel($label): void
     {
         $this->label = is_string($label) ? trim($label) : null;
     }
@@ -117,7 +124,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @return string content src url.
      */
-    public function getContentSrc()
+    public function getContentSrc(): ?string
     {
         return $this->contentSrc;
     }
@@ -129,7 +136,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @param string $contentSrc
      */
-    public function setContentSrc($contentSrc)
+    public function setContentSrc($contentSrc): void
     {
         $this->contentSrc = isset($contentSrc) && is_string($contentSrc) ? trim($contentSrc) : null;
     }
@@ -139,7 +146,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @return AbstractNavEntry if the parent is the root.
      */
-    public function getParent()
+    public function getParent(): ?\PHPePub\Core\Structure\NCX\AbstractNavEntry
     {
         return $this->parent;
     }
@@ -149,11 +156,17 @@ class NavPoint extends AbstractNavEntry
      *
      * @param NavPoint|NavMap $parent
      */
-    public function setParent($parent)
+    public function setParent($parent): void
     {
-        if ($parent != null && is_object($parent) && $parent instanceof AbstractNavEntry) {
-            $this->parent = $parent;
+        if ($parent == null) {
+            return;
         }
+
+        if (!is_object($parent)) {
+            return;
+        }
+
+        $this->parent = $parent;
     }
 
     /**
@@ -161,9 +174,9 @@ class NavPoint extends AbstractNavEntry
      *
      * @return int level
      */
-    public function getLevel()
+    public function getLevel(): int|float
     {
-        return $this->parent === null ? 1 : $this->parent->getLevel() + 1;
+        return $this->parent instanceof \PHPePub\Core\Structure\NCX\AbstractNavEntry ? $this->parent->getLevel() + 1 : 1;
     }
 
     /**
@@ -173,7 +186,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @return $this
      */
-    public function addNavPoint($navPoint)
+    public function addNavPoint($navPoint): static
     {
         if ($navPoint != null && is_object($navPoint) && $navPoint instanceof NavPoint) {
             /** @var $navPoint NavPoint */
@@ -181,6 +194,7 @@ class NavPoint extends AbstractNavEntry
             if ($navPoint->getWritingDirection() == null) {
                 $navPoint->setWritingDirection($this->writingDirection);
             }
+
             $this->navPoints[] = $navPoint;
 
             return $navPoint;
@@ -189,7 +203,7 @@ class NavPoint extends AbstractNavEntry
         return $this;
     }
 
-    public function getWritingDirection()
+    public function getWritingDirection(): ?string
     {
         return $this->writingDirection;
     }
@@ -199,7 +213,7 @@ class NavPoint extends AbstractNavEntry
      *
      * @param string $writingDirection
      */
-    public function setWritingDirection($writingDirection)
+    public function setWritingDirection($writingDirection): void
     {
         $this->writingDirection = isset($writingDirection) && is_string($writingDirection) ? trim($writingDirection) : null;
     }
@@ -208,13 +222,11 @@ class NavPoint extends AbstractNavEntry
      *
      * Enter description here ...
      *
-     * @param string $nav
      * @param int    $playOrder
      * @param int    $level
-     *
      * @return int
      */
-    public function finalize(&$nav = "", &$playOrder = 0, $level = 0)
+    public function finalize(string &$nav = "", &$playOrder = 0, $level = 0)
     {
         $maxLevel = $level;
         $levelAdjust = 0;
@@ -223,23 +235,24 @@ class NavPoint extends AbstractNavEntry
             return $maxLevel;
         }
 
-        if (isset($this->contentSrc)) {
-            $playOrder++;
+        if ($this->contentSrc !== null) {
+            ++$playOrder;
 
             if ($this->id == null) {
                 $this->id = "navpoint-" . $playOrder;
             }
-            $nav .= str_repeat("\t", $level) . "\t\t<navPoint id=\"" . $this->id . "\" playOrder=\"" . $playOrder . "\">\n"
+
+            $nav .= str_repeat("\t", $level) . "\t\t<navPoint id=\"" . $this->id . '" playOrder="' . $playOrder . "\">\n"
                 . str_repeat("\t", $level) . "\t\t\t<navLabel>\n"
                 . str_repeat("\t", $level) . "\t\t\t\t<text>" . $this->label . "</text>\n"
                 . str_repeat("\t", $level) . "\t\t\t</navLabel>\n"
                 . str_repeat("\t", $level) . "\t\t\t<content src=\"" . $this->contentSrc . "\" />\n";
         } else {
-            $levelAdjust++;
+            ++$levelAdjust;
         }
 
-        if (count($this->navPoints) > 0) {
-            $maxLevel++;
+        if ($this->navPoints !== []) {
+            ++$maxLevel;
             foreach ($this->navPoints as $navPoint) {
                 /** @var $navPoint NavPoint */
                 $retLevel = $navPoint->finalize($nav, $playOrder, ($level + 1 + $levelAdjust));
@@ -249,7 +262,7 @@ class NavPoint extends AbstractNavEntry
             }
         }
 
-        if (isset($this->contentSrc)) {
+        if ($this->contentSrc !== null) {
             $nav .= str_repeat("\t", $level) . "\t\t</navPoint>\n";
         }
 
@@ -260,15 +273,13 @@ class NavPoint extends AbstractNavEntry
      *
      * Enter description here ...
      *
-     * @param string $nav
      * @param int    $playOrder
      * @param int    $level
      * @param null   $subLevelClass
      * @param bool   $subLevelHidden
-     *
      * @return int
      */
-    public function finalizeEPub3(&$nav = "", &$playOrder = 0, $level = 0, $subLevelClass = null, $subLevelHidden = false)
+    public function finalizeEPub3(string &$nav = "", &$playOrder = 0, $level = 0, $subLevelClass = null, $subLevelHidden = false)
     {
         $maxLevel = $level;
 
@@ -277,29 +288,32 @@ class NavPoint extends AbstractNavEntry
         }
 
         $dir = "";
-        if (isset($this->writingDirection)) {
-            $dir .= " dir=\"" . $this->writingDirection . "\"";
+        if ($this->writingDirection !== null) {
+            $dir .= ' dir="' . $this->writingDirection . '"';
         }
+
         $indent = str_repeat("\t", $level) . "\t\t\t\t";
 
-        $nav .= $indent . "<li id=\"" . $this->id . "\"" . $dir . ">\n";
+        $nav .= $indent . '<li id="' . $this->id . '"' . $dir . ">\n";
 
-        if (isset($this->contentSrc)) {
-            $nav .= $indent . "\t<a href=\"" . $this->contentSrc . "\"" . $dir . ">" . $this->label . "</a>\n";
+        if ($this->contentSrc !== null) {
+            $nav .= $indent . "\t<a href=\"" . $this->contentSrc . '"' . $dir . ">" . $this->label . "</a>\n";
         } else {
             $nav .= $indent . "\t<span" . $dir . ">" . $this->label . "</span>\n";
         }
 
-        if (count($this->navPoints) > 0) {
-            $maxLevel++;
+        if ($this->navPoints !== []) {
+            ++$maxLevel;
 
             $nav .= $indent . "\t<ol epub:type=\"list\"" . $dir;
             if (isset($subLevelClass)) {
-                $nav .= " class=\"" . $subLevelClass . "\"";
+                $nav .= ' class="' . $subLevelClass . '"';
             }
+
             if ($subLevelHidden) {
-                $nav .= " hidden=\"hidden\"";
+                $nav .= ' hidden="hidden"';
             }
+
             $nav .= ">\n";
 
             foreach ($this->navPoints as $navPoint) {
@@ -309,6 +323,7 @@ class NavPoint extends AbstractNavEntry
                     $maxLevel = $retLevel;
                 }
             }
+
             $nav .= $indent . "\t</ol>\n";
         }
 

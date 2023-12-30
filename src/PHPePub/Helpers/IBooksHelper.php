@@ -37,14 +37,19 @@ class IBooksHelper
      * Add with: $book->addCustomPrefix(iBooks::EPUB3_IBOOK_PREFIX_NAME, iBooks::EPUB3_IBOOK_PREFIX_URI);
      */
     final public const EPUB3_IBOOK_PREFIX_NAME = "ibooks";
+
     final public const EPUB3_IBOOK_PREFIX_URI = "http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0";
 
     final public const ORIENTATION_NONE = "none";
+
     final public const ORIENTATION_PORTRAIT_ONLY = "portrait-only";
+
     final public const ORIENTATION_LANDSCAPE_ONLY = "landscape-only";
 
     final public const PLATFORM_ALL = "*";
+
     final public const PLATFORM_IPHONE = "iphone";
+
     final public const PLATFORM_IPAD = "ipad";
 
     /**
@@ -129,7 +134,7 @@ class IBooksHelper
      *
      * @param EPub $book
      */
-    public static function addPrefix($book)
+    public static function addPrefix($book): void
     {
         if (!$book->isEPubVersion2()) {
             $book->addCustomPrefix(self::EPUB3_IBOOK_PREFIX_NAME, self::EPUB3_IBOOK_PREFIX_URI);
@@ -141,7 +146,7 @@ class IBooksHelper
      * @param string $property
      * @param string $value
      */
-    public static function addProperty($book, $property, $value)
+    public static function addProperty($book, $property, $value): void
     {
         if (!$book->isEPubVersion2()) {
             $book->addCustomMetaProperty($property, $value);
@@ -152,7 +157,7 @@ class IBooksHelper
      * @param EPub $book
      * @param bool $value
      */
-    public static function setFixedLayout($book, $value)
+    public static function setFixedLayout($book, $value): void
     {
         if (!$book->isEPubVersion2()) {
             $book->addCustomMetaProperty(self::EPUB3_FIXED_LAYOUT, Boolean::getBoolean($value));
@@ -163,7 +168,7 @@ class IBooksHelper
      * @param EPub   $book
      * @param string $value "portrait-only", "landscape-only"
      */
-    public static function setIPhoneOrientationLock($book, $value)
+    public static function setIPhoneOrientationLock($book, $value): void
     {
         if (!$book->isEPubVersion2() && $value === self::ORIENTATION_PORTRAIT_ONLY || $value === self::ORIENTATION_LANDSCAPE_ONLY) {
             $book->addCustomMetaProperty(self::EPUB3_IPHONE_ORIENTATION_LOCK, $value);
@@ -174,7 +179,7 @@ class IBooksHelper
      * @param EPub   $book
      * @param string $value "portrait-only", "landscape-only"
      */
-    public static function setIPadOrientationLock($book, $value)
+    public static function setIPadOrientationLock($book, $value): void
     {
         if (!$book->isEPubVersion2() && $value === self::ORIENTATION_PORTRAIT_ONLY || $value === self::ORIENTATION_LANDSCAPE_ONLY) {
             $book->addCustomMetaProperty(self::EPUB3_IPAD_ORIENTATION_LOCK, $value);
@@ -185,7 +190,7 @@ class IBooksHelper
      * @param EPub $book
      * @param bool $value
      */
-    public static function setSpecifiedFonts($book, $value)
+    public static function setSpecifiedFonts($book, $value): void
     {
         if (!$book->isEPubVersion2()) {
             $book->addCustomMetaProperty(self::EPUB3_SPECIFIED_FONTS, Boolean::getBoolean($value));
@@ -196,7 +201,7 @@ class IBooksHelper
      * @param EPub $book
      * @param bool $value
      */
-    public static function setBinding($book, $value)
+    public static function setBinding($book, $value): void
     {
         if (!$book->isEPubVersion2()) {
             $book->addCustomMetaProperty(self::EPUB3_BINDING, Boolean::getBoolean($value));

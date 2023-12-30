@@ -18,8 +18,10 @@ use DOMDocument;
  */
 class EPubChapterSplitter
 {
-    private $splitDefaultSize = 250000;
-    private $bookVersion = EPub::BOOK_VERSION_EPUB2;
+    private int $splitDefaultSize = 250000;
+
+    private string $bookVersion = EPub::BOOK_VERSION_EPUB2;
+
     private $htmlFormat = EPub::FORMAT_XHTML;
 
     /**
@@ -38,7 +40,7 @@ class EPubChapterSplitter
      *
      * @param string $bookVersion
      */
-    public function setVersion($bookVersion)
+    public function setVersion($bookVersion): void
     {
         $this->bookVersion = is_string($bookVersion) ? trim($bookVersion) : EPub::BOOK_VERSION_EPUB2;
     }
@@ -48,7 +50,7 @@ class EPubChapterSplitter
      *
      * @param string $htmlFormat
      */
-    public function setHtmlFormat($htmlFormat)
+    public function setHtmlFormat($htmlFormat): void
     {
         $this->htmlFormat = in_array($htmlFormat, [EPub::FORMAT_XHTML, EPub::FORMAT_HTML5])
             ? $htmlFormat
@@ -60,10 +62,8 @@ class EPubChapterSplitter
      * Default is 250000 bytes, and minimum is 10240 bytes.
      *
      * @param int $size segment size in bytes
-     *
-     * @return void
      */
-    public function setSplitSize($size)
+    public function setSplitSize($size): void
     {
         $this->splitDefaultSize = (int)$size;
         if ($size < 10240) {
@@ -76,7 +76,7 @@ class EPubChapterSplitter
      *
      * @return int $size
      */
-    public function getSplitSize()
+    public function getSplitSize(): int
     {
         return $this->splitDefaultSize;
     }
@@ -93,7 +93,7 @@ class EPubChapterSplitter
      *
      * @return array with 1 or more parts
      */
-    public function splitChapter($chapter, $splitOnSearchString = false, $searchString = '/^Chapter\\ /i')
+    public function splitChapter($chapter, $splitOnSearchString = false, $searchString = '/^Chapter\\ /i'): array
     {
         $chapterData = [];
         $isSearchRegexp = $splitOnSearchString && (preg_match('#^(\D|\S|\W).+\1[imsxeADSUXJu]*$#m', $searchString) == 1);
@@ -126,6 +126,7 @@ class EPubChapterSplitter
         if (!str_contains(trim($newXML), "<?xml ")) {
             $newXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" . $newXML;
         }
+
         $headerLength = strlen($newXML);
 
         $files = [];
@@ -158,7 +159,7 @@ class EPubChapterSplitter
             if ($nodeLen > $partSize && $node->hasChildNodes()) {
                 $domPath[] = $node;
                 $domClonedPath[] = $node->cloneNode(false);
-                $domDepth++;
+                ++$domDepth;
 
                 $node = $node->firstChild;
             }
@@ -185,15 +186,17 @@ class EPubChapterSplitter
                             $curParent = $newParent;
                         }
                     }
+
                     $curSize = strlen($xmlDoc->saveXML($curFile));
                 }
+
                 $curParent->appendChild($node->cloneNode(true));
                 $curSize += $nodeLen;
             }
 
             $node = $node2;
             while ($node == null && $domDepth > 0) {
-                $domDepth--;
+                --$domDepth;
                 $node = end($domPath)->nextSibling;
                 array_pop($domPath);
                 array_pop($domClonedPath);
@@ -201,14 +204,14 @@ class EPubChapterSplitter
             }
         } while ($node != null);
 
-        $curFile = null;
-
         $xml = new DOMDocument('1.0', $xmlDoc->xmlEncoding);
         $xml->lookupPrefix("http://www.w3.org/1999/xhtml");
+
         $xml->preserveWhiteSpace = false;
         $xml->formatOutput = true;
+        $counter = count($files);
 
-        for ($idx = 0; $idx < count($files); $idx++) {
+        for ($idx = 0; $idx < $counter; ++$idx) {
             $xml2Doc = new DOMDocument('1.0', $xmlDoc->xmlEncoding);
             $xml2Doc->lookupPrefix("http://www.w3.org/1999/xhtml");
             $xml2Doc->loadXML($newXML);
