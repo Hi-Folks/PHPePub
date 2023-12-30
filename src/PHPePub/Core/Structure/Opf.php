@@ -2,7 +2,6 @@
 
 namespace PHPePub\Core\Structure;
 
-use com\grandt\BinStringStatic;
 use PHPePub\Core\EPub;
 use PHPePub\Core\Structure\OPF\DublinCore;
 use PHPePub\Core\Structure\OPF\Guide;
@@ -39,19 +38,19 @@ class Opf
     final public const TYPE_OEB1_CSS = "text/x-oeb1-css"; // Deprecated
     final public const TYPE_NCX = "application/x-dtbncx+xml";
 
-    private $bookVersion = EPub::BOOK_VERSION_EPUB2;
-    private $ident = "BookId";
+    private string $bookVersion = EPub::BOOK_VERSION_EPUB2;
+    private string $ident = "BookId";
 
-    public $date = null;
+    public $date;
 
     /** @var $metadata Metadata */
-    public $metadata = null;
+    public $metadata;
     /** @var $manifest Manifest */
-    public $manifest = null;
+    public $manifest;
     /** @var $spine Spine */
-    public $spine = null;
+    public $spine;
     /** @var $guide Guide */
-    public $guide = null;
+    public $guide;
 
     public $namespaces = ["xsi" => "http://www.w3.org/2001/XMLSchema-instance"];
     public $prefixes = [];
@@ -88,12 +87,12 @@ class Opf
      *
      * @param $bookVersion
      */
-    public function setVersion($bookVersion)
+    public function setVersion($bookVersion): void
     {
         $this->bookVersion = is_string($bookVersion) ? trim($bookVersion) : EPub::BOOK_VERSION_EPUB2;
     }
 
-    public function isEPubVersion2()
+    public function isEPubVersion2(): bool
     {
         return $this->bookVersion === EPub::BOOK_VERSION_EPUB2;
     }
@@ -104,7 +103,7 @@ class Opf
      *
      * @param string $ident
      */
-    public function setIdent($ident = "BookId")
+    public function setIdent($ident = "BookId"): void
     {
         $this->ident = is_string($ident) ? trim($ident) : "BookId";
     }
@@ -112,10 +111,8 @@ class Opf
     /**
      *
      * Enter description here ...
-     *
-     * @return string
      */
-    public function finalize()
+    public function finalize(): string
     {
         $metadata = $this->metadata->finalize($this->bookVersion, $this->date);
 
@@ -123,8 +120,9 @@ class Opf
             $this->addNamespace($ns, $nsuri);
         }
 
-        $opf = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-            . "<package xmlns=\"http://www.idpf.org/2007/opf\"\n";
+        $opf = '<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf"
+';
 
         foreach($this->namespaces as $ns => $uri) {
             $opf .= "\txmlns:$ns=\"$uri\"\n";
@@ -167,7 +165,7 @@ class Opf
      * @param string $identifier
      * @param string $identifierScheme
      */
-    public function initialize($title, $language, $identifier, $identifierScheme)
+    public function initialize($title, $language, $identifier, $identifierScheme): void
     {
         $this->metadata->addDublinCore(new DublinCore("title", $title));
         $this->metadata->addDublinCore(new DublinCore("language", $language));
@@ -182,7 +180,7 @@ class Opf
      * @param string $nsName
      * @param string $nsURI
      */
-    public function addNamespace($nsName, $nsURI)
+    public function addNamespace($nsName, $nsURI): void
     {
         if (!array_key_exists($nsName, $this->namespaces)) {
             $this->namespaces[$nsName] = $nsURI;
@@ -193,7 +191,7 @@ class Opf
      * @param string $name
      * @param string $URI
      */
-    public function addPrefix($name, $URI)
+    public function addPrefix($name, $URI): void
     {
         if (!array_key_exists($name, $this->prefixes)) {
             $this->prefixes[$name] = $URI;
@@ -209,7 +207,7 @@ class Opf
      * @param string $mediaType
      * @param string $properties
      */
-    public function addItem($id, $href, $mediaType, $properties = null)
+    public function addItem($id, $href, $mediaType, $properties = null): void
     {
         $this->manifest->addItem(new Item($id, $href, $mediaType, $properties));
     }
@@ -244,11 +242,16 @@ class Opf
         foreach ($this->manifest->getItems() as $item) {
             if (!$startsWith && $item->getHref() == $href) {
                 return $item;
-            } elseif($startsWith && BinStringStatic::startsWith($item->getHref(), $href)) {
-                $rv[] = $item;
             }
+            if (!$startsWith) {
+                continue;
+            }
+            if (!str_starts_with((string) $item->getHref(), $href)) {
+                continue;
+            }
+            $rv[] = $item;
         }
-        if (count($rv) > 0) {
+        if ($rv !== []) {
             return $rv;
         }
         return false;
@@ -261,7 +264,7 @@ class Opf
      * @param string $idref
      * @param bool   $linear
      */
-    public function addItemRef($idref, $linear = true)
+    public function addItemRef($idref, $linear = true): void
     {
         $this->spine->addItemref(new Itemref($idref, $linear));
     }
@@ -274,7 +277,7 @@ class Opf
      * @param string $title
      * @param string $href
      */
-    public function addReference($type, $title, $href)
+    public function addReference($type, $title, $href): void
     {
         $this->guide->addReference(new Reference($type, $title, $href));
     }
@@ -286,7 +289,7 @@ class Opf
      * @param string $name
      * @param string $value
      */
-    public function addDCMeta($name, $value)
+    public function addDCMeta($name, $value): void
     {
         $this->addMetaValue(new DublinCore($name, $value));
     }
@@ -295,7 +298,7 @@ class Opf
      *
      * @param MetaValue $value
      */
-    public function addMetaValue($value)
+    public function addMetaValue($value): void
     {
         $this->metadata->addDublinCore($value);
     }
@@ -309,7 +312,7 @@ class Opf
      * @param string $name
      * @param string $content
      */
-    public function addMeta($name, $content)
+    public function addMeta($name, $content): void
     {
         $this->metadata->addMeta($name, $content);
     }
@@ -325,7 +328,7 @@ class Opf
      * @param string $name  property name, including the namespace declaration, ie. "dcterms:modified"
      * @param string $content
      */
-    public function addMetaProperty($name, $content)
+    public function addMetaProperty($name, $content): void
     {
         $this->metadata->addMetaProperty($name, $content);
     }
@@ -338,7 +341,7 @@ class Opf
      * @param string $fileAs
      * @param string $role Use the MarcCode constants
      */
-    public function addCreator($name, $fileAs = null, $role = null)
+    public function addCreator($name, $fileAs = null, $role = null): void
     {
         $dc = new DublinCore(DublinCore::CREATOR, trim($name));
 
@@ -361,7 +364,7 @@ class Opf
      * @param string $fileAs
      * @param string $role Use the MarcCode constants
      */
-    public function addColaborator($name, $fileAs = null, $role = null)
+    public function addColaborator($name, $fileAs = null, $role = null): void
     {
         $dc = new DublinCore(DublinCore::CONTRIBUTOR, trim($name));
 

@@ -14,15 +14,10 @@ use PHPePub\Core\StaticData;
  */
 class Metadata
 {
-    private $dc = [];
-    private $meta = [];
-    private $metaProperties = [];
+    private array $dc = [];
+    private array $meta = [];
+    private array $metaProperties = [];
     public $namespaces = [];
-
-    /**
-     * Class constructor.
-     */
-    public function __construct() {}
 
     /**
      * Class destructor
@@ -40,11 +35,15 @@ class Metadata
      *
      * @param MetaValue $dc
      */
-    public function addDublinCore($dc)
+    public function addDublinCore($dc): void
     {
-        if ($dc != null && is_object($dc) && $dc instanceof MetaValue) {
-            $this->dc[] = $dc;
+        if ($dc == null) {
+            return;
         }
+        if (!is_object($dc)) {
+            return;
+        }
+        $this->dc[] = $dc;
     }
 
     /**
@@ -54,7 +53,7 @@ class Metadata
      * @param string $name
      * @param string $content
      */
-    public function addMeta($name, $content)
+    public function addMeta($name, $content): void
     {
         $name = is_string($name) ? trim($name) : null;
         if (isset($name)) {
@@ -72,7 +71,7 @@ class Metadata
      * @param string $name
      * @param string $content
      */
-    public function addMetaProperty($name, $content)
+    public function addMetaProperty($name, $content): void
     {
         $name = is_string($name) ? trim($name) : null;
         if (isset($name)) {
@@ -87,7 +86,7 @@ class Metadata
      * @param string $nsName
      * @param string $nsURI
      */
-    public function addNamespace($nsName, $nsURI)
+    public function addNamespace($nsName, $nsURI): void
     {
         if (!array_key_exists($nsName, $this->namespaces)) {
             $this->namespaces[$nsName] = $nsURI;
@@ -98,10 +97,8 @@ class Metadata
      *
      * @param string $bookVersion
      * @param int    $date
-     *
-     * @return string
      */
-    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2, $date = null)
+    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2, $date = null): string
     {
         if ($bookVersion === EPub::BOOK_VERSION_EPUB2) {
             $this->addNamespace("opf", StaticData::$namespaces["opf"]);
@@ -113,7 +110,7 @@ class Metadata
             $this->addMetaProperty("dcterms:modified", gmdate('Y-m-d\TH:i:s\Z', $date));
         }
 
-        if (count($this->dc) > 0) {
+        if ($this->dc !== []) {
             $this->addNamespace("dc", StaticData::$namespaces["dc"]);
         }
 

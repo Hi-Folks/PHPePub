@@ -11,12 +11,7 @@ namespace PHPePub\Core\Structure\OPF;
  */
 class Guide
 {
-    private $references = [];
-
-    /**
-     * Class constructor.
-     */
-    public function __construct() {}
+    private array $references = [];
 
     /**
      * Class destructor
@@ -33,7 +28,7 @@ class Guide
      * Enter description here ...
      *
      */
-    public function length()
+    public function length(): int
     {
         return count($this->references);
     }
@@ -44,23 +39,25 @@ class Guide
      *
      * @param Reference $reference
      */
-    public function addReference($reference)
+    public function addReference($reference): void
     {
-        if ($reference != null && is_object($reference) && $reference instanceof Reference) {
-            $this->references[] = $reference;
+        if ($reference == null) {
+            return;
         }
+        if (!is_object($reference)) {
+            return;
+        }
+        $this->references[] = $reference;
     }
 
     /**
      *
      * Enter description here ...
-     *
-     * @return string
      */
-    public function finalize()
+    public function finalize(): string
     {
         $ref = "";
-        if (count($this->references) > 0) {
+        if ($this->references !== []) {
             $ref = "\n\t<guide>\n";
             foreach ($this->references as $reference) {
                 /** @var $reference Reference */

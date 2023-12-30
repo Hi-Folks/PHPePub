@@ -93,7 +93,7 @@ $book->addCSSFile("styles.css", "css1", $cssData);
 
 // This test requires you have an image, change "demo/cover-image.jpg" to match your location.
 $log->logLine("Add Cover Image");
-$book->setCoverImage("Cover.jpg", file_get_contents("demo/cover-image.jpg"), "image/jpeg");
+$book->setCoverImage("Cover.jpg", file_get_contents("tests/demo/cover-image.jpg"), "image/jpeg");
 
 
 
@@ -265,7 +265,7 @@ if ($book->isLogging) { // Only used in case we need to debug EPub.php.
 $book->finalize(); // Finalize the book, and build the archive.
 
 // Send the book to the client. ".epub" will be appended if missing.
-$zipData = $book->sendBook("ExampleBook3");
+$zipData = $book->saveBook("ExampleBook3");
 
 // After this point your script should call exit. If anything is written to the output,
 // it'll be appended to the end of the book, causing the epub file to become corrupt.

@@ -60,7 +60,7 @@ class FileHelper
      *
      * @return mixed|string
      */
-    public static function sanitizeFileName($fileName)
+    public static function sanitizeFileName($fileName): string
     {
         $fileName1 = str_replace(StaticData::$forbiddenCharacters, '', $fileName);
         $fileName2 = preg_replace('/[\s-]+/', '-', $fileName1);
@@ -147,7 +147,7 @@ class FileHelper
      *
      * @return string normalized filename
      */
-    public static function normalizeFileName($fileName)
+    public static function normalizeFileName($fileName): ?string
     {
         return preg_replace('#^[/\.]+#i', "", RelativePath::getRelativePath($fileName));
     }

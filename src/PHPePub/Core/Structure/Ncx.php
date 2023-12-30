@@ -17,22 +17,22 @@ class Ncx
 {
     final public const MIMETYPE = "application/x-dtbncx+xml";
 
-    private $bookVersion = EPub::BOOK_VERSION_EPUB2;
+    private string $bookVersion = EPub::BOOK_VERSION_EPUB2;
 
     /** @var EPub $parentBook */
-    private $parentBook = null;
+    private $parentBook;
 
-    private $navMap = null;
-    private $uid = null;
-    private $meta = [];
-    private $docTitle = null;
-    private $docAuthor = null;
+    private ?\PHPePub\Core\Structure\NCX\NavMap $navMap = null;
+    private ?string $uid = null;
+    private array $meta = [];
+    private ?string $docTitle = null;
+    private ?string $docAuthor = null;
 
-    private $currentLevel = null;
-    private $lastLevel = null;
+    private $currentLevel;
+    private $lastLevel;
 
-    private $languageCode = "en";
-    private $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;
+    private string $languageCode = "en";
+    private string $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT;
 
     public $chapterList = [];
     public $referencesTitle = "Guide";
@@ -40,7 +40,7 @@ class Ncx
     public $referencesId = "references";
     public $referencesList = [];
     public $referencesName = [];
-    public $referencesOrder = null;
+    public $referencesOrder;
 
     /**
      * Class constructor.
@@ -79,7 +79,7 @@ class Ncx
     /**
      * @param EPub $parentBook
      */
-    public function setBook($parentBook)
+    public function setBook($parentBook): void
     {
         $this->parentBook = $parentBook;
     }
@@ -90,7 +90,7 @@ class Ncx
      *
      * @param string $bookVersion
      */
-    public function setVersion($bookVersion)
+    public function setVersion($bookVersion): void
     {
         $this->bookVersion = is_string($bookVersion) ? trim($bookVersion) : EPub::BOOK_VERSION_EPUB2;
     }
@@ -99,7 +99,7 @@ class Ncx
      *
      * @return bool TRUE if the book is set to type ePub 2
      */
-    public function isEPubVersion2()
+    public function isEPubVersion2(): bool
     {
         return $this->bookVersion === EPub::BOOK_VERSION_EPUB2;
     }
@@ -110,7 +110,7 @@ class Ncx
      *
      * @param string $uid
      */
-    public function setUid($uid)
+    public function setUid($uid): void
     {
         $this->uid = is_string($uid) ? trim($uid) : null;
     }
@@ -121,7 +121,7 @@ class Ncx
      *
      * @param string $docTitle
      */
-    public function setDocTitle($docTitle)
+    public function setDocTitle($docTitle): void
     {
         $this->docTitle = is_string($docTitle) ? trim($docTitle) : null;
     }
@@ -132,7 +132,7 @@ class Ncx
      *
      * @param string $docAuthor
      */
-    public function setDocAuthor($docAuthor)
+    public function setDocAuthor($docAuthor): void
     {
         $this->docAuthor = is_string($docAuthor) ? trim($docAuthor) : null;
     }
@@ -143,7 +143,7 @@ class Ncx
      *
      * @param string $languageCode
      */
-    public function setLanguageCode($languageCode)
+    public function setLanguageCode($languageCode): void
     {
         $this->languageCode = is_string($languageCode) ? trim($languageCode) : "en";
     }
@@ -154,7 +154,7 @@ class Ncx
      *
      * @param string $writingDirection
      */
-    public function setWritingDirection($writingDirection)
+    public function setWritingDirection($writingDirection): void
     {
         $this->writingDirection = is_string($writingDirection) ? trim($writingDirection) : EPub::DIRECTION_LEFT_TO_RIGHT;
     }
@@ -165,11 +165,15 @@ class Ncx
      *
      * @param NavMap $navMap
      */
-    public function setNavMap($navMap)
+    public function setNavMap($navMap): void
     {
-        if ($navMap != null && is_object($navMap) && $navMap instanceof NavMap) {
-            $this->navMap = $navMap;
+        if ($navMap == null) {
+            return;
         }
+        if (!is_object($navMap)) {
+            return;
+        }
+        $this->navMap = $navMap;
     }
 
     /**
@@ -182,10 +186,8 @@ class Ncx
      * @param string $navClass
      * @param bool   $isNavHidden
      * @param null   $writingDirection
-     *
-     * @return bool|NavPoint
      */
-    public function subLevel($navTitle = null, $navId = null, $navClass = null, $isNavHidden = false, $writingDirection = null)
+    public function subLevel($navTitle = null, $navId = null, $navClass = null, $isNavHidden = false, $writingDirection = null): \PHPePub\Core\Structure\NCX\NavPoint|bool
     {
         $navPoint = false;
         if (isset($navTitle) && isset($navClass)) {
@@ -204,7 +206,7 @@ class Ncx
      *
      * Subsequent chapters will be added to this chapters parent level.
      */
-    public function backLevel()
+    public function backLevel(): void
     {
         $this->lastLevel = $this->currentLevel;
         $this->currentLevel = $this->currentLevel->getParent();
@@ -215,7 +217,7 @@ class Ncx
      *
      * Subsequent chapters will be added to the rooot NavMap.
      */
-    public function rootLevel()
+    public function rootLevel(): void
     {
         $this->lastLevel = $this->currentLevel;
         $this->currentLevel = $this->navMap;
@@ -228,7 +230,7 @@ class Ncx
      *
      * @param int $newLevel
      */
-    public function setCurrentLevel($newLevel)
+    public function setCurrentLevel($newLevel): void
     {
         if ($newLevel <= 1) {
             $this->rootLevel();
@@ -255,7 +257,7 @@ class Ncx
      *
      * @param NavPoint $navPoint
      */
-    public function addNavPoint($navPoint)
+    public function addNavPoint($navPoint): void
     {
         $this->lastLevel = $this->currentLevel->addNavPoint($navPoint);
     }
@@ -266,7 +268,7 @@ class Ncx
      *
      * @return NavMap
      */
-    public function getNavMap()
+    public function getNavMap(): ?\PHPePub\Core\Structure\NCX\NavMap
     {
         return $this->navMap;
     }
@@ -278,23 +280,24 @@ class Ncx
      * @param string $name
      * @param string $content
      */
-    public function addMetaEntry($name, $content)
+    public function addMetaEntry($name, $content): void
     {
         $name = is_string($name) ? trim($name) : null;
         $content = is_string($content) ? trim($content) : null;
-
-        if ($name != null && $content != null) {
-            $this->meta[] = [$name => $content];
+        if ($name == null) {
+            return;
         }
+        if ($content == null) {
+            return;
+        }
+        $this->meta[] = [$name => $content];
     }
 
     /**
      *
      * Enter description here ...
-     *
-     * @return string
      */
-    public function finalize()
+    public function finalize(): string
     {
         $nav = $this->navMap->finalize();
 
@@ -310,12 +313,10 @@ class Ncx
             . "\t\t<meta name=\"dtb:totalPageCount\" content=\"0\" />\n"
             . "\t\t<meta name=\"dtb:maxPageNumber\" content=\"0\" />\n";
 
-        if (count($this->meta)) {
-            foreach ($this->meta as $metaEntry) {
-                $content = reset($metaEntry);
-                $name = key($metaEntry);
-                $ncx .= "\t\t<meta name=\"" . $name . "\" content=\"" . $content . "\" />\n";
-            }
+        foreach ($this->meta as $metaEntry) {
+            $content = reset($metaEntry);
+            $name = key($metaEntry);
+            $ncx .= "\t\t<meta name=\"" . $name . "\" content=\"" . $content . "\" />\n";
         }
 
         $ncx .= "\t</head>\n\n\t<docTitle>\n\t\t<text>"
@@ -330,15 +331,14 @@ class Ncx
 
     /**
      *
-     * @param string $title
      * @param string $cssFileName
      *
-     * @return string
      */
-    public function finalizeEPub3($title = "Table of Contents", $cssFileName = null)
+    public function finalizeEPub3(string $title = "Table of Contents", $cssFileName = null): string
     {
-        $end = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            . "<html xmlns=\"http://www.w3.org/1999/xhtml\"\n"
+        $end = '<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+'
             . "      xmlns:epub=\"http://www.idpf.org/2007/ops\"\n"
             . "      xml:lang=\"" . $this->languageCode . "\" lang=\"" . $this->languageCode . "\" dir=\"" . $this->writingDirection . "\">\n"
             . "\t<head>\n"
@@ -353,28 +353,24 @@ class Ncx
             $end .= "\t\t<link rel=\"stylesheet\" href=\"" . $cssFileName . "\" type=\"text/css\"/>\n";
         }
 
-        $end .= "\t</head>\n"
-            . "\t<body epub:type=\"frontmatter toc\">\n"
-            . "\t\t<header>\n"
-            . "\t\t\t<h1>" . $title . "</h1>\n"
+        return $end . ('	</head>
+	<body epub:type="frontmatter toc">
+		<header>
+			<h1>' . $title . "</h1>\n"
             . "\t\t</header>\n"
             . $this->navMap->finalizeEPub3()
             . $this->finalizeEPub3Landmarks()
             . "\t</body>\n"
-            . "</html>\n";
-
-        return $end;
+            . "</html>\n");
     }
 
     /**
      * Build the references for the ePub 2 toc.
      * These are merely reference pages added to the end of the navMap though.
-     *
-     * @return string
      */
-    public function finalizeReferences()
+    public function finalizeReferences(): void
     {
-        if (isset($this->referencesList) && count($this->referencesList) > 0) {
+        if ($this->referencesList !== null && count($this->referencesList) > 0) {
             $this->rootLevel();
             $this->subLevel($this->referencesTitle, $this->referencesId, $this->referencesClass);
             $refId = 1;
@@ -390,15 +386,13 @@ class Ncx
 
     /**
      * Build the landmarks for the ePub 3 toc.
-     *
-     * @return string
      */
-    public function finalizeEPub3Landmarks()
+    public function finalizeEPub3Landmarks(): string
     {
         $lm = "";
-        if (isset($this->referencesList) && count($this->referencesList) > 0) {
-            $lm = "\t\t\t<nav epub:type=\"landmarks\">\n"
-                . "\t\t\t\t<h2"
+        if ($this->referencesList !== null && count($this->referencesList) > 0) {
+            $lm = '			<nav epub:type="landmarks">
+				<h2'
                 . ($this->writingDirection === EPub::DIRECTION_RIGHT_TO_LEFT ? " dir=\"rtl\"" : "") . ">"
                 . $this->referencesTitle . "</h2>\n"
                 . "\t\t\t\t<ol>\n";
@@ -413,7 +407,7 @@ class Ncx
                         . "</a></li>\n";
                 }
             }
-            if (empty($li)) {
+            if ($li === '' || $li === '0') {
                 return "";
             }
 

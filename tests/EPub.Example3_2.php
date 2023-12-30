@@ -73,9 +73,9 @@ $book->addCSSFile("styles.css", "css1", $cssData);
 
 // This test requires you have an image, change "demo/cover-image.jpg" to match your location.
 $log->logLine("Add Cover Image");
-$book->setCoverImage("Cover.jpg", file_get_contents("demo/cover-image.jpg"), "image/jpeg");
+$book->setCoverImage("Cover.jpg", file_get_contents("tests/demo/cover-image.jpg"), "image/jpeg");
 
-$data = '<div class="img-container" id="em_1" style="left: 138px; top: 148px; height: 232px; width: 308px; position: absolute; z-index: 1;"><img src="http://www.grandt.com/test/sample2.gif" style="width:100%;height:100%;"/></div>';
+$data = '<div class="img-container" id="em_1" style="left: 138px; top: 148px; height: 232px; width: 308px; position: absolute; z-index: 1;"><img src="tests/demo/512x700_g1.gif" style="width:100%;height:100%;"/></div>';
 
 $book->addChapter("Page 1", "page_1.xhtml", $content_start . $data . $bookEnd, false, EPub::EXTERNAL_REF_ADD);
 
@@ -92,7 +92,7 @@ if ($book->isLogging) { // Only used in case we need to debug EPub.php.
 $book->finalize(); // Finalize the book, and build the archive.
 
 // Send the book to the client. ".epub" will be appended if missing.
-$zipData = $book->sendBook("ExampleBook3_2.epub");
+$zipData = $book->saveBook("ExampleBook3_2.epub");
 
 // After this point your script should call exit. If anything is written to the output,
 // it'll be appended to the end of the book, causing the epub file to become corrupt.

@@ -40,7 +40,7 @@ class RenditionHelper
      *
      * @param EPub $book
      */
-    public static function addPrefix($book)
+    public static function addPrefix($book): void
     {
         if (!$book->isEPubVersion2()) {
             $book->addCustomPrefix(self::RENDITION_PREFIX_NAME, self::RENDITION_PREFIX_URI);
@@ -51,7 +51,7 @@ class RenditionHelper
      * @param EPub   $book
      * @param string $value "reflowable", "pre-paginated"
      */
-    public static function setLayout($book, $value)
+    public static function setLayout($book, $value): void
     {
         if (!$book->isEPubVersion2() && $value === self::LAYOUT_REFLOWABLE || $value === self::LAYOUT_PRE_PAGINATED) {
             $book->addCustomMetaProperty(self::RENDITION_LAYOUT, $value);
@@ -62,7 +62,7 @@ class RenditionHelper
      * @param EPub   $book
      * @param string $value "landscape", "portrait" or "auto"
      */
-    public static function setOrientation($book, $value)
+    public static function setOrientation($book, $value): void
     {
         if (!$book->isEPubVersion2() && $value === self::ORIENTATION_LANDSCAPE || $value === self::ORIENTATION_PORTRAIT || $value === self::ORIENTATION_AUTO) {
             $book->addCustomMetaProperty(self::RENDITION_ORIENTATION, $value);
@@ -73,7 +73,7 @@ class RenditionHelper
      * @param EPub   $book
      * @param string $value "landscape", "portrait" or "auto"
      */
-    public static function setSpread($book, $value)
+    public static function setSpread($book, $value): void
     {
         if (!$book->isEPubVersion2() && $value === self::SPREAD_NONE || $value === self::SPREAD_LANDSCAPE || $value === self::SPREAD_PORTRAIT || $value === self::SPREAD_BOTH || $value === self::SPREAD_AUTO) {
             $book->addCustomMetaProperty(self::RENDITION_SPREAD, $value);

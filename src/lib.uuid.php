@@ -70,15 +70,15 @@ class UUID implements \Stringable
     final public const randNative  = 5;
     //static properties
     protected static $randomFunc   = self::randChoose;
-    protected static $randomSource = null;
+    protected static $randomSource;
     protected static $bignum       = self::bigChoose;
     protected static $storeClass   = "UUIDStorageStable";
-    protected static $store        = null;
-    protected static $secLib       = null;
+    protected static $store;
+    protected static $secLib;
     //instance properties
     protected $bytes;
     protected $hex;
-    protected $string;
+    protected string $string;
     protected $urn;
     protected $version;
     protected $variant;
@@ -105,7 +105,7 @@ class UUID implements \Stringable
         }
     }
 
-    public static function mintStr($ver = 1, $node = null, $ns = null, $time = null)
+    public static function mintStr($ver = 1, $node = null, $ns = null, $time = null): string
     {
         /* If a randomness source hasn't been chosen, use the lowest common denominator. */
         if (self::$randomFunc == self::randChoose) {
@@ -128,22 +128,18 @@ class UUID implements \Stringable
             bin2hex(substr((string) $uuid, 10, 6));
     }
 
-    public static function import($uuid)
+    public static function import($uuid): self
     {
         /* Import an existing UUID. */
         return ($uuid instanceof self) ? $uuid : new self(self::makeBin($uuid));
     }
 
-    public static function compare($a, $b)
+    public static function compare($a, $b): bool
     {
         /* Compares the binary representations of two UUIDs.
            The comparison will return true if they are bit-exact,
             or if neither is valid. */
-        if (self::makeBin($a) == self::makeBin($b)) {
-            return true;
-        } else {
-            return false;
-        }
+        return self::makeBin($a) == self::makeBin($b);
     }
 
     public static function seq()
@@ -156,7 +152,7 @@ class UUID implements \Stringable
 
     public function __toString(): string
     {
-        return (string) $this->string;
+        return $this->string;
     }
 
     public function __get($var)
@@ -182,17 +178,13 @@ class UUID implements \Stringable
                 }
                 if ($byte >= self::varRFC) {
                     return 1;
-                } else {
-                    return 0;
                 }
-                // no break
+                return 0;
             case "node":
                 if (ord($this->bytes[6]) >> 4 == 1) {
                     return bin2hex(strrev(substr((string) $this->bytes, 10)));
-                } else {
-                    return null;
                 }
-                // no break
+                return null;
             case "time":
                 if (ord($this->bytes[6]) >> 4 == 1) {
                     // Restore contiguous big-endian byte order
@@ -202,10 +194,8 @@ class UUID implements \Stringable
                     // Decode the hex digits and return a fixed-precision string
                     $time = self::decodeTimestamp($time);
                     return $time;
-                } else {
-                    return null;
                 }
-                // no break
+                return null;
             default:
                 return null;
         }
@@ -226,7 +216,7 @@ class UUID implements \Stringable
             bin2hex(substr((string) $uuid, 10, 6));
     }
 
-    protected static function mintTime($node = null, $seq = null, $time = null)
+    protected static function mintTime($node = null, $seq = null, $time = null): string
     {
         /* Generates a Version 1 UUID.
            These are derived from the time at which they were generated. */
@@ -268,14 +258,12 @@ class UUID implements \Stringable
         return $uuid;
     }
 
-    protected static function mintName($ver, $node, $ns)
+    protected static function mintName($ver, string $node, $ns): string
     {
         /* Generates a Version 3 or Version 5 UUID.
            These are derived from a hash of a name and its namespace, in binary form. */
-        if ($ver == 3) {
-            if (!$node) {
-                throw new UUIDException("A name-string is required for Version 3 or 5 UUIDs.", 201);
-            }
+        if ($ver == 3 && !$node) {
+            throw new UUIDException("A name-string is required for Version 3 or 5 UUIDs.", 201);
         }
         // if the namespace UUID isn't binary, make it so
         $ns = self::makeBin($ns);
@@ -299,7 +287,7 @@ class UUID implements \Stringable
         return ($uuid);
     }
 
-    protected static function CheckTimeInput($node, $seq, $time)
+    protected static function CheckTimeInput(array $node, $seq, $time): array
     {
         /* If no timestamp has been specified, generate one.
            Note that this will never be more accurate than to
@@ -336,12 +324,12 @@ class UUID implements \Stringable
         return [$node, $seq, $time];
     }
 
-    protected static function normalizeTime($time, $expected = false)
+    protected static function normalizeTime(array $time, $expected = false)
     {
         /* Returns a string representation of the
            number of 100ns steps since the Unix epoch. */
         if(is_a($time, "DateTimeInterface") || is_a($time, "DateTime")) {
-            return $time->format("U") . str_pad($time->format("u"), 7, "0", STR_PAD_RIGHT);
+            return $time->format("U") . str_pad((string) $time->format("u"), 7, "0", STR_PAD_RIGHT);
         }
         switch(gettype($time)) {
             case "string":
@@ -361,7 +349,7 @@ class UUID implements \Stringable
         }
     }
 
-    protected static function buildTime($time)
+    protected static function buildTime($time): string
     {
         switch (self::$bignum) {
             case self::bigNative:
@@ -406,7 +394,7 @@ class UUID implements \Stringable
         return pack("H*", str_pad((string) $out, 16, "0", STR_PAD_LEFT));
     }
 
-    protected static function decodeTimestamp($hex)
+    protected static function decodeTimestamp($hex): string
     {
         /* Convrt a UUID timestamp (in hex notation) to
            a Unix timestamp with microseconds. */
@@ -463,15 +451,13 @@ class UUID implements \Stringable
         }
         if (strlen((string) $str) == $len) {
             return $str;
-        } else {
-            $str = preg_replace("/^urn:uuid:/is", "", (string) $str);
-        } // strip URN scheme and namespace
+        }
+        $str = preg_replace("/^urn:uuid:/is", "", (string) $str); // strip URN scheme and namespace
         $str = preg_replace("/[^a-f0-9]/is", "", $str);  // strip non-hex characters
         if (strlen($str) != ($len * 2)) {
             return false;
-        } else {
-            return pack("H*", $str);
         }
+        return pack("H*", $str);
     }
 
     protected static function makeNode($str)
@@ -481,14 +467,13 @@ class UUID implements \Stringable
         $len = 6;
         if (strlen((string) $str) == $len) {
             return $str;
-        } else {
-            $str = preg_replace("/[^a-f0-9]/is", "", (string) $str);
-        }  // strip non-hex characters
+        }
+        $str = preg_replace("/[^a-f0-9]/is", "", (string) $str);  // strip non-hex characters
         if (strlen($str) != ($len * 2)) {
             return false;
-        } else { // MAC addresses are little-endian and UUIDs are big-endian, so we reverse bytes
-            return strrev(pack("H*", $str));
         }
+        // MAC addresses are little-endian and UUIDs are big-endian, so we reverse bytes
+        return strrev(pack("H*", $str));
     }
 
     public static function randomBytes($bytes)
@@ -527,7 +512,7 @@ class UUID implements \Stringable
         }
     }
 
-    public static function initAccurate()
+    public static function initAccurate(): void
     {
         $big = self::initBignum();
         if ($big == self::bigNot) {
@@ -555,7 +540,8 @@ class UUID implements \Stringable
         if ($how === null) {
             if (self::$randomFunc != self::randChoose) {
                 return self::$randomFunc;
-            } elseif (function_exists('random_bytes')) {
+            }
+            if (function_exists('random_bytes')) {
                 $how = self::randNative;
             } elseif (function_exists('openssl_random_pseudo_bytes')) {
                 $how = self::randOpenSSL;
@@ -625,9 +611,11 @@ class UUID implements \Stringable
         /* Check to see if PHP is running in a 32-bit environment and if so,
            use GMP or BC Math if available. */
         if ($how === null) {
-            if (self::$bignum != self::bigChoose) { // determination has already been made
+            if (self::$bignum != self::bigChoose) {
+                // determination has already been made
                 return self::$bignum;
-            } elseif (PHP_INT_SIZE >= 8) {
+            }
+            if (PHP_INT_SIZE >= 8) {
                 self::$bignum = self::bigNative;
             } elseif (function_exists("gmp_add")) {
                 self::$bignum = self::bigGMP;
@@ -681,7 +669,7 @@ class UUID implements \Stringable
         return self::$bignum;
     }
 
-    public static function initStorage($file = null)
+    public static function initStorage($file = null): void
     {
         if (self::$storeClass == "UUIDStorageStable") {
             try {
@@ -700,14 +688,14 @@ class UUID implements \Stringable
         }
     }
 
-    public static function registerStorage($name)
+    public static function registerStorage($name): void
     {
         try {
             $store = new ReflectionClass($name);
         } catch(Exception $e) {
             throw new UUIDStorageException("Storage class does not exist.", 1001, $e);
         }
-        if (array_search("UUIDStorage", $store->getInterfaceNames()) === false) {
+        if (!in_array("UUIDStorage", $store->getInterfaceNames())) {
             throw new UUIDStorageException("Storage class does not implement the UUIDStorage interface.", 1002);
         }
         self::$storeClass = $name;
@@ -737,9 +725,9 @@ interface UUIDStorage
 
 class UUIDStorageVolatile implements UUIDStorage
 {
-    protected $node = null;
-    protected $timestamp = null;
-    protected $sequence = null;
+    protected $node;
+    protected $timestamp;
+    protected $sequence;
 
     public function getNode()
     {
@@ -765,12 +753,12 @@ class UUIDStorageVolatile implements UUIDStorage
         return $this->sequence;
     }
 
-    public function setSequence($sequence)
+    public function setSequence($sequence): void
     {
         $this->sequence = pack("n", unpack("nseq", (string) $sequence)['seq'] & self::maxSequence);
     }
 
-    public function setTimestamp($timestamp)
+    public function setTimestamp($timestamp): void
     {
         $this->timestamp = $timestamp;
     }
@@ -778,7 +766,7 @@ class UUIDStorageVolatile implements UUIDStorage
 
 class UUIDStorageStable extends UUIDStorageVolatile
 {
-    protected $file = null;
+    protected $file;
     protected $read = false;
     protected $wrote = true;
 
@@ -811,7 +799,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
         }
         $this->read = true;
         $this->wrote = false;
-        if (!$data) { // an empty file is not an error
+        if ($data === '' || $data === '0') { // an empty file is not an error
             return;
         }
         $data = @unserialize($data);
@@ -827,7 +815,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
         return parent::getNode();
     }
 
-    public function setSequence($sequence)
+    public function setSequence($sequence): void
     {
         if (!$this->read) {
             $this->readState();
@@ -836,7 +824,7 @@ class UUIDStorageStable extends UUIDStorageVolatile
         $this->write();
     }
 
-    public function setTimestamp($timestamp)
+    public function setTimestamp($timestamp): void
     {
         parent::setTimestamp($timestamp);
         if ($this->wrote) {
@@ -849,10 +837,8 @@ class UUIDStorageStable extends UUIDStorageVolatile
     {
         $data = serialize([$this->node, $this->sequence, $this->timestamp]);
         $write = @file_put_contents($this->file, $data);
-        if ($check) {
-            if ($write === false) {
-                throw new UUIDStorageException("Stable storage could not be written.", 1202);
-            }
+        if ($check && $write === false) {
+            throw new UUIDStorageException("Stable storage could not be written.", 1202);
         }
         $this->wrote = true;
         $this->read = false;

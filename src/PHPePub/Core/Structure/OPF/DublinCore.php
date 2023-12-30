@@ -45,7 +45,7 @@ class DublinCore extends MetaValue
      * @param string $name
      * @param string $value
      */
-    public function setDc($name, $value)
+    public function setDc($name, $value): void
     {
         if (is_string($name)) {
             $this->setValue("dc:" . trim($name), $value);

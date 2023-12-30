@@ -13,7 +13,7 @@ use UnexpectedValueException;
  */
 abstract class Enum
 {
-    private static $constantsCache = [];
+    private static array $constantsCache = [];
     private $value;
 
     public function __construct($value)
@@ -25,7 +25,7 @@ abstract class Enum
         $this->value = $value;
     }
 
-    public function is($value)
+    public function is($value): bool
     {
         return $this->value === $value;
     }
@@ -35,7 +35,7 @@ abstract class Enum
         return $this->value;
     }
 
-    public static function has($value)
+    public static function has($value): bool
     {
         return in_array($value, self::toArray(), true);
     }

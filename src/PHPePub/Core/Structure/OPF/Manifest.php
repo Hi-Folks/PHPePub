@@ -13,12 +13,7 @@ use PHPePub\Core\EPub;
  */
 class Manifest
 {
-    private $items = [];
-
-    /**
-     * Class constructor.
-     */
-    public function __construct() {}
+    private array $items = [];
 
     /**
      * Class destructor
@@ -36,20 +31,22 @@ class Manifest
      *
      * @param Item $item
      */
-    public function addItem($item)
+    public function addItem($item): void
     {
-        if ($item != null && is_object($item) && $item instanceof Item) {
-            $this->items[] = $item;
+        if ($item == null) {
+            return;
         }
+        if (!is_object($item)) {
+            return;
+        }
+        $this->items[] = $item;
     }
 
     /**
      *
      * @param string $bookVersion
-     *
-     * @return string
      */
-    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2)
+    public function finalize($bookVersion = EPub::BOOK_VERSION_EPUB2): string
     {
         $manifest = "\n\t<manifest>\n";
         foreach ($this->items as $item) {
@@ -60,10 +57,7 @@ class Manifest
         return $manifest . "\t</manifest>\n";
     }
 
-    /**
-     * @return array
-     */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }

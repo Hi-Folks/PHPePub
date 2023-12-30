@@ -81,7 +81,7 @@ $book->addChapter("Chapter 2: Vivamus bibendum massa", "Chapter002.html", $chapt
 $book->finalize(); // Finalize the book, and build the archive.
 
 // Send the book to the client. ".epub" will be appended if missing.
-$zipData = $book->sendBook("ExampleBookSimple");
+$zipData = $book->saveBook("ExampleBookSimple");
 
 // After this point your script should call exit. If anything is written to the output,
 // it'll be appended to the end of the book, causing the epub file to become corrupt.

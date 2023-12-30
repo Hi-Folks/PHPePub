@@ -21,10 +21,10 @@ abstract class Boolean extends Enum
      *
      * @return string constant
      */
-    public static function getBoolean($value)
+    public static function getBoolean($value): string
     {
         if (is_bool($value)) {
-            return $value === true ? self::TRUE : self::FALSE;
+            return $value ? self::TRUE : self::FALSE;
         }
         if (is_numeric($value)) { // 0 is false, everything else is true.
             return $value !== 0 ? self::TRUE : self::FALSE;
