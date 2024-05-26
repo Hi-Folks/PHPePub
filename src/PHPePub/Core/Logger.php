@@ -48,9 +48,9 @@ class Logger
     {
         if ($this->isLogging) {
             $tTemp = gettimeofday();
-            $tS = $this->tStart['sec'] + (((int)($this->tStart['usec'] / 100)) / 10000);
-            $tL = $this->tLast['sec'] + (((int)($this->tLast['usec'] / 100)) / 10000);
-            $tT = $tTemp['sec'] + (((int)($tTemp['usec'] / 100)) / 10000);
+            $tS = $this->tStart['sec'] + (((int) ($this->tStart['usec'] / 100)) / 10000);
+            $tL = $this->tLast['sec'] + (((int) ($this->tLast['usec'] / 100)) / 10000);
+            $tT = $tTemp['sec'] + (((int) ($tTemp['usec'] / 100)) / 10000);
 
             $logline = sprintf("\n+%08.04f; +%08.04f; ", ($tT - $tS), ($tT - $tL)) . $this->name . $line;
             $this->log .= $logline;

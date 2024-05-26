@@ -1,60 +1,64 @@
 {
-    "name": "hi-folks/phpepub",
-    "type": "library",
-    "description": "Package to create and stream e-books in the ePub 2.0 and 3.0 formats.",
-    "keywords": ["epub", "e-book"],
-    "homepage": "https://github.com/Hi-Folks/PHPePub",
-    "license": "LGPL-2.1",
-    "minimum-stability": "stable",
-    "authors": [
-        {
-            "name": "A. Grandt",
-            "email": "php@grandt.com",
-            "homepage": "http://grandt.com",
-            "role": "Developer"
-        },
-        {
-            "name": "An, Hyeong-woo",
-            "email": "mail@mytory.net",
-            "homepage": "https://mytory.net",
-            "role": "Contributor"
-        },
-        {
-            "name": "Daniel Berthereau",
-            "email": "daniel.composer@berthereau.net",
-            "role": "Contributor"
-        },
-        {
-            "name": "Kevin Decherf",
-            "homepage": "https://kdecherf.com",
-            "role": "Contributor"
-        },
-        {
-            "name": "Roberto Butti",
-            "homepage": "https://hi-folks.dev",
-            "role": "Contributor"
-        }
-    ],
-    "require": {
-        "php": ">=8.1.0",
-        "phpzip/phpzip": "~2.0.7",
-        "grandt/phpresizegif": "~1.0.3",
-        "grandt/relativepath": "~1.0.1",
-        "masterminds/html5": "~2.3"
+  "name": "hi-folks/phpepub",
+  "type": "library",
+  "description": "Package to create and stream e-books in the ePub 2.0 and 3.0 formats.",
+  "keywords": [
+    "epub",
+    "e-book"
+  ],
+  "homepage": "https://github.com/Hi-Folks/PHPePub",
+  "license": "LGPL-2.1",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "A. Grandt",
+      "email": "php@grandt.com",
+      "homepage": "http://grandt.com",
+      "role": "Developer"
     },
-    "autoload": {
-        "psr-4": {
-            "PHPePub\\": "src/PHPePub"
-        },
-        "classmap": [
-            "src/lib.uuid.php"
-        ]
+    {
+      "name": "An, Hyeong-woo",
+      "email": "mail@mytory.net",
+      "homepage": "https://mytory.net",
+      "role": "Contributor"
     },
-    "require-dev": {
-        "rector/rector": "^0.18.13",
-        "laravel/pint": "^1.13"
+    {
+      "name": "Daniel Berthereau",
+      "email": "daniel.composer@berthereau.net",
+      "role": "Contributor"
     },
-    "scripts": {
-        "format": "pint"
+    {
+      "name": "Kevin Decherf",
+      "homepage": "https://kdecherf.com",
+      "role": "Contributor"
+    },
+    {
+      "name": "Roberto Butti",
+      "homepage": "https://hi-folks.dev",
+      "role": "Contributor"
     }
+  ],
+  "require": {
+    "php": ">=8.1.0",
+    "grandt/phpresizegif": "~1.0.3",
+    "grandt/relativepath": "~1.0.1",
+    "masterminds/html5": "~2.3",
+    "ext-dom": "*",
+    "ext-zip": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "PHPePub\\": "src/PHPePub"
+    },
+    "classmap": [
+      "src/lib.uuid.php"
+    ]
+  },
+  "require-dev": {
+    "rector/rector": "^1",
+    "laravel/pint": "^1.13"
+  },
+  "scripts": {
+    "format": "pint"
+  }
 }

@@ -39,7 +39,7 @@ class ImageHelper
         if (!preg_match(
             '/\A(?:(\xff\xd8\xff)|(GIF8[79]a)|(\x89PNG\x0d\x0a)|(BM)|(\x49\x49(?:\x2a\x00|\x00\x4a))|(FORM.{4}ILBM))/',
             $binary,
-            $hits
+            $hits,
         )
         ) {
             return 'application/octet-stream';

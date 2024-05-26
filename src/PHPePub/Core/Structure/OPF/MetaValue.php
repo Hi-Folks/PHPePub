@@ -42,7 +42,7 @@ class MetaValue
     public function setValue($name, $value): void
     {
         $this->tagName = is_string($name) ? trim($name) : null;
-        $this->tagValue = isset($value) ? (string)$value : null;
+        $this->tagValue = isset($value) ? (string) $value : null;
         if ($this->tagValue === null) {
             $this->tagName = null;
         }

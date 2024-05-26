@@ -65,7 +65,7 @@ class EPubChapterSplitter
      */
     public function setSplitSize($size): void
     {
-        $this->splitDefaultSize = (int)$size;
+        $this->splitDefaultSize = (int) $size;
         if ($size < 10240) {
             $this->splitDefaultSize = 10240; // Making the file smaller than 10k is not a good idea.
         }

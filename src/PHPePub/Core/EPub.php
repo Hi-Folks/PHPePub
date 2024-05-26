@@ -18,8 +18,8 @@ use PHPePub\Helpers\ImageHelper;
 use PHPePub\Helpers\MimeHelper;
 use PHPePub\Helpers\StringHelper;
 use PHPePub\Helpers\URLHelper;
-use PHPZip\Zip\File\Zip;
 use RelativePath;
+use ZipArchive;
 
 /**
  * Create an ePub compatible book file.
@@ -98,8 +98,7 @@ class EPub
 
     public $encodeHTML = false;
 
-    /** @var $Zip Zip */
-    private \PHPZip\Zip\File\Zip $zip;
+    private ZipArchive $zip;
 
     private string $title = '';
 
@@ -197,7 +196,7 @@ class EPub
         private $bookVersion = EPub::BOOK_VERSION_EPUB2,
         private $languageCode = 'en',
         private $writingDirection = EPub::DIRECTION_LEFT_TO_RIGHT,
-        private $htmlFormat = EPub::FORMAT_XHTML
+        private $htmlFormat = EPub::FORMAT_XHTML,
     ) {
         $this->log = new Logger('EPub', $this->isLogging);
 
@@ -216,11 +215,12 @@ class EPub
 
         $this->docRoot = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/';
 
-        $this->zip = new Zip();
-        $this->zip->setExtraField(false);
-        $this->zip->addFile('application/epub+zip', 'mimetype');
-        $this->zip->setExtraField(true);
-        $this->zip->addDirectory('META-INF');
+        $this->zip = new ZipArchive();
+        $this->zip->open('test.zip', ZipArchive::CREATE);
+        //$this->zip->setExtraField(false);
+        //$this->zip->addFile('application/epub+zip', 'mimetype');
+        //$this->zip->setExtraField(true);
+        $this->zip->addEmptyDir('META-INF');
 
         $this->ncx = new Ncx(null, null, null, $this->languageCode, $this->writingDirection);
         $this->opf = new Opf();
@@ -687,7 +687,7 @@ class EPub
 
         $fileName = FileHelper::normalizeFileName($fileName);
 
-        $this->zip->addFile($fileData, "META-INF/" . $fileName);
+        $this->zip->addFromString("META-INF/" . $fileName, $fileData);
 
         return true;
     }
@@ -716,7 +716,7 @@ class EPub
 
         $compress = (!str_starts_with($mimetype, "image/"));
 
-        $this->zip->addFile($fileData, $this->bookRoot . $fileName, 0, null, $compress);
+        $this->zip->addFromString($this->bookRoot . $fileName, $fileData);
         $this->fileList[$fileName] = $fileName;
         $this->opf->addItem($fileId, $fileName, $mimetype);
 
@@ -1036,7 +1036,7 @@ class EPub
 
         $fileName = FileHelper::normalizeFileName($fileName);
 
-        if ($this->zip->addLargeFile($filePath, $this->bookRoot . $fileName)) {
+        if ($this->zip->addFile($this->bookRoot . $fileName, $filePath)) {
             $this->fileList[$fileName] = $fileName;
             $this->opf->addItem($fileId, $fileName, $mimetype);
 
@@ -1073,7 +1073,7 @@ class EPub
 
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\">\n\t<rootfiles>\n\t\t<rootfile full-path=\"" . $this->bookRoot . "book.opf\" media-type=\"application/oebps-package+xml\" />\n\t</rootfiles>\n</container>\n";
 
-        $this->zip->addFile($content, "META-INF/container.xml", 0, null, false);
+        $this->zip->addFromString("META-INF/container.xml", $content);
         $this->ncx->setVersion($this->bookVersion);
         $this->opf->setVersion($this->bookVersion);
         $this->opf->addItem("ncx", "book.ncx", Ncx::MIMETYPE);
@@ -2075,6 +2075,7 @@ body {
         $fh = fopen($baseDir . '/' . $fileName, "w");
 
         if ($fh) {
+            $this->zip->close();
             fwrite($fh, $this->getBook());
             fclose($fh);
 
@@ -2197,15 +2198,15 @@ body {
         $ncxFinal = StringHelper::fixEncoding($this->ncx->finalize());
 
         if (mb_detect_encoding($opfFinal, 'UTF-8', true) === "UTF-8") {
-            $this->zip->addFile($opfFinal, $this->bookRoot . "book.opf");
+            $this->zip->addFromString($this->bookRoot . "book.opf", $opfFinal);
         } else {
-            $this->zip->addFile(mb_convert_encoding($opfFinal, "UTF-8"), $this->bookRoot . "book.opf");
+            $this->zip->addFromString($this->bookRoot . "book.opf", mb_convert_encoding($opfFinal, "UTF-8"));
         }
 
         if (mb_detect_encoding($ncxFinal, 'UTF-8', true) === "UTF-8") {
-            $this->zip->addFile($ncxFinal, $this->bookRoot . "book.ncx");
+            $this->zip->addFromString($this->bookRoot . "book.ncx", $ncxFinal);
         } else {
-            $this->zip->addFile(mb_convert_encoding($ncxFinal, "UTF-8"), $this->bookRoot . "book.ncx");
+            $this->zip->addFromString($this->bookRoot . "book.ncx", mb_convert_encoding($ncxFinal, "UTF-8"));
         }
 
         $this->opf = null;
@@ -2317,7 +2318,7 @@ body {
         $fileName = RelativePath::getRelativePath($fileName);
         $fileName = preg_replace('#^[/\.]+#i', "", $fileName);
 
-        $this->zip->addFile($tocData, $this->bookRoot . $fileName);
+        $this->zip->addFromString($this->bookRoot . $fileName, $tocData);
 
         $this->fileList[$fileName] = $fileName;
         $this->opf->addItem("toc", $fileName, "application/xhtml+xml", "nav");
@@ -2348,7 +2349,7 @@ body {
             $this->finalize();
         }
 
-        return $this->zip->getZipData();
+        return $this->zip;
     }
 
     /**
@@ -2362,7 +2363,7 @@ body {
             $this->finalize();
         }
 
-        return $this->zip->getArchiveSize();
+        return $this->zip->statIndex("size");
     }
 
     /**
@@ -2413,7 +2414,7 @@ body {
      */
     public function setSplitSize($size): void
     {
-        $this->splitDefaultSize = (int)$size;
+        $this->splitDefaultSize = (int) $size;
         if ($size < 10240) {
             $this->splitDefaultSize = 10240; // Making the file smaller than 10k is not a good idea.
         }

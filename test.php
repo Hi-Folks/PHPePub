@@ -50,22 +50,22 @@ $book->buildTOC();
 $book->addChapter(
     "Chapter 1",
     "Chapter1.html",
-    $content_start . "<h1>Chapter 1</h1>\n<p>Plenty of test content</p>\n" . $content_end
+    $content_start . "<h1>Chapter 1</h1>\n<p>Plenty of test content</p>\n" . $content_end,
 );
 $book->addChapter(
     "Chapter 2",
     "Chapter2.html",
-    $content_start . "<h1>Chapter 2</h1>\n<p>Plenty of test content</p>\n" . $content_end
+    $content_start . "<h1>Chapter 2</h1>\n<p>Plenty of test content</p>\n" . $content_end,
 );
 $book->addChapter(
     "Chapter 3",
     "Chapter3.html",
-    $content_start . "<h1>Chapter 3</h1>\n<p>Plenty of test content</p>\n" . $content_end
+    $content_start . "<h1>Chapter 3</h1>\n<p>Plenty of test content</p>\n" . $content_end,
 );
 $book->addChapter(
     "Epilogue",
     "Epilogue.html",
-    $content_start . "<h1>Epilogue</h1>\n<p>Plenty of test content</p>\n" . $content_end
+    $content_start . "<h1>Epilogue</h1>\n<p>Plenty of test content</p>\n" . $content_end,
 );
 $book->finalize();
 $zipData = $book->sendBook("ExampleBook1_test");
